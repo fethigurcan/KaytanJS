@@ -1,0 +1,20 @@
+{
+  "name": "KaytanJS",
+  "version": "1.0.0",
+  "description": "Mustache like Template Engine with some logic extensions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fethigurcan/KaytanJS.git"
+  },
+  "keywords": [],
+  "author": "Fethi Gürcan <fethigurcan@gmail.com> (mobula.co)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fethigurcan/KaytanJS/issues"
+  },
+  "homepage": "https://github.com/fethigurcan/KaytanJS#readme"
+}
