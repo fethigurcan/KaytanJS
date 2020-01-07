@@ -10,6 +10,11 @@ var KaytanProperty=require('./KaytanProperty');
 var KaytanGlobalProperty=require('./KaytanProperty');
 var KaytanSystemProperty=require('./KaytanProperty');
 
+//expressions
+var KaytanAndOperator=require('./KaytanAndOperator');
+var KaytanOrOperator=require('./KaytanOrOperator');
+var KaytanNotExpression=require('./KaytanNotExpression');
+
 //statements
 var KaytanIfStatement=require('./KaytanIfStatement');
 var KaytanNotIfStatement=require('./KaytanNotIfStatement');
