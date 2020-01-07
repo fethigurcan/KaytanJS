@@ -1,6 +1,6 @@
-var KaytanLogicToken=require('./KaytanLogicToken');
+var KaytanToken=require('./KaytanToken');
 
-class KaytanProperty extends KaytanLogicToken{
+class KaytanGlobalPropertyDefinition extends KaytanToken{
     constructor(engine,name){
         super(engine);
         Object.defineProperties(this,{
@@ -9,8 +9,8 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     toString(){
-        return this.name;
+        return "{{$"+this.name+"}}";
     }
 }
 
-module.exports=KaytanProperty;
+module.exports=KaytanGlobalPropertyDefinition;

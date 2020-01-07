@@ -2,6 +2,7 @@ var KaytanRuntimeError=require('./KaytanRuntimeError');
 var KaytanBugError=require('./KaytanBugError');
 var Helper=require('./Helper');
 var parseTemplate=require('./KaytanParserFn');
+var KaytanTokenList=require('./KaytanTokenList');
 
 //treat as static
 const _getExistenceOf=function (property,objectArray,parentIndex,parentLength){
@@ -157,13 +158,15 @@ const _executeTemplate=function(astItem,v,parentIndex,parentLength){
 
 class Kaytan{
     constructor(template,options){
-    Object.defineProperties(this,{
-        template:{ value:template, writable:false, enumerable:true }
-    });
-    
-    Object.defineProperties(this,{
-        ast:{ value:parseTemplate.call(this).data, writable:false, enumerable:true }
-    });
+        Object.defineProperties(this,{
+            template:{ value:template, writable:false, enumerable:true }
+        });
+        
+        let ast=parseTemplate.call(this).data;
+
+        Object.defineProperties(this,{
+            ast:{ value:ast.length==1?ast[0]:new KaytanTokenList(this,ast), writable:false, enumerable:true }
+        });
     }
 }
 
@@ -171,10 +174,10 @@ class Kaytan{
 //private methods
 Object.defineProperties(Kaytan.prototype,{
     execute:{
-    value:function(values){
-        return _executeTemplate(this.ast,[{},values]); //empty object is the global variable holder for define command
-    },
-    writable:false
+        value:function(values){
+            return _executeTemplate(this.ast,[{},values]); //empty object is the global variable holder for define command
+        },
+        writable:false
     }
 });
 

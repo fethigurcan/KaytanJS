@@ -1,10 +1,13 @@
 var KaytanToken=require('./KaytanToken');
 
 class KaytanStringToken extends KaytanToken{
-    constructor(value){
-        if (!(value instanceof String))
-            throw new TypeError('Value must be a String'); 
-        this.value=value;
+    constructor(engine,value){
+        if (!(typeof(value)=="string"))
+            throw new TypeError('Value must be a String');
+        super(engine);
+        Object.defineProperties(this,{
+            value:{ value:value, writable:false }
+        });
     }
 
     getOutput(){

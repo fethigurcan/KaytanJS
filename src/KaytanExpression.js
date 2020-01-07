@@ -1,8 +1,8 @@
 var KaytanLogicToken=require('./KaytanLogicToken');
 
 class KaytanExpression extends KaytanLogicToken{
-    constructor(){
-        super();
+    constructor(engine){
+        super(engine);
         if (this.constructor===KaytanExpression)
             throw new TypeError('Abstract class "KaytanExpression" cannot be instantiated directly.'); 
     }

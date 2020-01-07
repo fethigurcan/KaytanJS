@@ -2,8 +2,8 @@ var KaytanLogicToken=require('./KaytanLogicToken');
 var KaytanOperator=require('./KaytanOperator');
 
 class KaytanOrOperator extends KaytanOperator{
-    constructor(left,right){
-        super(left,right);
+    constructor(engine,left,right){
+        super(engine,left,'|',right);
     }
 }
 

@@ -2,11 +2,17 @@ var KaytanLogicToken=require('./KaytanLogicToken');
 var KaytanExpression=require('./KaytanExpression');
 
 class KaytanNotExpression extends KaytanExpression{
-    constructor(expression){
+    constructor(engine,expression){
         if (!(expression instanceof KaytanLogicToken))
             throw new TypeError('Expression must be a KaytanLogicToken'); 
-        super();
-        this.expression=expression;
+        super(engine);
+        Object.defineProperties(this,{
+            expression:{ value:expression, writable:false }
+        });
+    }
+
+    toString(){
+        return "!("+this.expression.toString()+')';
     }
 }
 

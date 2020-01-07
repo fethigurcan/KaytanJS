@@ -1,8 +1,8 @@
 var KaytanProperty=require('./KaytanProperty');
 
 class KaytanSystemProperty extends KaytanProperty{
-    constructor(){
-        super();
+    constructor(engine,name){
+        super(engine,name);
     }
 }
 
