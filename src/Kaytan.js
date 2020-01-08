@@ -4,7 +4,7 @@ var KaytanTokenList=require('./KaytanTokenList');
 class Kaytan{
     constructor(template,options){
         Object.defineProperties(this,{
-            template:{ value:template, writable:false, enumerable:true }
+            template:{ value:template||'', writable:false, enumerable:true }
         });
         
         let ast=parseTemplate.call(this).data;
