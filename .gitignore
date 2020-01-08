@@ -1,6 +1,12 @@
 #MacOS Generated Files 
 .DS_Store
 
+#Webpack Generated
+package-lock.json
+
+#Babel Generated
+babelsrc
+
 # Logs
 logs
 *.log

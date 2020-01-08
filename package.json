@@ -4,7 +4,9 @@
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack && rm -rf babelsrc",
+    "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,16 @@
   "bugs": {
     "url": "https://github.com/fethigurcan/KaytanJS/issues"
   },
-  "homepage": "https://github.com/fethigurcan/KaytanJS#readme"
+  "homepage": "https://github.com/fethigurcan/KaytanJS#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "clean-webpack-plugin": "^3.0.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.7.0"
+  }
 }
