@@ -8,3 +8,4 @@ TODO:
     - Add webpack and build for browsers
     - Add Tests
     - Add NPM package
+    - Do Performance Tests against Mustache and HandleBars 
