@@ -4,7 +4,7 @@
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack && rm -rf babelsrc",
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env"
   },
@@ -24,6 +24,7 @@
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "clean-webpack-plugin": "^3.0.0",
+    "jest": "^24.9.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
