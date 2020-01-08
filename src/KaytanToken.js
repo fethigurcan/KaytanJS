@@ -9,8 +9,8 @@ class KaytanToken{
         });
     }
 
-    getOutput(){
-        throw new Error('getOutput method is not implemented.'); 
+    execute(objectArray,parentIndex,parentLength){
+        throw new Error('execute method is not implemented for:'+this.constructor.name); 
     }
 }
 

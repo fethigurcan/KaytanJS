@@ -1,4 +1,4 @@
-var KaytanLogicToken=require('./KaytanLogicToken');
+const KaytanLogicToken=require('./KaytanLogicToken');
 
 class KaytanExpression extends KaytanLogicToken{
     constructor(engine){

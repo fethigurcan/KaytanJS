@@ -21,6 +21,16 @@ class KaytanIfStatement extends KaytanStatement{
     toString(){
         return "{{?"+this.if.toString()+"}}"+this.then.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
+
+    execute(objectArray,parentIndex,parentLength){
+        if (this.if.executeLogic(objectArray,parentIndex,parentLength))
+            return this.then.execute(objectArray,parentIndex,parentLength);
+        else if (this.else)
+            return this.else.execute(objectArray,parentIndex,parentLength);
+        else
+            return '';
+    }
+
 }
 
 module.exports=KaytanIfStatement;

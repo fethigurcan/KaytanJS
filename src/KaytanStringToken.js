@@ -1,4 +1,4 @@
-var KaytanToken=require('./KaytanToken');
+const KaytanToken=require('./KaytanToken');
 
 class KaytanStringToken extends KaytanToken{
     constructor(engine,value){
@@ -10,13 +10,14 @@ class KaytanStringToken extends KaytanToken{
         });
     }
 
-    getOutput(){
-        return this.value; 
-    }
-
     toString(){
         return this.value;
     }
+
+    execute(objectArray){
+        return this.value;
+    }
+
 }
 
 module.exports=KaytanStringToken;

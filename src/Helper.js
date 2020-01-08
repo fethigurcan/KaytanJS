@@ -3,6 +3,7 @@ const commandNameRegex=new RegExp("^#(first|last|odd|even|intermediate)$|^\\$"+c
 const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
 const commandPrefixToken=/^[[({'"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
+const partialsHolder="$partials";
 
 const escape={
     undefined: function(v){
@@ -39,5 +40,6 @@ module.exports={
     simpleCommandNameRegex:simpleCommandNameRegex,
     commandPrefixToken:commandPrefixToken,
     logicCommandPrefixToken:logicCommandPrefixToken,
-    escape:escape
+    escape:escape,
+    partialsHolder:partialsHolder
 };

@@ -1,4 +1,4 @@
-var KaytanToken=require('./KaytanToken');
+const KaytanToken=require('./KaytanToken');
 
 class KaytanTokenList extends KaytanToken{
     constructor(engine,tokens){
@@ -14,19 +14,20 @@ class KaytanTokenList extends KaytanToken{
         for(let i in tokens) 
             if (!(tokens[i] instanceof KaytanToken))
                 throw new TypeError('all tokens must be a KaytanToken');
-            else
+            else{
+                Object.defineProperties(tokens[i],{
+                    index:{ value:i, writable:false },
+                    parent:this,
+                });
                 Object.defineProperties(this,{
                     [i]:{ value:tokens[i], writable:false }
                 });
+            }
     }
 
     *[Symbol.iterator]() {
         for(let i=0;i<this.length;i++) 
             yield this[i];
-    }
-
-    get length(){
-        return this.tokens.length;
     }
 
     toString(){
@@ -36,6 +37,12 @@ class KaytanTokenList extends KaytanToken{
         return s;
     }
 
+    execute(objectArray,parentIndex,parentLength){
+        let s='';
+        for(let token of this) 
+            s+=token.execute(objectArray,parentIndex,parentLength);
+        return s;
+    }
 }
 
 module.exports=KaytanTokenList;

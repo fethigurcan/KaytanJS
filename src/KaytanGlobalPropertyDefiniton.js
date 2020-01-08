@@ -1,4 +1,4 @@
-var KaytanToken=require('./KaytanToken');
+const KaytanToken=require('./KaytanToken');
 
 class KaytanGlobalPropertyDefinition extends KaytanToken{
     constructor(engine,name){
@@ -11,6 +11,13 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
     toString(){
         return "{{$"+this.name+"}}";
     }
+
+    execute(objectArray){
+        let rootObject=objectArray[0];
+        rootObject[this.name]=true;
+        return '';
+    }
+
 }
 
 module.exports=KaytanGlobalPropertyDefinition;

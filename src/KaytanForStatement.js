@@ -1,6 +1,6 @@
-var KaytanToken=require('./KaytanToken');
-var KaytanStatement=require('./KaytanStatement');
-var KaytanProperty=require('./KaytanProperty');
+const KaytanToken=require('./KaytanToken');
+const KaytanStatement=require('./KaytanStatement');
+const KaytanProperty=require('./KaytanProperty');
 
 class KaytanForStatement extends KaytanStatement{
     constructor(engine,_for,_loop,_else){        
@@ -20,6 +20,26 @@ class KaytanForStatement extends KaytanStatement{
 
     toString(){
         return "{{#"+this.for.toString()+"}}"+this.loop.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
+    }
+
+    execute(objectArray,parentIndex,parentLength){
+        let obj=this.for.execute(objectArray,parentIndex,parentLength);
+
+        if (Array.isArray(obj) && obj.length){
+            let childObjectArray=[...objectArray,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
+            let l=objectArray.length;
+            let s="";
+            for (let i=0;i<obj.length;i++){
+                childObjectArray[objectArray.length]=obj[i]; //son öğe ile scope'u belirle.
+                s+=this.loop.execute(childObjectArray,i,obj.length);
+            }
+            return s;
+        }else if (obj)
+            return this.loop.execute([...objectArray,obj],0,1);
+        else if (this.else)
+            return this.else.execute(objectArray,parentIndex,parentLength);
+        else
+            return '';
     }
 
 }

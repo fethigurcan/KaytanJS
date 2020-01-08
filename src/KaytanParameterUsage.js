@@ -1,4 +1,5 @@
-var KaytanToken=require('./KaytanToken');
+const KaytanToken=require('./KaytanToken');
+const parameterUsageHolder="$parameterUsage"
 
 class KaytanParameterUsage extends KaytanToken{
     constructor(engine,name){
@@ -10,6 +11,14 @@ class KaytanParameterUsage extends KaytanToken{
 
     toString(){
         return "{{@"+this.name+"}}";
+    }
+
+    execute(objectArray){
+        let rootObject=objectArray[0];
+        if (!rootObject[parameterUsageHolder]) 
+            rootObject[parameterUsageHolder]=[];
+        rootObject[parameterUsageHolder].push(this.name);
+        return '';
     }
 }
 

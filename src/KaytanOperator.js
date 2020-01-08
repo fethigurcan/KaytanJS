@@ -1,5 +1,5 @@
-var KaytanLogicToken=require('./KaytanLogicToken');
-var KaytanExpression=require('./KaytanExpression');
+const KaytanLogicToken=require('./KaytanLogicToken');
+const KaytanExpression=require('./KaytanExpression');
 
 class KaytanOperator extends KaytanExpression{
     constructor(engine,left,operator,right){        

@@ -1,4 +1,4 @@
-var KaytanError=require('./KaytanError');
+const KaytanError=require('./KaytanError');
 
 class KaytanRuntimeError extends KaytanError{
     constructor(message,index,src){

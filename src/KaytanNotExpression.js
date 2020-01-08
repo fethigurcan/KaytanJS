@@ -1,5 +1,5 @@
-var KaytanLogicToken=require('./KaytanLogicToken');
-var KaytanExpression=require('./KaytanExpression');
+const KaytanLogicToken=require('./KaytanLogicToken');
+const KaytanExpression=require('./KaytanExpression');
 
 class KaytanNotExpression extends KaytanExpression{
     constructor(engine,expression){
@@ -14,6 +14,11 @@ class KaytanNotExpression extends KaytanExpression{
     toString(){
         return "!("+this.expression.toString()+')';
     }
+
+    executeLogic(objectArray,parentIndex,parentLength){
+        return !this.expression.executeLogic(objectArray,parentIndex,parentLength);
+    }
+
 }
 
 module.exports=KaytanNotExpression;

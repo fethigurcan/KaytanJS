@@ -1,5 +1,6 @@
-var KaytanToken=require('./KaytanToken');
-var KaytanProperty=require('./KaytanProperty');
+const KaytanToken=require('./KaytanToken');
+const KaytanProperty=require('./KaytanProperty');
+const _escape=require('./Helper').escape;
 
 class KaytanPropertyValue extends KaytanToken{
     constructor(engine,property,escape){
@@ -15,6 +16,15 @@ class KaytanPropertyValue extends KaytanToken{
     toString(){
         return "{{"+(this.escape?this.escape:"")+this.property.name+"}}";
     }
+
+    execute(objectArray,parentIndex,parentLength){
+        let obj=this.property.execute(objectArray,parentIndex,parentLength);
+        if (obj!=null)
+            return _escape[this.escape](obj.toString());
+        else
+            return '';
+    }
+
 }
 
 module.exports=KaytanPropertyValue;

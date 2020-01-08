@@ -6,6 +6,7 @@ var KaytanBugError=require('./KaytanBugError');
 var KaytanProperty=require('./KaytanProperty');
 var KaytanGlobalProperty=require('./KaytanGlobalProperty');
 var KaytanSystemProperty=require('./KaytanSystemProperty');
+var KaytanThisProperty=require('./KaytanThisProperty');
 
 //basics
 var KaytanStringToken=require('./KaytanStringToken');
@@ -205,7 +206,7 @@ function parseTemplate(i,isABlock){
                         }else
                             throw new KaytanSyntaxError('Invalid global variable name:'+command,i,this.template);
                     }else if (command=='.'){ //DİKKAT: ilk karakter değil tümü=.
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command,i)));
+                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this)));
                     }else if (command[0]=='!'){ 
                         //ignore comments
                     }else if (command[0]=='<'){

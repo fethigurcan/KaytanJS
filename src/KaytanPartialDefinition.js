@@ -1,4 +1,5 @@
-var KaytanToken=require('./KaytanToken');
+const KaytanToken=require('./KaytanToken');
+const partialsHolder=require('./Helper').partialsHolder;
 
 class KaytanPartialDefinition extends KaytanToken{
     constructor(engine,name,token){
@@ -13,6 +14,14 @@ class KaytanPartialDefinition extends KaytanToken{
 
     toString(){
         return "{{<"+this.name+"}}"+this.token.toString()+"{{/}}";
+    }
+
+    execute(objectArray){
+        let rootObject=objectArray[0];
+        if (!rootObject[partialsHolder]) 
+            rootObject[partialsHolder]={};
+        rootObject[partialsHolder][this.name]=this.token;
+        return '';
     }
 }
 
