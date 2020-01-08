@@ -1,4 +1,4 @@
-const Kaytan=require("./dist/kaytan");
+const Kaytan=require(__ENTRYPOINT__);
 
 let EmptyTemplate='';
 test('Empty Template With Undefined Data', () => {

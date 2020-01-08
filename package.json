@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
+    "test-web": "jest --config jest.web.config.js",
+    "coverage-web": "jest --config jest.web.config.js --coverage",
     "build": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack",
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env"
   },
