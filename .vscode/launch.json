@@ -11,7 +11,16 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/kaytancmd.js"
+            "program": "${workspaceFolder}/loremipsum.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Tests",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest.js"
         }
     ]
 }

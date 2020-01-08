@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack && rm -rf babelsrc",
+    "build": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack",
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env"
   },
   "repository": {
@@ -29,6 +29,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.7.0"
+    "@babel/polyfill": "^7.7.0",
+    "core-js": "^2.6.11",
+    "next-i18next": "^3.0.1"
   }
 }
