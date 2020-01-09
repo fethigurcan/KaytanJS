@@ -21,7 +21,7 @@ class Kaytan{
 Object.defineProperties(Kaytan.prototype,{
     execute:{
         value:function(values){
-            return this.ast.execute([{},values]); //empty object is the global variable holder for define command
+            return this.ast.execute([{},values||{}]); //empty object is the global variable holder for define command
         },
         writable:false
     }

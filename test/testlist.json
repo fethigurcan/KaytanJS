@@ -1,0 +1,22 @@
+{
+    "Empty Template":{
+        "Undefined Data":   ["",null,""],
+        "Empty Data":       [-1,{},-1],
+        "Some Data":        [-1,{ "a": true, "b": false },-1],
+        "Empty Array":      [-1,[],-1],
+        "Undefined Template":    [null,null,-1]
+    },
+    "Simple Value":{
+        "Undefined Data":   ["{{MyName}}",null,""],
+        "Empty Data":       [-1,{},""],
+        "Empty Array":      [-1,[],""],
+        "String Object":    [-1,"fethi",""],
+        "Simple Data":      [-1,{ "MyName":"fethi" },"fethi"],
+        "Standard Escape":  [-1,{ "MyName":"<span id=\"x\" class='bold'>`fethi`</span>\r\n\tgurcan" },"&lt;span id=&quot;x&quot; class=&#039;bold&#039;&gt;`fethi`&lt;&#x2F;span&gt;\r\n\tgurcan"],
+        "No Escape":        ["{{&MyName}}",-1,"<span id=\"x\" class='bold'>`fethi`</span>\r\n\tgurcan"],
+        "\\ Escape":        ["{{\\MyName}}",-1,"<span id=\\\"x\\\" class=\\'bold\\'>`fethi`</span>\\r\\n\\tgurcan"],
+        "\" Escape":        ["{{\"MyName}}",-1,"<span id=\"\"x\"\" class='bold'>`fethi`</span>\r\n\tgurcan"],
+        "' Escape":         ["{{'MyName}}",-1,"<span id=\"x\" class=''bold''>`fethi`</span>\r\n\tgurcan"],
+        "` Escape":         ["{{`MyName}}",-1,"<span id=\"x\" class='bold'>``fethi``</span>\r\n\tgurcan"]
+    }
+}

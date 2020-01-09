@@ -4,11 +4,9 @@
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "coverage": "jest --coverage",
+    "test": "jest --config jest.config.js --coverage",
     "test-server": "node test-web/server.js",
-    "test-web": "jest --config jest.web.config.js",
-    "coverage-web": "jest --config jest.web.config.js --coverage",
+    "test-web": "jest --config jest.web.config.js --coverage",
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack --config webpack.config.babel.js",
     "build": "webpack --config webpack.config.js"
   },

@@ -1,10 +1,9 @@
-if (__ENTRYPOINT__)
-    var Kaytan=require(__ENTRYPOINT__);
-else
-    beforeEach(async () => {
-        await page.goto(PATH, { waitUntil: 'load' })
-    });
 
+
+
+beforeEach(async () => {
+    await page.goto(PATH, { waitUntil: 'load' })
+});
 
 let EmptyTemplate='';
 test('Empty Template With Undefined Data', () => {
