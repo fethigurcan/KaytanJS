@@ -6,33 +6,15 @@ const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if
 const partialsHolder="$partials";
 
 const escape={
-    undefined: function(v){
-    return v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;");
-    },
-    "\\": function(v){
-    return v.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/'/g,"\\'").replace(/\t/g,'\\t').replace(/\r/g,'\\r').replace(/\n/g,'\\n');
-    },
-    "\"": function(v){
-    return v.replace(/"/g,'""');
-    },
-    "'": function(v){
-    return v.replace(/'/g,"''");
-    },
-    "[": function(v){
-    return v.replace(/]/g,']]');
-    },
-    "(": function(v){
-    return v.replace(/\)/g,'\\)');
-    },
-    "{": function(v){
-    return v.replace(/}/g,'}}');
-    },
-    "`": function(v){
-    return v.replace(/`/g,'``');;
-    },
-    "&": function(v){
-    return v;
-    }
+    undefined: v=>v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;"),
+    "&": v=>v,
+    "\\": v=>v.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/'/g,"\\'").replace(/\t/g,'\\t').replace(/\r/g,'\\r').replace(/\n/g,'\\n'),
+    "\"": v=>v.replace(/"/g,'""'),
+    "'": v=>v.replace(/'/g,"''"),
+    "`": v=>v.replace(/`/g,'``'),
+    "[": v=>v.replace(/]/g,']]'),
+    "(": v=>v.replace(/\)/g,'\\)'),
+    "{": v=>v.replace(/}/g,'\\}')
 };
 
 module.exports={

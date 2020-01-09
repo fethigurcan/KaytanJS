@@ -240,6 +240,8 @@ function parseTemplate(i,isABlock){
                 buffer+=this.template[i];
         }
     }
+    if (retVal.length>0 && typeof(retVal[retVal.length-1])=="string")
+        retVal[retVal.length-1]=new KaytanStringToken(this,retVal[retVal.length-1]);
     if (buffer)
         throw new KaytanBugError('Buffer is not emptied!',i,this.template);
     if (isABlock && !blockEnded)
