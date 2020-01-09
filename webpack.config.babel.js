@@ -1,29 +1,27 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = [
- {
-    entry: './src',
+  {
+    entry: './babelsrc',
     mode:'production',
     target: 'web',
     optimization: {
-      minimize: true
+      minimize: false
     },    
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'kaytan.js',
+      filename: 'kaytan-babel.js',
       library: 'Kaytan'
     }
   },
   {
-    entry: './src',
-    target: 'web',
+    entry: './babelsrc',
     mode:'development',
-    plugins: [new CleanWebpackPlugin()], //we need at last config (backward sequence)
+    target: 'web',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'kaytan-dev.js',
+      filename: 'kaytan-babel-dev.js',
       library: 'Kaytan'
     }
-  }
+ }
 ];
