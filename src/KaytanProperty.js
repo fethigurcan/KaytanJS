@@ -23,10 +23,10 @@ const _getValueOf=function(property,objectArray,parentIndex,parentLength){
     }else{ //search for all levels
         for (i=objectArray.length-1;i>-1;i--){
             _objectArray=objectArray[i][__property];
-            if (_objectArray){
-            if (i<objectArray.length-1 && (_objectArray==objectArray[i+1] || (Array.isArray(_objectArray) && _objectArray.indexOf(objectArray[i+1])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
-                _objectArray=null;
-            break;
+            if (_objectArray!=null){
+                if (i<objectArray.length-1 && (_objectArray==objectArray[i+1] || (Array.isArray(_objectArray) && _objectArray.indexOf(objectArray[i+1])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
+                    _objectArray=null;
+                break;
             }
         }
     }
@@ -34,7 +34,7 @@ const _getValueOf=function(property,objectArray,parentIndex,parentLength){
     if (_childIndex<0)
         return _objectArray;
     else
-        if (_objectArray && typeof(_objectArray)=='object')
+        if (_objectArray!=null && typeof(_objectArray)=='object')
             return _getValueOf(_property.substring(_childIndex),[...objectArray,_objectArray]);
         else
             throw new KaytanRuntimeError('object expected '+__property);
