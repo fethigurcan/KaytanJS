@@ -23,7 +23,7 @@
         "( Escape":                 ["SELECT * FROM ({{(TableName}})",{ "TableName":"Employees (aka) Friends" },"SELECT * FROM (Employees (aka\\) Friends)"],
         "String at Start and End":  ["Hello {{where}}!",{ "where":"World" },"Hello World!"]
     },
-    "If Block":{
+    "If Block (Basic)":{
         "Undefined Data":           ["t{{?a}}a{{/}}m",null,"tm"],
         "Empty Data":               [-1,{},"tm"],
         "Empty Array":              [-1,[],"tm"],
@@ -38,7 +38,7 @@
         "False With Empty String":  [-1,{ "a":"" },"tm"],
         "False With Empty Array":   [-1,{ "a":[] },"tm"]
     },
-    "If Else Block":{
+    "If Else Block (Basic)":{
         "Undefined Data":           ["{{?a}}true{{:}}false{{/}}",null,"false"],
         "Empty Data":               [-1,{},"false"],
         "Empty Array":              [-1,[],"false"],
@@ -52,6 +52,36 @@
         "False With null":          [-1,{ "a":null },"false"],
         "False With Empty String":  [-1,{ "a":"" },"false"],
         "False With Empty Array":   [-1,{ "a":[] },"false"]
+    },
+    "NotIf Block (Basic)":{
+        "Undefined Data":           ["t{{^a}}a{{/}}m",null,"tam"],
+        "Empty Data":               [-1,{},"tam"],
+        "Empty Array":              [-1,[],"tam"],
+        "String Object":            [-1,"fethi","tam"],
+        "False":                    [-1,{ "a":true },"tm"],
+        "False With String":        [-1,{ "a":"fethi" },"tm"],
+        "False With Number":        [-1,{ "a":1 },"tm"],
+        "False With 0":             [-1,{ "a":0 },"tm"],
+        "False With Any Object":    [-1,{ "a":{} },"tm"],
+        "True":                     [-1,{ "a":false },"tam"],
+        "True With null":           [-1,{ "a":null },"tam"],
+        "True With Empty String":   [-1,{ "a":"" },"tam"],
+        "True With Empty Array":    [-1,{ "a":[] },"tam"]
+    },
+    "NotIf Else Block (Basic)":{
+        "Undefined Data":           ["{{^a}}true{{:}}false{{/}}",null,"true"],
+        "Empty Data":               [-1,{},"true"],
+        "Empty Array":              [-1,[],"true"],
+        "String Object":            [-1,"fethi","true"],
+        "False":                    [-1,{ "a":true },"false"],
+        "False With String":        [-1,{ "a":"fethi" },"false"],
+        "False With Number":        [-1,{ "a":1 },"false"],
+        "False With 0":             [-1,{ "a":0 },"false"],
+        "False With Any Object":    [-1,{ "a":{} },"false"],
+        "True":                     [-1,{ "a":false },"true"],
+        "True With null":           [-1,{ "a":null },"true"],
+        "True With Empty String":   [-1,{ "a":"" },"true"],
+        "True With Empty Array":    [-1,{ "a":[] },"true"]
     }
 
 }
