@@ -22,26 +22,26 @@ class KaytanForStatement extends KaytanStatement{
         return "{{#"+this.for.toString()+"}}"+this.loop.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
-    toJavascriptCode(){
+    toJavascriptCode(indentation){
+        let ind=indentation?"   ".repeat(indentation):"";
         let _for=this.for.toJavascriptCode();
-        let retVal=`
-        let ${_for}=getItem("${_for}");
-        if (Array.isArray(${_for})){
-            for(let i=0;i<c.length;i++){
-                let c=${_for}[i];
-                ${this.loop.toJavascriptCode()}
-            }
-        }else if (${_for}){
-            let c=${_for};
-            ${this.loop.toJavascriptCode()}
-        }`;
+        let retVal=`${ind}let ${_for}=getItem("${_for}");
+${ind}if (Array.isArray(${_for})){
+${ind}   for(let i=0;i<c.length;i++){
+${ind}   let c=${_for}[i];
+${this.loop.toJavascriptCode(indentation+1)}
+${ind}}
+${ind}}else if (${_for}){
+${ind}   let c=${_for};
+${this.loop.toJavascriptCode(indentation+1)}
+${ind}}`;
         if (this.else)
-            retVal+=`else{
-                ${this.else.toJavascriptCode()}
-            }`;
+            retVal+=`${ind}else{
+${this.else.toJavascriptCode(indentation+1)}
+${ind}}`;
         else
             retVal=`
-            `;
+`;
         return retVal;
     }
 

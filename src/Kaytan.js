@@ -51,10 +51,9 @@ class Kaytan{
 
         if (options && options.optimized){
             let fn=`let fn=function(objectArray){
-                var retVal='';
-                ${ast.toJavascriptCode()}
-                return retVal;
-            };fn;`;
+   var retVal='';
+${ast.toJavascriptCode(1)}   return retVal;
+};fn;`;
             let getItem=Helper.getItem; //used inside fn, keep reference
             let _escape=Helper.escape; //used inside fn, keep reference
             fn=eval(fn);            

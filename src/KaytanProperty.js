@@ -57,9 +57,7 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     toJavascriptGetValueCode(){
-        return `
-            let ${this.name}=getItem("${this.name}",objectArray);
-        `;
+        return `let ${this.name}=getItem("${this.name}",objectArray);`;
     }
 }
 

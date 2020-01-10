@@ -1,6 +1,6 @@
 Kaytan=require('.');
 
-dd=new Kaytan("t{{?a}}a{{/}}m",{ optimized:true });
+dd=new Kaytan("t{{?a}}a{{a}}{{/}}m",{ optimized:true });
 console.log(dd);
 //dd.execute({ deneme: 'fethi' });
 

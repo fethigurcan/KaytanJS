@@ -14,10 +14,10 @@ class KaytanStringToken extends KaytanToken{
         return this.value;
     }
 
-    toJavascriptCode(){
-        let retVal=`
-        retVal+="${Helper.escape["\\"](this.value)}";
-        `;
+    toJavascriptCode(indentation){
+        let ind=indentation?"   ".repeat(indentation):"";
+        let retVal=`${ind}retVal+="${Helper.escape["\\"](this.value)}";
+`;
         return retVal;
     }    
 

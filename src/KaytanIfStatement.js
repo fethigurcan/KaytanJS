@@ -22,19 +22,17 @@ class KaytanIfStatement extends KaytanStatement{
         return "{{?"+this.if.toString()+"}}"+this.then.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
-    toJavascriptCode(){
-        let retVal=`
-        ${this.if.toJavascriptGetValueCode()}
-        if (${this.if.toJavascriptCode()}!=null){
-            ${this.then.toJavascriptCode()}
-        }`;
+    toJavascriptCode(indentation){
+        let ind=indentation?"   ".repeat(indentation):"";
+        let retVal=`${ind}${this.if.toJavascriptGetValueCode()}
+${ind}if (${this.if.toJavascriptCode()}!=null){
+${this.then.toJavascriptCode(indentation+1)}${ind}}`;
         if (this.else)
-            retVal+=`else{
-                ${this.else.toJavascriptCode()}
-            }`;
+            retVal+=`${ind}else{
+${this.else.toJavascriptCode(indentation+1)}${ind}}`;
         else
             retVal+=`
-            `;
+`;
         return retVal;
     }
 

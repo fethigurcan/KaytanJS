@@ -17,14 +17,14 @@ class KaytanPropertyValue extends KaytanToken{
         return "{{"+(this.escape?this.escape:"")+this.property.name+"}}";
     }
 
-    toJavascriptCode(){
+    toJavascriptCode(indentation){
+        let ind=indentation?"   ".repeat(indentation):"";
         let prop=this.property.toJavascriptCode();
-        let retVal=`
-        ${this.property.toJavascriptGetValueCode()}
-        if (${prop}!=null){
-            retVal+=_escape[${this.escape?`"${_escape["\\"](this.escape)}"`:undefined}](${prop}.toString());
-        }
-        `;
+        let retVal=`${ind}${this.property.toJavascriptGetValueCode()}
+${ind}if (${prop}!=null){
+${ind}   retVal+=_escape[${this.escape?`"${_escape["\\"](this.escape)}"`:undefined}](${prop}.toString());
+${ind}}
+`;
         return retVal;
     }
 

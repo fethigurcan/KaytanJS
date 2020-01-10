@@ -37,13 +37,14 @@ class KaytanTokenList extends KaytanToken{
         return s;
     }
 
-    toJavascriptCode(){
-        let s=`{
-            `;
+    toJavascriptCode(indentation){
+        let ind=indentation?"   ".repeat(indentation):"";
+        let s=`${ind}{
+`;
         for(let token of this) 
-            s+=token.toJavascriptCode();
-        s+=`}
-        `;
+            s+=token.toJavascriptCode(indentation+1);
+        s+=`${ind}}
+`;
         return s;
     }     
 
