@@ -5,15 +5,22 @@ Mustache like Template Engine with some logic extensions. Mustache templates als
    - npm install
    - npm run build
    - npm run test
-   
-## Very Basic Usage Sample (Nodejs)
+
+## Simple Test Server
+   - npm run test-server
+
+## Run Tests
+   - npm run test
+   - npm run test-web (it is broken for now)
+
+## Basic Usage Sample (Nodejs)
 ```javascript
 require("KaytanJS")
 var kaytan=new Kaytan("{{?a&b}}{{b}}{{:}}false{{/}}");
 console.log(kaytan.execute({ "a":true, "b":"Test" }));
 ```
 
-## Very Basic Usage Sample (Browser)
+## Basic Usage Sample (Browser)
 ```html
 <!DOCTYPE html>
 <html>

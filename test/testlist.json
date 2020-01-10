@@ -4,7 +4,8 @@
         "Empty Data":               [-1,{},-1],
         "Some Data":                [-1,{ "a": true, "b": false },-1],
         "Empty Array":              [-1,[],-1],
-        "Undefined Template":       [null,null,-1]
+        "Undefined Template":       [null,null,-1],
+        "Raw Text":                 ["Hello World!",{},"Hello World!"]
     },
     "Simple Value":{
         "Undefined Data":           ["{{MyName}}",null,""],
