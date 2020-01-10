@@ -1,5 +1,6 @@
 const KaytanLogicToken=require('./KaytanLogicToken');
 const KaytanExpression=require('./KaytanExpression');
+const Helper=require('./Helper');
 
 class KaytanOperator extends KaytanExpression{
     constructor(engine,left,operator,right){        
@@ -18,7 +19,16 @@ class KaytanOperator extends KaytanExpression{
     }
     
     toString(){
-        return "("+this.left.toString()+")"+this.operator+"("+this.right.toString()+")";
+        let left=this.left.toString();
+        let right=this.right.toString();
+
+        if (Helper.checkRegexForExpressionToString.test(left))
+            left="("+left+")";
+
+        if (Helper.checkRegexForExpressionToString.test(right))
+            right="("+right+")";
+
+        return left+this.operator+right;
     }
 }
 

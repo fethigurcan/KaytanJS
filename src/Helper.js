@@ -4,6 +4,7 @@ const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
 const commandPrefixToken=/^[[({'"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
 const partialsHolder="$partials";
+const checkRegexForExpressionToString=/[&|]/;
 
 const escape={
     undefined: v=>v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;"),
@@ -23,5 +24,6 @@ module.exports={
     commandPrefixToken:commandPrefixToken,
     logicCommandPrefixToken:logicCommandPrefixToken,
     escape:escape,
-    partialsHolder:partialsHolder
+    partialsHolder:partialsHolder,
+    checkRegexForExpressionToString:checkRegexForExpressionToString
 };
