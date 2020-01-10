@@ -2,7 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var testlist = JSON.parse(fs.readFileSync(path.resolve("test/testlist.json")));
 
-beforeEach(async () => {
+beforeAll(async () => {
     await page.goto(PATH, { waitUntil: 'load' })
 });
 
