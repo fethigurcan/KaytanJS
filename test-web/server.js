@@ -138,6 +138,7 @@ const app = express()
             function userchange(){
               document.getElementById('list').value="";
               document.getElementById('expectedlabel').style.color=null;
+              document.getElementById('output').innerText="";
               let expectedel=document.getElementById('expected');
               expectedel.innerText="";
               expectedel.parentElement.parentElement.parentElement.style.display="none";
