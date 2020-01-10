@@ -6,5 +6,5 @@ module.exports={
   //testMatch: [
   //  "**/test/**/*.test.js"
   //]
-  testRegex:"\\test\\\\.+\.test\.js$"
+  testRegex:process.platform === "win32"?"\\test\\\\.+\.test\.js$":"/test/.+\.test\.js$"
 };
