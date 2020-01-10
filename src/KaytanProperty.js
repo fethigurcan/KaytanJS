@@ -55,6 +55,12 @@ class KaytanProperty extends KaytanLogicToken{
     execute(objectArray,parentIndex,parentLength){
         return _getValueOf(this.name,objectArray,parentIndex,parentLength); 
     }
+
+    toJavascriptGetValueCode(){
+        return `
+            let ${this.name}=getItem("${this.name}",objectArray);
+        `;
+    }
 }
 
 module.exports=KaytanProperty;

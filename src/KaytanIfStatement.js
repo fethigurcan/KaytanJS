@@ -22,6 +22,22 @@ class KaytanIfStatement extends KaytanStatement{
         return "{{?"+this.if.toString()+"}}"+this.then.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
+    toJavascriptCode(){
+        let retVal=`
+        ${this.if.toJavascriptGetValueCode()}
+        if (${this.if.toJavascriptCode()}!=null){
+            ${this.then.toJavascriptCode()}
+        }`;
+        if (this.else)
+            retVal+=`else{
+                ${this.else.toJavascriptCode()}
+            }`;
+        else
+            retVal+=`
+            `;
+        return retVal;
+    }
+
     execute(objectArray,parentIndex,parentLength){
         if (this.if.executeLogic(objectArray,parentIndex,parentLength))
             return this.then.execute(objectArray,parentIndex,parentLength);

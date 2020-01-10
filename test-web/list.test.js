@@ -2,6 +2,11 @@ var fs = require("fs");
 var path = require("path");
 var testlist = JSON.parse(fs.readFileSync(path.resolve("test/testlist.json")));
 
+var options;
+if (__OPTIMIZED__=="YES"){
+    options={ optimized:true };
+}
+
 beforeAll(async () => {
     await page.goto(PATH, { waitUntil: 'load' })
 });
@@ -24,7 +29,7 @@ for (let block in testlist){
             lastexpectedResult=expectedResult;
 
             test(title, async () => {
-                const result = await page.evaluate((template,obj) => (new Kaytan(template)).execute(obj) ,template,obj);
+                const result = await page.evaluate((template,obj,options) => (new Kaytan(template,options)).execute(obj) ,template,obj,options);
                 expect(result).toEqual(expectedResult);
             });
 

@@ -1,9 +1,9 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{?a}}true{{:}}false{{/}}");
+dd=new Kaytan("t{{?a}}a{{/}}m",{ optimized:true });
 console.log(dd);
 //dd.execute({ deneme: 'fethi' });
 
 console.log(dd.ast.toString());
-console.log(dd.execute({ "a":0 }));
+console.log(dd.execute({ "a":true }));
 console.log('end');

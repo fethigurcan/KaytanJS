@@ -1,5 +1,5 @@
 const KaytanToken=require('./KaytanToken');
-
+const Helper=require('./Helper');
 class KaytanStringToken extends KaytanToken{
     constructor(engine,value){
         if (!(typeof(value)=="string"))
@@ -13,6 +13,13 @@ class KaytanStringToken extends KaytanToken{
     toString(){
         return this.value;
     }
+
+    toJavascriptCode(){
+        let retVal=`
+        retVal+="${Helper.escape["\\"](this.value)}";
+        `;
+        return retVal;
+    }    
 
     execute(objectArray){
         return this.value;

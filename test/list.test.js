@@ -3,6 +3,11 @@ var fs = require("fs");
 var path = require("path");
 var testlist = JSON.parse(fs.readFileSync(path.resolve("test/testlist.json")));
 
+var options;
+if (__OPTIMIZED__=="YES"){
+    options={ optimized:true };
+}
+
 
 for (let block in testlist){
     let blockItem=testlist[block];
@@ -22,7 +27,7 @@ for (let block in testlist){
             lastexpectedResult=expectedResult;
 
             test(title, () => {
-                expect((new Kaytan(template)).execute(obj)).toBe(expectedResult);
+                expect((new Kaytan(template,options)).execute(obj)).toBe(expectedResult);
             });
         }
     });

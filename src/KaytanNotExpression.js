@@ -24,6 +24,10 @@ class KaytanNotExpression extends KaytanExpression{
         return !this.expression.executeLogic(objectArray,parentIndex,parentLength);
     }
 
+    toJavascriptGetValueCode(){
+        return this.expression.toJavascriptGetValueCode();
+    }
+
 }
 
 module.exports=KaytanNotExpression;

@@ -30,6 +30,13 @@ class KaytanOperator extends KaytanExpression{
 
         return left+this.operator+right;
     }
+
+    toJavascriptGetValueCode(){
+        let l=this.left.toJavascriptGetValueCode();
+        let r=this.right.toJavascriptGetValueCode();
+        return l+r;
+    }
+
 }
 
 module.exports=KaytanOperator;

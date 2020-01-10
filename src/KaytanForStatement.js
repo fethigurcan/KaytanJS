@@ -22,6 +22,29 @@ class KaytanForStatement extends KaytanStatement{
         return "{{#"+this.for.toString()+"}}"+this.loop.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
+    toJavascriptCode(){
+        let _for=this.for.toJavascriptCode();
+        let retVal=`
+        let ${_for}=getItem("${_for}");
+        if (Array.isArray(${_for})){
+            for(let i=0;i<c.length;i++){
+                let c=${_for}[i];
+                ${this.loop.toJavascriptCode()}
+            }
+        }else if (${_for}){
+            let c=${_for};
+            ${this.loop.toJavascriptCode()}
+        }`;
+        if (this.else)
+            retVal+=`else{
+                ${this.else.toJavascriptCode()}
+            }`;
+        else
+            retVal=`
+            `;
+        return retVal;
+    }
+
     execute(objectArray,parentIndex,parentLength){
         let obj=this.for.execute(objectArray,parentIndex,parentLength);
 
