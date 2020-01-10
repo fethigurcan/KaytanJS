@@ -39,7 +39,16 @@ const app = express()
               <button id="execute" onclick="document.getElementById('output').innerText=(new Kaytan(document.getElementById('template').value)).execute(JSON.parse(document.getElementById('data').value))">Execute</button>
             </td></tr>
             </table>
-            <div id="root"></div>
+          <script src="/dist/${req.params.jslibrary}.js"></script>
+        </body>
+      </html>`
+    );
+  })  
+  .get("/simple/:jslibrary",(req, res) => {
+    res.send(
+      `<!DOCTYPE html>
+      <html>
+        <body>
           <script src="/dist/${req.params.jslibrary}.js"></script>
         </body>
       </html>`
