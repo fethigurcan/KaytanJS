@@ -56,42 +56,22 @@ const getScopeInfo=function(property,scopeInfo){
     };
 }
 
-const getItem=function(property,objectArray,parentIndex,parentLength,index,exactLevel){
+const getItem=function(property,objectArray,index,exactLevel){
     if (property=='.')
         return objectArray[objectArray.length-1];
 
-    let i=objectArray.length;
-    let _property=property;
-    while(_property[0]=='.'){
-        i--;
-        if (i<1)
-            throw new KaytanRuntimeError('object tree mismatch for property '+property);
-        _property=_property.substring(1);
-    }
-    let retVal;
-    let _childIndex=_property.indexOf('.');
-    let __property=_childIndex<0?_property:_property.substring(0,_childIndex);
+    let childIndex=property.indexOf('.');
+    let _property=childIndex<0?property:property.substring(0,childIndex);
 
-    if (i<objectArray.length){ //exact level
-        retVal=objectArray[i][__property];
-    }else{ //search for all levels
-        for (i=objectArray.length-1;i>-1;i--){
-            retVal=objectArray[i][__property];
-            if (retVal!=null){
-                if (i<objectArray.length-1 && (retVal==objectArray[i+1] || (Array.isArray(retVal) && retVal.indexOf(objectArray[i+1])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
-                    retVal=null;
-                break;
-            }
-        }
-    }
+    let retVal=getItemSimple(_property,objectArray,index,exactLevel);
 
-    if (_childIndex<0)
+    if (childIndex<0)
         return retVal;
     else
         if (retVal!=null && typeof(retVal)=='object')
-            return getItem(_property.substring(_childIndex),[...objectArray,retVal]);
+            return getItem(property.substring(childIndex),[...objectArray,retVal]);
         else
-            throw new KaytanRuntimeError('object expected '+__property);
+            throw new KaytanRuntimeError('object expected '+property);
 };
 
 const getItemSimple=function(property,objectArray,index,exactLevel){
