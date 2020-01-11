@@ -24,8 +24,10 @@ class KaytanIfStatement extends KaytanStatement{
 
     toJavascriptCode(ind){
         let nind=ind+"   ";
-        let retVal=`${this.if.toJavascriptGetValueCode(ind)}
-${ind}if (${this.if.toJavascriptCode(null)}!=null){
+        let valueCode=this.if.toJavascriptGetValueCode(ind);
+        let retVal=`${valueCode
+            ?valueCode+`
+`:""}${ind}if (${this.if.toJavascriptCode(null)}!=null){
 ${this.then.toJavascriptCode(nind)}${ind}}`;
         if (this.else)
             retVal+=`${ind}else{

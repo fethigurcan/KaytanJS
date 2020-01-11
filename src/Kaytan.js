@@ -50,11 +50,12 @@ class Kaytan{
         ast=ast.length==1?ast[0]:new KaytanTokenList(this,ast);
 
         if (options && options.optimized){
-            let fn=`let fn=function($o$){
-   var $retVal$='';
+            let fn=`let $fn$=function($o$){
+   let $retVal$='',$global$={},$i$=0,$l$=1;
 ${ast.toJavascriptCode("   ",[{ defined:[] }])}   return $retVal$;
-};fn;`;
+};$fn$;`;
             let getItemSimple=Helper.getItemSimple; //used inside fn, keep reference
+            let systemFn=Helper.systemFn; //used inside fn, keep reference
             let _escape=Helper.escape; //used inside fn, keep reference
             fn=eval(fn);            
             Object.defineProperties(this,{

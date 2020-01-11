@@ -20,6 +20,14 @@ const escape={
     "{": v=>v.replace(/}/g,'\\}')
 };
 
+const systemFn={
+    first:(i,l)=>i===0?true:null,
+    last:(i,l)=>i==l-1?true:null,
+    intermediate:(i,l)=>i>0 && i<l-1?true:null,
+    odd:(i,l)=>i%2==1?true:null,
+    even:(i,l)=>i%2==0?true:null
+};
+
 const getScopeInfo=function(property,scopeInfo){
     if (property=='.')
         return scopeInfo[scopeInfo.length-1];
@@ -103,5 +111,6 @@ module.exports={
     checkRegexForExpressionToString:checkRegexForExpressionToString,
     getItem:getItem,
     getItemSimple:getItemSimple,
-    getScopeInfo:getScopeInfo
+    getScopeInfo:getScopeInfo,
+    systemFn:systemFn
 };

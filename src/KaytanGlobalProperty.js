@@ -2,7 +2,7 @@ const KaytanProperty=require('./KaytanProperty');
 
 class KaytanGlobalProperty extends KaytanProperty{
     constructor(engine,name){
-        super(engine,name);
+        super(engine,name,false);
     }
 
     execute(objectArray,parentIndex,parentLength){
@@ -10,6 +10,13 @@ class KaytanGlobalProperty extends KaytanProperty{
         return rootObject[this.name];
     }
 
+    toJavascriptGetValueCode(ind){
+        return "";
+    }
+
+    toJavascriptCode(ind){
+        return `$global$.${this.name}`;
+    }
 }
 
 module.exports=KaytanGlobalProperty;

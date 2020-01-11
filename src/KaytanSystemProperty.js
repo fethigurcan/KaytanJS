@@ -1,31 +1,37 @@
 const KaytanProperty=require('./KaytanProperty');
 const KaytanBugError=require('./KaytanBugError');
+const Helper=require('./Helper');
+
+
 
 class KaytanSystemProperty extends KaytanProperty{
     constructor(engine,name){
-        super(engine,name);
+        super(engine,name,false);
+        let fn=Helper.systemFn[this.name];
+        if (fn){
+          Object.defineProperties(this,{
+            fn:{ value:fn, writable:false }
+          });
+        }else
+          throw new KaytanBugError('Unknown system variable. '+this.name);
+
     }
 
     execute(objectArray,parentIndex,parentLength){
-        if (parentLength){ //system variable
-            let retVal;
-            if (this.name=="first")
-              retVal=parentIndex===0;
-            else if (this.name=="last")
-              retVal=parentIndex==parentLength-1;
-            else if (this.name=="intermediate")
-              retVal=parentIndex>0 && parentIndex<parentLength-1;
-            else if (this.name=="odd")
-              retVal=parentIndex%2==1;
-            else if (this.name=="even")
-              retVal=parentIndex%2==0;
-            else
-              throw new KaytanBugError('Unknown system variable. '+this.name);
-        
-            return retVal;
-        }
+      return this.fn(parentIndex,parentLength);
     }
 
+    toString(){
+      return "{{#"+this.name+"}}";
+    }
+
+    toJavascriptGetValueCode(ind){
+        return "";
+}
+
+    toJavascriptCode(ind){
+        return `systemFn["${this.name}"]($i$,$l$)`;
+    }
 }
 
 module.exports=KaytanSystemProperty;

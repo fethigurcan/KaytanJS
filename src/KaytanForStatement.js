@@ -26,18 +26,17 @@ class KaytanForStatement extends KaytanStatement{
         let nind=ind+"   ";
         let _for=this.for.toJavascriptCode(null);
         let retVal=`${this.for.toJavascriptGetValueCode(ind)}
-${ind}if (Array.isArray(${_for})){
-${ind}   for(let i=0;i<c.length;i++){
-${ind}   let c=${_for}[i];
-${this.loop.toJavascriptCode(nind)}${ind}}
-${ind}}else if (${_for}){
-${ind}   let c=${_for};
-${this.loop.toJavascriptCode(nind)}${ind}}`;
+${ind}if (Array.isArray(${_for}) || (${_for} && (${_for}=[${_for}]))){
+${ind}   let $l$=${_for}.length;
+${ind}   for(let $i$=0;$i$<$l$;$i$++){
+${ind}      let $item$=${_for}[$i$];
+${this.loop.toJavascriptCode(nind+"   ")}${ind}   }
+${ind}}`;
         if (this.else)
             retVal+=`${ind}else{
 ${this.else.toJavascriptCode(nind)}${ind}}`;
         else
-            retVal=`
+            retVal+=`
 `;
         return retVal;
     }

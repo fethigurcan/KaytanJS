@@ -171,7 +171,7 @@ function parseTemplate(scopeInfo,i,isABlock){
                         command=command.substring(1).trim();
                         if (command){
                             let block={ 
-                                for:parseProperty.call(this,command,scopeInfo,i,null),
+                                for:parseProperty.call(this,command,i,scopeInfo,null),
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };

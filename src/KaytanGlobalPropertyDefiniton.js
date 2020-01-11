@@ -18,6 +18,10 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
         return '';
     }
 
+    toJavascriptCode(ind){
+        return `${ind}$global$.${this.name}=true;
+`;
+    }
 }
 
 module.exports=KaytanGlobalPropertyDefinition;
