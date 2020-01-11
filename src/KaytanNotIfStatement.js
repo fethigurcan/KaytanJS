@@ -9,16 +9,14 @@ class KaytanNotIfStatement extends KaytanIfStatement{
         return "{{^"+super.toString().substring(3);
     }
 
-    toJavascriptCode(indentation){
-        let ind=indentation?"   ".repeat(indentation):"";
-        let retVal=`${ind}${this.if.toJavascriptGetValueCode()}
-${ind}if (${this.if.toJavascriptCode()}==null){
-${ind}${this.then.toJavascriptCode(indentation+1)}
-${ind}}`;
+    toJavascriptCode(ind){
+        let nind=ind+"   ";
+        let retVal=`${this.if.toJavascriptGetValueCode(ind)}
+${ind}if (${this.if.toJavascriptCode(null)}==null){
+${this.then.toJavascriptCode(nind)}${ind}}`;
         if (this.else)
             retVal+=`${ind}else{
-${ind}${this.else.toJavascriptCode(indentation+1)}
-${ind}}`;
+${this.else.toJavascriptCode(nind)}${ind}}`;
         else
             retVal+=`
 `;

@@ -24,10 +24,17 @@ class KaytanNotExpression extends KaytanExpression{
         return !this.expression.executeLogic(objectArray,parentIndex,parentLength);
     }
 
-    toJavascriptGetValueCode(){
-        return this.expression.toJavascriptGetValueCode();
+    toJavascriptGetValueCode(ind){
+        return this.expression.toJavascriptGetValueCode(ind);
     }
 
+    toJavascriptCode(ind){
+        let expression=this.expression.toJavascriptCode(ind);
+        if (Helper.checkRegexForExpressionToString.test(expression))
+            expression="("+expression+")";
+
+        return "!"+expression;
+    }
 }
 
 module.exports=KaytanNotExpression;

@@ -19,11 +19,6 @@ class KaytanLogicToken extends KaytanToken{
         else
             return retVal!=null;*/
     }
-
-    toJavascriptCode(){
-        //toString() with few replaces for Logic tokens also compatible with javascript
-        return this.toString().replace(/\&/g,"&&").replace(/\|/,"||"); 
-    }
 }
 
 module.exports=KaytanLogicToken;

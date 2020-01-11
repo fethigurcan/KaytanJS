@@ -46,15 +46,15 @@ class Kaytan{
             template:{ value:template||'', writable:false, enumerable:true }
         });
         
-        let ast=parseTemplate.call(this).data;
+        let ast=parseTemplate.call(this,[{ defined:[] }]).data;
         ast=ast.length==1?ast[0]:new KaytanTokenList(this,ast);
 
         if (options && options.optimized){
-            let fn=`let fn=function(objectArray){
-   var retVal='';
-${ast.toJavascriptCode(1)}   return retVal;
+            let fn=`let fn=function($o$){
+   var $retVal$='';
+${ast.toJavascriptCode("   ",[{ defined:[] }])}   return $retVal$;
 };fn;`;
-            let getItem=Helper.getItem; //used inside fn, keep reference
+            let getItemSimple=Helper.getItemSimple; //used inside fn, keep reference
             let _escape=Helper.escape; //used inside fn, keep reference
             fn=eval(fn);            
             Object.defineProperties(this,{

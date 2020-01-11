@@ -31,10 +31,24 @@ class KaytanOperator extends KaytanExpression{
         return left+this.operator+right;
     }
 
-    toJavascriptGetValueCode(){
-        let l=this.left.toJavascriptGetValueCode();
-        let r=this.right.toJavascriptGetValueCode();
-        return l+r;
+    toJavascriptGetValueCode(ind){
+        let l=this.left.toJavascriptGetValueCode(ind);
+        let r=this.right.toJavascriptGetValueCode(ind);
+        return l+`
+`+r;
+    }
+
+    toJavascriptCode(ind){
+        let left=this.left.toJavascriptCode(ind);
+        let right=this.right.toJavascriptCode(ind);
+
+        if (Helper.checkRegexForExpressionToString.test(left))
+            left="("+left+")";
+
+        if (Helper.checkRegexForExpressionToString.test(right))
+            right="("+right+")";
+
+        return left+this.operator.repeat(2)+right;
     }
 
 }

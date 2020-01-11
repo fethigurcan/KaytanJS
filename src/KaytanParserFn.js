@@ -32,20 +32,20 @@ var KaytanForStatement=require('./KaytanForStatement');
 var Helpers=require('./Helper');
 
 //treat as member function of Kaytan
-function parseProperty(propertyName,errorIndex){
+function parseProperty(propertyName,errorIndex,scopeInfo){
     if (Helpers.commandNameRegex.test(propertyName)){
         if (propertyName[0]=='$')
             return new KaytanGlobalProperty(this,propertyName.substring(1));
         else if (propertyName[0]=='#')
             return new KaytanSystemProperty(this,propertyName.substring(1));
         else
-            return new KaytanProperty(this,propertyName);
+            return new KaytanProperty(this,propertyName,scopeInfo);
     }else
         throw new KaytanSyntaxError('Invalid property:'+propertyName,errorIndex,this.template);
 }
 
 //treat as member function of Kaytan
-function parseExpression(expression,templateIndex,i,level,stopAtLevel){
+function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel){
     let retVal=[];
     let buffer='';
     level=level||0;
@@ -55,14 +55,14 @@ function parseExpression(expression,templateIndex,i,level,stopAtLevel){
                 i--;
                 break;
             }else{
-                let r=parseExpression.call(this,expression,templateIndex,i+1,level,stopAtLevel);
+                let r=parseExpression.call(this,expression,templateIndex,scopeInfo,i+1,level,stopAtLevel);
                 level=r.level;
                 if (buffer){
                     if (Helpers.commandNameRegex.test(buffer)){
                         if (expression[i]=='&')
-                            retVal.push(new KaytanAndOperator(this,parseProperty.call(this,buffer,templateIndex+i),r.data));
+                            retVal.push(new KaytanAndOperator(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
                         else
-                            retVal.push(new KaytanOrOperator(this,parseProperty.call(this,buffer,templateIndex+i),r.data));
+                            retVal.push(new KaytanOrOperator(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
                     }else
                     throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
                     buffer='';
@@ -79,13 +79,13 @@ function parseExpression(expression,templateIndex,i,level,stopAtLevel){
             if (buffer || retVal.length)
                 throw new KaytanSyntaxError('Invalid lefthand operand',templateIndex+i,this.template);
             else{
-                let r=parseExpression.call(this,expression,templateIndex,i+1,level,level);
+                let r=parseExpression.call(this,expression,templateIndex,scopeInfo,i+1,level,level);
                 retVal.push(new KaytanNotExpression(this,r.data));
                 level=r.level;
                 i=r.i;
             }
         }else if (expression[i]=='('){
-            let r=parseExpression.call(this,expression,templateIndex,i+1,level+1,stopAtLevel);
+            let r=parseExpression.call(this,expression,templateIndex,scopeInfo,i+1,level+1,stopAtLevel);
             if (r.level>level)
                 throw new KaytanSyntaxError('Missing )',templateIndex+i,this.template);
             level=r.level;       
@@ -104,7 +104,7 @@ function parseExpression(expression,templateIndex,i,level,stopAtLevel){
 
     if (buffer){
         if (Helpers.commandNameRegex.test(buffer))
-            retVal.push(parseProperty.call(this,buffer,templateIndex+i));
+            retVal.push(parseProperty.call(this,buffer,templateIndex+i,scopeInfo));
         else
             throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
     }
@@ -115,7 +115,7 @@ function parseExpression(expression,templateIndex,i,level,stopAtLevel){
 };
 
 //treat as member function of Kaytan
-function parseTemplate(i,isABlock){
+function parseTemplate(scopeInfo,i,isABlock){
     let retVal=[];
     let j=0;
     let buffer;
@@ -150,11 +150,11 @@ function parseTemplate(i,isABlock){
                         throw new KaytanSyntaxError('Unexpected /',i,this.template);
                     }else if (Helpers.logicCommandPrefixToken.test(command[0])){
                         let a={};
-                        let r=parseTemplate.call(this,i+1,true);
+                        let r=parseTemplate.call(this,scopeInfo,i+1,true);
                         let command1=command.substring(1).trim();
                         if (command1){
                             let block={ 
-                                if:parseExpression.call(this,command1,i-command.length).data,
+                                if:parseExpression.call(this,command1,i-command.length,scopeInfo).data,
                                 then:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
@@ -167,11 +167,11 @@ function parseTemplate(i,isABlock){
                             throw new KaytanSyntaxError('Empty expression',i,this.template);
                     }else if (command[0]=='#'){
                         let a={};
-                        let r=parseTemplate.call(this,i+1,true);
+                        let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],i+1,true);
                         command=command.substring(1).trim();
                         if (command){
                             let block={ 
-                                for:parseProperty.call(this,command,i),
+                                for:parseProperty.call(this,command,scopeInfo,i,null),
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
@@ -184,7 +184,7 @@ function parseTemplate(i,isABlock){
                             throw new KaytanSyntaxError('Syntax error',i,this.template);
                         if (isABlock){
                             let a={};
-                            let r=parseTemplate.call(this,i+1,true);
+                            let r=parseTemplate.call(this,scopeInfo,i+1,true);
                             command=command.substring(1);
                             retVal.else=r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data);
                             blockEnded=true;
@@ -195,7 +195,7 @@ function parseTemplate(i,isABlock){
                         throw new KaytanSyntaxError('Unexpected :',i,this.template);
                     }else if (Helpers.commandPrefixToken.test(command[0])){
                         let command1=command.substring(1).trim();
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i),command[0]));
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i),scopeInfo,command[0]));
                     }else if (command[0]=='$' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleCommandNameRegex.test(command1)){
@@ -206,12 +206,12 @@ function parseTemplate(i,isABlock){
                         }else
                             throw new KaytanSyntaxError('Invalid global variable name:'+command,i,this.template);
                     }else if (command=='.'){ //DİKKAT: ilk karakter değil tümü=.
-                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this)));
+                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this),scopeInfo));
                     }else if (command[0]=='!'){ 
                         //ignore comments
                     }else if (command[0]=='<'){
                         let a={};
-                        let r=parseTemplate.call(this,i+1,true);
+                        let r=parseTemplate.call(this,scopeInfo,i+1,true);
                         command=command.substring(1).trim();
                         if (command){
                             if (Helpers.simpleCommandNameRegex.test(command)){
@@ -230,7 +230,7 @@ function parseTemplate(i,isABlock){
                         }else
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
                     }else{
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command,i)));
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command,i,scopeInfo),scopeInfo));
                     }
                     j=retVal.length;
                     buffer=null;
