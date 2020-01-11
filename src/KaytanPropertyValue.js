@@ -30,7 +30,7 @@ class KaytanPropertyValue extends KaytanToken{
         let prop=this.property.toJavascriptCode(null);
         let retVal="";
         if (!this.allreadyDefined){
-            let retVal=`${this.property.toJavascriptGetValueCode(ind)}
+            retVal=`${this.property.toJavascriptGetValueCode(ind)}
 `;
         }
         retVal+=`${ind}if (${this.property.access}!=null){

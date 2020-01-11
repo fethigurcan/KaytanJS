@@ -195,7 +195,7 @@ function parseTemplate(scopeInfo,i,isABlock){
                         throw new KaytanSyntaxError('Unexpected :',i,this.template);
                     }else if (Helpers.commandPrefixToken.test(command[0])){
                         let command1=command.substring(1).trim();
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i),scopeInfo,command[0]));
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,command[0]));
                     }else if (command[0]=='$' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleCommandNameRegex.test(command1)){

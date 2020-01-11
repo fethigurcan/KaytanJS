@@ -97,7 +97,7 @@ const getItem=function(property,objectArray,parentIndex,parentLength,index,exact
 const getItemSimple=function(property,objectArray,index,exactLevel){
     if (property=='.')
         return objectArray[objectArray.length-1];
-
+    let retVal;
     if (exactLevel){ //exact level
         retVal=objectArray[index][property];
     }else{ //search for all levels

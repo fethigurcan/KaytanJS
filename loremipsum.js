@@ -1,9 +1,9 @@
 Kaytan=require('.');
 
-dd=new Kaytan("t{{?a.c&.b|!(c&d)}}a{{.a.b}}{{/}}m{{a}}{{#d}}{{/}}",{ optimized:true });
+dd=new Kaytan("SELECT * FROM ({{(TableName}})",{ optimized:true });
 console.log(dd);
 //dd.execute({ deneme: 'fethi' });
 
 console.log(dd.ast.toString());
-console.log(dd.execute({ "a":"a" }));
+console.log(dd.execute({ "TableName":"Employees (aka) Friends" }));
 console.log('end');
