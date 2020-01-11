@@ -44,10 +44,10 @@ class KaytanTokenList extends KaytanToken{
         return s;
     }     
 
-    execute(objectArray,parentIndex,parentLength){
+    execute(global,objectArray,parentIndex,parentLength){
         let s='';
         for(let token of this) 
-            s+=token.execute(objectArray,parentIndex,parentLength);
+            s+=token.execute(global,objectArray,parentIndex,parentLength);
         return s;
     }
 }

@@ -7,11 +7,13 @@ class KaytanPropertyValue extends KaytanToken{
         if (!(property instanceof KaytanProperty))
             throw new TypeError('property must be a KaytanProperty'); 
 
-        let si=scopeInfo[property.index-1];
         let allreadyDefined=true;
-        if (si.defined.indexOf(property.name)<0){
-            si.defined.push(property.name);
-            allreadyDefined=false;
+        if (property.name!="."){
+            let si=scopeInfo[property.index];
+            if (si.defined.indexOf(property.name)<0){
+                si.defined.push(property.name);
+                allreadyDefined=false;
+            }
         }
 
         super(engine);
@@ -27,7 +29,6 @@ class KaytanPropertyValue extends KaytanToken{
     }
 
     toJavascriptCode(ind){
-        let prop=this.property.toJavascriptCode(null);
         let retVal="";
         if (!this.allreadyDefined){
             retVal=`${this.property.toJavascriptGetValueCode(ind)}
@@ -40,8 +41,8 @@ ${ind}}
         return retVal;
     }
 
-    execute(objectArray,parentIndex,parentLength){
-        let obj=this.property.execute(objectArray,parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength){
+        let obj=this.property.execute(global,objectArray,parentIndex,parentLength);
         if (obj!=null)
             return Helper.escape[this.escape](obj.toString());
         else

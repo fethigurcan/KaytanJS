@@ -24,25 +24,25 @@ class KaytanIfStatement extends KaytanStatement{
 
     toJavascriptCode(ind){
         let nind=ind+"   ";
-        let valueCode=this.if.toJavascriptGetValueCode(ind);
-        let retVal=`${valueCode
-            ?valueCode+`
-`:""}${ind}if (${this.if.toJavascriptCode(null)}!=null){
-${this.then.toJavascriptCode(nind)}${ind}}`;
+        let retVal=`${ind}{
+${this.if.toJavascriptGetValueCode(nind)}
+${nind}if (${this.if.toJavascriptCode(null)}!=null){
+${this.then.toJavascriptCode(nind+"   ")}${nind}}`;
         if (this.else)
-            retVal+=`${ind}else{
-${this.else.toJavascriptCode(nind)}${ind}}`;
+            retVal+=`${nind}else{
+${this.else.toJavascriptCode(nind+"   ")}${nind}}
+${ind}}`;
         else
-            retVal+=`
+            retVal+=`${ind}}
 `;
         return retVal;
     }
 
-    execute(objectArray,parentIndex,parentLength){
-        if (this.if.executeLogic(objectArray,parentIndex,parentLength))
-            return this.then.execute(objectArray,parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength){
+        if (this.if.executeLogic(global,objectArray,parentIndex,parentLength))
+            return this.then.execute(global,objectArray,parentIndex,parentLength);
         else if (this.else)
-            return this.else.execute(objectArray,parentIndex,parentLength);
+            return this.else.execute(global,objectArray,parentIndex,parentLength);
         else
             return '';
     }

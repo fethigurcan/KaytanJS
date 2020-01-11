@@ -206,7 +206,7 @@ function parseTemplate(scopeInfo,i,isABlock){
                         }else
                             throw new KaytanSyntaxError('Invalid global variable name:'+command,i,this.template);
                     }else if (command=='.'){ //DİKKAT: ilk karakter değil tümü=.
-                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this),scopeInfo));
+                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
                     }else if (command[0]=='!'){ 
                         //ignore comments
                     }else if (command[0]=='<'){

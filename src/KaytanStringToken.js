@@ -20,7 +20,7 @@ class KaytanStringToken extends KaytanToken{
         return retVal;
     }    
 
-    execute(objectArray){
+    execute(global,objectArray){
         return this.value;
     }
 

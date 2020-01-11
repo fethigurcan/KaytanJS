@@ -25,24 +25,33 @@ class KaytanForStatement extends KaytanStatement{
     toJavascriptCode(ind){
         let nind=ind+"   ";
         let _for=this.for.toJavascriptCode(null);
-        let retVal=`${this.for.toJavascriptGetValueCode(ind)}
-${ind}if (Array.isArray(${_for}) || (${_for} && (${_for}=[${_for}]))){
-${ind}   let $l$=${_for}.length;
-${ind}   for(let $i$=0;$i$<$l$;$i$++){
-${ind}      let $item$=${_for}[$i$];
-${this.loop.toJavascriptCode(nind+"   ")}${ind}   }
-${ind}}`;
+        let no=this.engine.varcounter;
+        this.engine.varcounter++;
+        
+        let retVal=`${ind}{
+${this.for.toJavascriptGetValueCode(nind)}
+${nind}let $arr${no}$=${_for};
+${nind}let $tmpo${no}$=$o$;
+${nind}if (Array.isArray($arr${no}$) || ($arr${no}$ && ($arr${no}$=[$arr${no}$]))){
+${nind}   let $l$=$arr${no}$.length;
+${nind}   let $o$=[...$tmpo${no}$,null];
+${nind}   for(let $i$=0;$i$<$arr${no}$.length;$i$++){
+${nind}      let $item$=$arr${no}$[$i$];
+${nind}      $o$[$o$.length-1]=$item$;
+${this.loop.toJavascriptCode(nind+"      ")}${nind}   }
+${nind}}`;
         if (this.else)
-            retVal+=`${ind}else{
-${this.else.toJavascriptCode(nind)}${ind}}`;
+            retVal+=`else{
+${this.else.toJavascriptCode(nind+"      ")}${nind}}
+${ind}}`;
         else
-            retVal+=`
+            retVal+=`${ind}}
 `;
         return retVal;
     }
 
-    execute(objectArray,parentIndex,parentLength){
-        let obj=this.for.execute(objectArray,parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength){
+        let obj=this.for.execute(global,objectArray,parentIndex,parentLength);
 
         if (Array.isArray(obj) && obj.length){
             let childObjectArray=[...objectArray,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
@@ -50,13 +59,13 @@ ${this.else.toJavascriptCode(nind)}${ind}}`;
             let s="";
             for (let i=0;i<obj.length;i++){
                 childObjectArray[objectArray.length]=obj[i]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(childObjectArray,i,obj.length);
+                s+=this.loop.execute(global,childObjectArray,i,obj.length);
             }
             return s;
         }else if (obj)
-            return this.loop.execute([...objectArray,obj],0,1);
+            return this.loop.execute(global,[...objectArray,obj],0,1);
         else if (this.else)
-            return this.else.execute(objectArray,parentIndex,parentLength);
+            return this.else.execute(global,objectArray,parentIndex,parentLength);
         else
             return '';
     }

@@ -7,9 +7,9 @@ class KaytanLogicToken extends KaytanToken{
             throw new TypeError('Abstract class "KaytanLogicToken" cannot be instantiated directly.'); 
     }
 
-    executeLogic(objectArray,parentIndex,parentLength){
-        return this.execute(objectArray,parentIndex,parentLength)!=null;
-        /*let retVal=this.execute(objectArray,parentIndex,parentLength);
+    executeLogic(global,objectArray,parentIndex,parentLength){
+        return this.execute(global,objectArray,parentIndex,parentLength)!=null;
+        /*let retVal=this.execute(global,objectArray,parentIndex,parentLength);
         if (typeof(retVal)=="boolean")
             return retVal;
         else if (Array.isArray(retVal))

@@ -5,9 +5,8 @@ class KaytanGlobalProperty extends KaytanProperty{
         super(engine,name,false);
     }
 
-    execute(objectArray,parentIndex,parentLength){
-        let rootObject=objectArray[0];
-        return rootObject[this.name];
+    execute(global,objectArray,parentIndex,parentLength){
+        return global[this.name];
     }
 
     toJavascriptGetValueCode(ind){

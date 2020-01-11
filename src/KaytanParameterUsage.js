@@ -13,11 +13,10 @@ class KaytanParameterUsage extends KaytanToken{
         return "{{@"+this.name+"}}";
     }
 
-    execute(objectArray){
-        let rootObject=objectArray[0];
-        if (!rootObject[parameterUsageHolder]) 
-            rootObject[parameterUsageHolder]=[];
-        rootObject[parameterUsageHolder].push(this.name);
+    execute(global,objectArray){
+        if (!global[parameterUsageHolder]) 
+            global[parameterUsageHolder]=[];
+        global[parameterUsageHolder].push(this.name);
         return '';
     }
 }

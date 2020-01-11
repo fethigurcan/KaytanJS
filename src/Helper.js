@@ -89,10 +89,10 @@ const getItemSimple=function(property,objectArray,index,exactLevel){
     if (exactLevel){ //exact level
         retVal=objectArray[index][property];
     }else{ //search for all levels
-        for (let i=index;i>0;i--){
+        for (let i=index;i>-1;i--){
             retVal=objectArray[i][property];
             if (retVal!=null){
-                if (i<objectArray.length-1 && (retVal==objectArray[i+1] || (Array.isArray(retVal) && retVal.indexOf(objectArray[i+1])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
+                if (i<objectArray.length && (retVal==objectArray[i] || (Array.isArray(retVal) && retVal.indexOf(objectArray[i])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
                     retVal=null;
                 break;
             }

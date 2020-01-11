@@ -16,6 +16,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Optimized Test",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/optimized-test-code/forstatement.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Run Tests",
             "skipFiles": [
                 "<node_internals>/**"

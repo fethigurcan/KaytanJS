@@ -12,9 +12,8 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
         return "{{$"+this.name+"}}";
     }
 
-    execute(objectArray){
-        let rootObject=objectArray[0];
-        rootObject[this.name]=true;
+    execute(global,objectArray){
+        global[this.name]=true;
         return '';
     }
 

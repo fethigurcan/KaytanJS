@@ -16,11 +16,10 @@ class KaytanPartialDefinition extends KaytanToken{
         return "{{<"+this.name+"}}"+this.token.toString()+"{{/}}";
     }
 
-    execute(objectArray){
-        let rootObject=objectArray[0];
-        if (!rootObject[partialsHolder]) 
-            rootObject[partialsHolder]={};
-        rootObject[partialsHolder][this.name]=this.token;
+    execute(global,objectArray){
+        if (!global[partialsHolder]) 
+            global[partialsHolder]={};
+        global[partialsHolder][this.name]=this.token;
         return '';
     }
 }

@@ -5,13 +5,13 @@ const Helper=require('./Helper');
 class KaytanProperty extends KaytanLogicToken{
     constructor(engine,name,scopeInfo){
         super(engine);
-        if (scopeInfo!==false){ //system and global constructors dont need
+        if (scopeInfo!==false && name!="."){ //system and global constructors dont need
             let scopeResult=Helper.getScopeInfo(name,scopeInfo);
             Object.defineProperties(this,{
                 name:{ value:scopeResult.name, writable:false },
                 access:{ value:scopeResult.access, writable:false },
                 exactLevel:{ value:scopeResult.exactLevel, writable:false },
-                index:{ value:scopeResult.index+1, writable:false }
+                index:{ value:scopeResult.index, writable:false }
             });
         }else{
             Object.defineProperties(this,{
@@ -24,7 +24,7 @@ class KaytanProperty extends KaytanLogicToken{
         return this.name;
     }
 
-    execute(objectArray,parentIndex,parentLength){
+    execute(global,objectArray,parentIndex,parentLength){
         return Helper.getItem(this.access,objectArray,this.index,this.exactLevel); 
     }
 

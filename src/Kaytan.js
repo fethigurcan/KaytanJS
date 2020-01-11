@@ -11,7 +11,7 @@ function prepareData(data){
             if (data.length==1)
                 return prepareData(data[0]);
             else
-                return data.map(i=>prepareData[i]);
+                return data.map(i=>prepareData(i));
         }else
             return null;
     }
@@ -33,11 +33,11 @@ function prepareData(data){
 }
 
 function _executeCompiledCode(values){
-    return this.fn([{},prepareData(values)||{}]);
+    return this.fn([prepareData(values)||{}]);
 }
 
 function _executeClassic(values){
-    return this.ast.execute([{},prepareData(values)||{}]); //empty object is the global variable holder for define command
+    return this.ast.execute({},[prepareData(values)||{}]); //empty object is the global variable holder for define command
 }
 
 class Kaytan{
@@ -50,10 +50,16 @@ class Kaytan{
         ast=ast.length==1?ast[0]:new KaytanTokenList(this,ast);
 
         if (options && options.optimized){
-            let fn=`let $fn$=function($o$){
-   let $retVal$='',$global$={},$i$=0,$l$=1;
+            this.varcounter=0;
+            let fn=`let $fn$=function($oo$){
+   let $retVal$='';
+   let $global$={};
+   let $i$=0;
+   let $l$=1;
+   let $o$=$oo$;
 ${ast.toJavascriptCode("   ",[{ defined:[] }])}   return $retVal$;
 };$fn$;`;
+            delete this.varcounter;
             let getItemSimple=Helper.getItemSimple; //used inside fn, keep reference
             let systemFn=Helper.systemFn; //used inside fn, keep reference
             let _escape=Helper.escape; //used inside fn, keep reference
