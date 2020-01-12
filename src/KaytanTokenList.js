@@ -47,7 +47,7 @@ class KaytanTokenList extends KaytanToken{
         for(let token of this) 
             s+=token.toJavascriptCode()+`
 `;
-        return s.trim('\r\n');
+        return s;
     }     
 
     execute(global,objectArray,parentIndex,parentLength){
