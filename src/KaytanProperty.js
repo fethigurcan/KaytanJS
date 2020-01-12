@@ -26,14 +26,14 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     execute(global,objectArray,parentIndex,parentLength){
-        return Helper.getItem(this.access,objectArray,this.index,this.exactLevel); 
+        return Helper.getPropertyValue(this.access,objectArray,this.index,this.exactLevel); 
     }
 
     toJavascriptDefinitionsCode(){
         if (this.exactLevel)
             return '';
         else
-            return `let ${this.name}=$getItemSimple("${this.name}",$o,${this.index},${this.exactLevel});`;
+            return `let ${this.name}=$findPropertyValue("${this.name}",$o,${this.index});`;
     }
 
     toJavascriptCheckCode()

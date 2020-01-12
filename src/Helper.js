@@ -67,41 +67,39 @@ const getScopeInfo=function(property,scopeInfo){
     };
 }
 
-const getItem=function(property,objectArray,index,exactLevel){
+const getPropertyValue=function(property,objectArray,index,exactLevel){
     if (property=='.')
         return objectArray[objectArray.length-1];
 
     let childIndex=property.indexOf('.');
     let _property=childIndex<0?property:property.substring(0,childIndex);
 
-    let retVal=getItemSimple(_property,objectArray,index,exactLevel);
+    let retVal;
+    if (exactLevel)
+        retVal=objectArray[index][property];
+    else 
+        retVal=findPropertyValue(_property,objectArray,index);
 
     if (childIndex<0)
         return retVal;
     else
         if (retVal!=null && typeof(retVal)=='object')
-            return getItem(property.substring(childIndex),[...objectArray,retVal]);
+            return getPropertyValue(property.substring(childIndex),[...objectArray,retVal]);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };
 
-const getItemSimple=function(property,objectArray,index,exactLevel){
-    if (property=='.')
-        return objectArray[objectArray.length-1];
-    let retVal;
-    if (exactLevel){ //exact level
-        retVal=objectArray[index][property];
-    }else{ //search for all levels
-        for (let i=index;i>-1;i--){
-            retVal=objectArray[i][property];
-            if (retVal!=null){
-                if (i<objectArray.length && (retVal==objectArray[i] || (Array.isArray(retVal) && retVal.indexOf(objectArray[i])>-1 ))) //if a property found but references to the current scope, stop searching upward to prevent cycle
-                    retVal=null;
-                break;
-            }
+const findPropertyValue=function(property,objectArray,index){
+    for (let i=index;i>-1;i--){
+        let p=objectArray[i][property];
+        if (p!=null){
+             //if a property found but references to the current scope, stop searching upward to prevent cycle
+            if (i<objectArray.length && (p==objectArray[i] || (Array.isArray(p) && p.indexOf(objectArray[i])>-1 ))){
+                return;
+            }else
+                return p;
         }
     }
-    return retVal;
 };
 
 module.exports={
@@ -112,8 +110,8 @@ module.exports={
     escape:escape,
     partialsHolder:partialsHolder,
     checkRegexForExpressionToString:checkRegexForExpressionToString,
-    getItem:getItem,
-    getItemSimple:getItemSimple,
+    getPropertyValue:getPropertyValue,
+    findPropertyValue:findPropertyValue,
     getScopeInfo:getScopeInfo,
     systemFn:systemFn,
     formatJavascript:formatJavascript

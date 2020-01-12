@@ -61,7 +61,7 @@ ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:[] }]),1)}
    return $r;
 };$fn;`;
             //delete this.varcounter;
-            let $getItemSimple=Helper.getItemSimple; //used inside fn, keep reference
+            let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference
             let $systemFn=Helper.systemFn; //used inside fn, keep reference
             let $escape=Helper.escape; //used inside fn, keep reference
             fn=eval(fn);            
