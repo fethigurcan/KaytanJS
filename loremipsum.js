@@ -1,6 +1,6 @@
 Kaytan=require('.');
 
-dd=new Kaytan("SELECT * FROM {{{TableName}}}m"
+dd=new Kaytan("{{=<} >=}}<! ct >"
         ,{ optimized:true,defaultStartDelimiter:'{{',defaultEndDelimiter:'}}' });
 console.log(dd);
 

@@ -135,6 +135,8 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
             if (buffer.length==delimiterStart.length){
                 buffer+=this.template[i];
                 if (!buffer.startsWith(delimiterStart)){
+                    if (!retVal[j])
+                        retVal.push('');
                     retVal[j]+=buffer[0];
                     buffer=buffer.substring(1);
                 }
@@ -229,6 +231,20 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
                     }else if (command[0]=='!'){ 
                         //ignore comments
+                    }else if (command[0]=='='){
+                        if (command[command.length-1]=="="){
+                            command=command.replace(/^=|=$/g,"");
+                            let newDelimiters=command.split(' ');
+                            if (newDelimiters.length==2){
+                                let delimiterIllegalRegex=/[a-zA-Z0-9-_=&|!]/g;
+                                if (delimiterIllegalRegex.test(newDelimiters[0])||delimiterIllegalRegex.test(newDelimiters[1]))
+                                    throw new KaytanSyntaxError('Delimiters can\'t contain [a-zA-Z0-9-_=]',i,this.template);
+                                delimiterStart=newDelimiters[0];
+                                delimiterEnd=newDelimiters[1];
+                            }else
+                                throw new KaytanSyntaxError('Delimiter directive needs start and end delimiters that separated by a space',i,this.template);
+                        }else
+                            throw new KaytanSyntaxError('Delimiter directive must be end with = ',i,this.template);
                     }else if (command[0]=='<'){
                         let a={};
                         command=command.substring(1).trim();
@@ -264,9 +280,14 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
     //if (retVal.length>0 && typeof(retVal[retVal.length-1])=="string")
     //    retVal[retVal.length-1]=new KaytanStringToken(this,retVal[retVal.length-1]);
     if (buffer)
-        throw new KaytanBugError('Buffer is not emptied!',i,this.template);
+        if (typeof(retVal[retVal.length-1])=="string")
+            retVal[retVal.length-1]+=buffer;
+        else
+            retVal.push(new KaytanStringToken(this,buffer));
+
     if (blockName && !blockEnded)
         throw new KaytanSyntaxError('Unclosed block',i,this.template);
+        
     return { data:retVal, i:i };
 };
 
