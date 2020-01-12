@@ -39,7 +39,6 @@ console.log(kaytan.execute({ "a":true, "b":"Test" }));
 
 ## TODO List:
    - Add Delimiter Change
-   - Remove escape char of { and use delimiter Change
    - Configure babel for older browser support
    - Add Usage info
    - Add Documentation
