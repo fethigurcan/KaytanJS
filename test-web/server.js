@@ -41,7 +41,7 @@ const app = express()
           item[1]=obj;
           item[2]=expectedResult;
 
-          testlisthtml+=`<option value="${_title}">${_title}</>`;
+          testlisthtml+=`<option value="${_title}">${_title}</option>`;
         }
         testlisthtml+="</optgroup>";
       }
@@ -121,7 +121,7 @@ const app = express()
                 selected=selectedGroup[event.target.value];
 
                 outputel.innerText="";
-                templateel.value=selected[0];
+                templateel.value=selected[0]?selected[0]:"";
                 datael.value=JSON.stringify(selected[1]);
                 expectedel.innerText=selected[2];
                 expectedel.parentElement.parentElement.parentElement.style.display=null;
@@ -179,6 +179,6 @@ const app = express()
       </html>`
     );    
   })
-  .listen(port, () => {
+  .listen(port,"0.0.0.0", () => {
     console.log(`Server started at http://localhost:${port}/`)
   });
