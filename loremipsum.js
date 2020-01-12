@@ -1,9 +1,9 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{#a}}true{{:a}}false{{/a}}"
-        ,{ optimized:true });
+dd=new Kaytan("SELECT * FROM (TableName)"
+        ,{ optimized:true,defaultStartDelimiter:'(',defaultEndDelimiter:')' });
 console.log(dd);
 
 console.log(dd.ast.toString());
-console.log(dd.execute({ a:true, b:true, c:true }));
+console.log(dd.execute({ "TableName":"Employees {aka} Friends" }));
 console.log('end');

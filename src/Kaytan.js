@@ -43,11 +43,14 @@ function _executeClassic(values){
 class Kaytan{
     constructor(template,options){
         Object.defineProperties(this,{
-            template:{ value:template||'', writable:false, enumerable:true }
+            template:{ value:template||'', writable:false, enumerable:true },
+            defaultStartDelimiter:{ value:(options && options.defaultStartDelimiter)||"{{", writable:false, enumerable:true },
+            defaultEndDelimiter:{ value:(options && options.defaultEndDelimiter)||"}}", writable:false, enumerable:true }
         });
         
-        let ast=parseTemplate.call(this,[{ defined:[] }]).data;
-        ast=ast.length==1?ast[0]:new KaytanTokenList(this,ast);
+        let ast=parseTemplate.call(this,[{ defined:[] }],this.defaultStartDelimiter,this.defaultEndDelimiter).data;
+        let tokenList=new KaytanTokenList(this,ast);
+        ast=tokenList.length==1?tokenList[0]:tokenList;
 
         if (options && options.optimized){
             //this.varcounter=0;

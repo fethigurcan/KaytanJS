@@ -115,31 +115,33 @@ function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel)
 };
 
 //treat as member function of Kaytan
-function parseTemplate(scopeInfo,i,blockName){
+function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter="}}",i,blockName){
     let retVal=[];
     let j=0;
     let buffer;
     let blockEnded=false;
+    let delimiterStart=defaultStartDelimiter;
+    let delimiterEnd=defaultEndDelimiter;
     for (i=i||0;i<this.template.length;i++){
         if (!buffer){
-            if (this.template[i] == '\\' || this.template[i] == '{'){
-                if (j<retVal.length)
-                    retVal[j]=new KaytanStringToken(this,retVal[j]);
+            if (this.template[i] == delimiterStart[0]){
                 buffer=this.template[i];
             }else {
-                if (!retVal[j]) retVal.push('');
-                    retVal[j]+=this.template[i];
+                if (!retVal[j])
+                    retVal.push('');
+                retVal[j]+=this.template[i];
             }
         }else{
-            if (buffer=='\\'){
-                retVal[j]+=this.template[i];
-                buffer=null;        
-            }else if (this.template[i]!='{' && buffer=='{'){
-                throw new KaytanSyntaxError('Expected {',i,this.template);
-            }else if (this.template[i]=='}' && buffer.startsWith('{{') && buffer[buffer.length-1]=='}'){
+            if (buffer.length==delimiterStart.length){
                 buffer+=this.template[i];
-                if (buffer.length>4){
-                    let command=buffer.substring(2,buffer.length-2);
+                if (!buffer.startsWith(delimiterStart)){
+                    retVal[j]+=buffer[0];
+                    buffer=buffer.substring(1);
+                }
+            }else if (buffer.length>=delimiterStart.length+delimiterEnd.length && buffer.substring(buffer.length-(delimiterEnd.length-1))+this.template[i]==delimiterEnd){
+                buffer+=this.template[i];
+                if (buffer.length>delimiterStart.length+delimiterEnd.length){
+                    let command=buffer.substring(delimiterStart.length,buffer.length-delimiterEnd.length);
                     if (command[0]=='/'){
                         if (blockName){
                             command=command.substring(1).trim();
@@ -153,13 +155,19 @@ function parseTemplate(scopeInfo,i,blockName){
                             throw new KaytanSyntaxError('Unexpected /',i,this.template);
                     }else if (Helpers.logicCommandPrefixToken.test(command[0])){
                         let command1=command.substring(1).trim();
-                        let r=parseTemplate.call(this,scopeInfo,i+1,command1);
+                        let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command1);
                         if (command1){
                             let block={ 
                                 if:parseExpression.call(this,command1,i-command.length,scopeInfo).data,
                                 then:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
+
+                            if (typeof(block.then)=="string")
+                                block.then=new KaytanStringToken(this,block.then);
+                            if (typeof(block.else)=="string")
+                                block.else=new KaytanStringToken(this,block.else);
+            
                             if (command[0]=='?')
                                 retVal.push(new KaytanIfStatement(this,block.if,block.then,block.else));
                             else 
@@ -170,12 +178,18 @@ function parseTemplate(scopeInfo,i,blockName){
                     }else if (command[0]=='#'){
                         command=command.substring(1).trim();
                         if (command){
-                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],i+1,command);
+                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],delimiterStart,delimiterEnd,i+1,command);
                             let block={ 
                                 for:parseProperty.call(this,command,i,scopeInfo,null),
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
+
+                            if (typeof(block.loop)=="string")
+                                block.loop=new KaytanStringToken(this,block.loop);
+                            if (typeof(block.else)=="string")
+                                block.else=new KaytanStringToken(this,block.else);
+
                             retVal.push(new KaytanForStatement(this,block.for,block.loop,block.else));
                             i=r.i;
                         }else
@@ -186,7 +200,7 @@ function parseTemplate(scopeInfo,i,blockName){
                             if (command && blockName!=command) //end tags supported but optional. But if used it must be matched.
                                 throw new KaytanSyntaxError(`Expected {{:${blockName}}}} or {{:}}`,i,this.template);
 
-                            let r=parseTemplate.call(this,scopeInfo,i+1,blockName);
+                            let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,blockName);
                             retVal.else=r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data);
                             blockEnded=true;
                             buffer=null;
@@ -213,12 +227,13 @@ function parseTemplate(scopeInfo,i,blockName){
                     }else if (command[0]=='<'){
                         let a={};
                         command=command.substring(1).trim();
-                        let r=parseTemplate.call(this,scopeInfo,i+1,command);
+                        let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command);
                         if (command){
                             if (Helpers.simpleCommandNameRegex.test(command)){
                                 if (r.data.else)
                                     throw new KaytanSyntaxError('Invalid else statement in partial block',i,this.template);
-                                retVal.push(new KaytanPartialDefinition(this,command,r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data)));
+                                let tokenList=new KaytanTokenList(this,r.data);
+                                retVal.push(new KaytanPartialDefinition(this,command,tokenList.length==1?tokenList[0]:tokenList));
                                 i=r.i;
                             }else
                                 throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
@@ -241,8 +256,8 @@ function parseTemplate(scopeInfo,i,blockName){
                 buffer+=this.template[i];
         }
     }
-    if (retVal.length>0 && typeof(retVal[retVal.length-1])=="string")
-        retVal[retVal.length-1]=new KaytanStringToken(this,retVal[retVal.length-1]);
+    //if (retVal.length>0 && typeof(retVal[retVal.length-1])=="string")
+    //    retVal[retVal.length-1]=new KaytanStringToken(this,retVal[retVal.length-1]);
     if (buffer)
         throw new KaytanBugError('Buffer is not emptied!',i,this.template);
     if (blockName && !blockEnded)

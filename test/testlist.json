@@ -24,7 +24,7 @@
         "' Escape":                 ["{{'MyName}}",-1,"<span id=\"x\" class=''bold''>`fethi`</span>\r\n\tgurcan"],
         "` Escape":                 ["{{`MyName}}",-1,"<span id=\"x\" class='bold'>``fethi``</span>\r\n\tgurcan"],
         "[ Escape":                 ["SELECT * FROM [{{[TableName}}]",{ "TableName":"Employees [aka] Friends" },"SELECT * FROM [Employees [aka]] Friends]"],
-        "{ Escape":                 ["SELECT * FROM \\{ {{{TableName}} }",{ "TableName":"Employees {aka} Friends" },"SELECT * FROM { Employees {aka\\} Friends }"],
+        "{ Escape":                 ["SELECT * FROM { {{{TableName}} }",{ "TableName":"Employees {aka} Friends" },"SELECT * FROM { Employees {aka\\} Friends }"],
         "( Escape":                 ["SELECT * FROM ({{(TableName}})",{ "TableName":"Employees (aka) Friends" },"SELECT * FROM (Employees (aka\\) Friends)"],
         "String at Start and End":  ["Hello {{where}}!",{ "where":"World" },"Hello World!"]
     },
