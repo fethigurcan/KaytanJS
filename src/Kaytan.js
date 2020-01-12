@@ -4,9 +4,7 @@ var Helper=require('./Helper');
 
 //for improve performance on execution (less conditions will be used in execute functions)
 function prepareData(data){
-    if (typeof(data)=="boolean")
-        return data?true:null;
-    else if (Array.isArray(data)){
+    if (Array.isArray(data)){
         if (data.length){
             if (data.length==1)
                 return prepareData(data[0]);
@@ -33,11 +31,13 @@ function prepareData(data){
 }
 
 function _executeCompiledCode(values){
-    return this.fn([prepareData(values)||{}]);
+    let data=prepareData(values);
+    return this.fn([data!=null?data:{}]);
 }
 
 function _executeClassic(values){
-    return this.ast.execute({},[prepareData(values)||{}]); //empty object is the global variable holder for define command
+    let data=prepareData(values);
+    return this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
 }
 
 class Kaytan{
@@ -56,6 +56,7 @@ class Kaytan{
    let $global={};
    let $o=$oo;
    let $scope=$o[$o.length-1];
+   let $check=v=>v!=null&&v!==false;
 ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:[] }]),1)}
    return $r;
 };$fn;`;

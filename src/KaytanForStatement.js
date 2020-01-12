@@ -29,10 +29,10 @@ class KaytanForStatement extends KaytanStatement{
         //this.engine.varcounter++;
         
         let retVal=`{
-${formatJavascript(this.for.toJavascriptGetValueCode(),1)}
+${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}
    let $arr=${_for};
    let $_o=$o;
-   if (Array.isArray($arr) || ($arr && ($arr=[$arr]))){
+   if (Array.isArray($arr) || ($arr!=null && $arr!==false && ($arr=[$arr]))){
       let $l=$arr.length;
       let $o=[...$_o,null];
       for(let $i=0;$i<$arr.length;$i++){

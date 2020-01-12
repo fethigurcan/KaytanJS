@@ -8,7 +8,8 @@ class KaytanLogicToken extends KaytanToken{
     }
 
     executeLogic(global,objectArray,parentIndex,parentLength){
-        return this.execute(global,objectArray,parentIndex,parentLength)!=null;
+        let r=this.execute(global,objectArray,parentIndex,parentLength);
+        return r!=null && r!==false;
         /*let retVal=this.execute(global,objectArray,parentIndex,parentLength);
         if (typeof(retVal)=="boolean")
             return retVal;

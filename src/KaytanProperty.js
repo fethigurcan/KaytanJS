@@ -29,14 +29,20 @@ class KaytanProperty extends KaytanLogicToken{
         return Helper.getItem(this.access,objectArray,this.index,this.exactLevel); 
     }
 
-    toJavascriptGetValueCode(){
+    toJavascriptDefinitionsCode(){
         if (this.exactLevel)
             return '';
         else
             return `let ${this.name}=$getItemSimple("${this.name}",$o,${this.index},${this.exactLevel});`;
     }
 
-    toJavascriptCode(){
+    toJavascriptCheckCode()
+    {
+        let access=this.toJavascriptAccessCode();
+        return `$check(${access})`;
+    }
+
+    toJavascriptAccessCode(){
         if (this.isCurrentScope)
             return '$scope'+(this.name=='.'?'':'.'+this.access);
         else if (this.exactLevel)

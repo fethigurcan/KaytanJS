@@ -31,10 +31,10 @@ class KaytanPropertyValue extends KaytanToken{
     toJavascriptCode(){
         let retVal="";
         if (!this.allreadyDefined){
-            retVal=`${this.property.toJavascriptGetValueCode()}
+            retVal=`${this.property.toJavascriptDefinitionsCode()}
 `;
         }
-        let access=this.property.toJavascriptCode();
+        let access=this.property.toJavascriptAccessCode();
         if (this.escape=="&")
             retVal+=`$r+=${access}!=null?${access}.toString():"";`;
         else

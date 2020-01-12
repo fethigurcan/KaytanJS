@@ -25,8 +25,8 @@ class KaytanIfStatement extends KaytanStatement{
 
     toJavascriptCode(){
         let retVal=`{
-${formatJavascript(this.if.toJavascriptGetValueCode(),1)}
-   if (${this.if.toJavascriptCode()}!=null){
+${formatJavascript(this.if.toJavascriptDefinitionsCode(),1)}
+   if (${this.if.toJavascriptCheckCode()}){
 ${formatJavascript(this.then.toJavascriptCode(),2)}
    }`;
         if (this.else)

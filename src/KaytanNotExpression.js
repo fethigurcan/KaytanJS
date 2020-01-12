@@ -24,12 +24,12 @@ class KaytanNotExpression extends KaytanExpression{
         return !this.expression.executeLogic(objectArray,parentIndex,parentLength);
     }
 
-    toJavascriptGetValueCode(){
-        return this.expression.toJavascriptGetValueCode();
+    toJavascriptDefinitionsCode(){
+        return this.expression.toJavascriptDefinitionsCode();
     }
 
-    toJavascriptCode(){
-        let expression=this.expression.toJavascriptCode();
+    toJavascriptCheckCode(){
+        let expression=this.expression.toJavascriptCheckCode();
         if (Helper.checkRegexForExpressionToString.test(expression))
             expression="("+expression+")";
 

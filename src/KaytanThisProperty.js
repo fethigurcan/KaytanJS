@@ -15,11 +15,11 @@ class KaytanThisProperty extends KaytanProperty{
         return objectArray[objectArray.length-1];
     }
 
-    toJavascriptGetValueCode(){
+    toJavascriptDefinitionsCode(){
         return "";
     }
 
-    toJavascriptCode(){
+    toJavascriptAccessCode(){
         return "$scope";
     }
 }
