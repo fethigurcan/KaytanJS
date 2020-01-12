@@ -220,6 +220,11 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                                 retVal.push(new KaytanParameterUsage(this,command1));
                         }else
                             throw new KaytanSyntaxError('Invalid global variable name:'+command,i,this.template);
+                    }else if (command[0]=='{' && (command[command.length-1]=='}' || this.template[i+1]==delimiterEnd[delimiterEnd.length-1])){ //{{{ }}} support just for compatibility
+                        if (command[command.length-1]!='}') //this happens when with default delimiter and/or any delimiter that ends with }
+                            i++;
+                        let command1=command.substring(1).trim().replace(/}$/,'').trim();
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,"&"));
                     }else if (command=='.'){ //DİKKAT: ilk karakter değil tümü=.
                         retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
                     }else if (command[0]=='!'){ 

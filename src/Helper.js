@@ -1,7 +1,7 @@
 const commandRegexBaseStr="[a-zA-Z_][a-zA-Z0-9-_]*";
 const commandNameRegex=new RegExp("^#(first|last|odd|even|intermediate)$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
 const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
-const commandPrefixToken=/^[[({'"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
+const commandPrefixToken=/^[[('"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
 const partialsHolder="$partials";
 const checkRegexForExpressionToString=/[&|]/;
@@ -16,8 +16,8 @@ const escape={
     "'": v=>v.replace(/'/g,"''"),
     "`": v=>v.replace(/`/g,'``'),
     "[": v=>v.replace(/]/g,']]'),
-    "(": v=>v.replace(/\)/g,'\\)'),
-    "{": v=>v.replace(/}/g,'\\}')
+    "(": v=>v.replace(/\)/g,'\\)')
+    //"{": v=>v.replace(/}/g,'\\}')
 };
 
 const systemFn={
