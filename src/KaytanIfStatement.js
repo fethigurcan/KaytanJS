@@ -1,6 +1,7 @@
-var KaytanStatement=require('./KaytanStatement');
-var KaytanToken=require('./KaytanToken');
-var KaytanLogicToken=require('./KaytanLogicToken');
+const KaytanStatement=require('./KaytanStatement');
+const KaytanToken=require('./KaytanToken');
+const KaytanLogicToken=require('./KaytanLogicToken');
+const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanIfStatement extends KaytanStatement{
     constructor(engine,_if,_then,_else){        
@@ -22,19 +23,19 @@ class KaytanIfStatement extends KaytanStatement{
         return "{{?"+this.if.toString()+"}}"+this.then.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
-    toJavascriptCode(ind){
-        let nind=ind+"   ";
-        let retVal=`${ind}{
-${this.if.toJavascriptGetValueCode(nind)}
-${nind}if (${this.if.toJavascriptCode(null)}!=null){
-${this.then.toJavascriptCode(nind+"   ")}${nind}}`;
+    toJavascriptCode(){
+        let retVal=`{
+${formatJavascript(this.if.toJavascriptGetValueCode(),1)}
+   if (${this.if.toJavascriptCode()}!=null){
+${formatJavascript(this.then.toJavascriptCode(),2)}
+   }`;
         if (this.else)
-            retVal+=`${nind}else{
-${this.else.toJavascriptCode(nind+"   ")}${nind}}
-${ind}}`;
-        else
-            retVal+=`${ind}}
-`;
+            retVal+=`else{
+${formatJavascript(this.else.toJavascriptCode(),1)}
+   }`;
+        
+        retVal+=`
+}`;
         return retVal;
     }
 

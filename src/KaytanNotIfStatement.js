@@ -1,4 +1,5 @@
 const KaytanIfStatement=require('./KaytanIfStatement');
+const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanNotIfStatement extends KaytanIfStatement{
     constructor(engine,_if,_then,_else){        
@@ -9,18 +10,19 @@ class KaytanNotIfStatement extends KaytanIfStatement{
         return "{{^"+super.toString().substring(3);
     }
 
-    toJavascriptCode(ind){
-        let nind=ind+"   ";
-        let retVal=`${ind}{
-${this.if.toJavascriptGetValueCode(nind)}
-${nind}if (${this.if.toJavascriptCode(null)}==null){
-${this.then.toJavascriptCode(nind+"   ")}${nind}}`;
+    toJavascriptCode(){
+        let retVal=`{
+${formatJavascript(this.if.toJavascriptGetValueCode(),1)}
+    if (${this.if.toJavascriptCode()}==null){
+${formatJavascript(this.then.toJavascriptCode(),2)}
+   }`;
         if (this.else)
-            retVal+=`${nind}else{
-${this.else.toJavascriptCode(nind+"   ")}${nind}}
-${ind}}`;
-        else
-            retVal+=`${ind}}
+            retVal+=`else{
+${formatJavascript(this.else.toJavascriptCode(),1)}
+   }`;
+        
+        retVal+=`
+}
 `;
         return retVal;
     }

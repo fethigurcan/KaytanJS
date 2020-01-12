@@ -28,6 +28,8 @@ const systemFn={
     even:(i,l)=>i%2==0?true:null
 };
 
+const formatJavascript= (v,i) => v.replace(/^/gm," ".repeat(i*3));
+
 const getScopeInfo=function(property,scopeInfo){
     if (property=='.')
         return scopeInfo[scopeInfo.length-1];
@@ -59,6 +61,7 @@ const getScopeInfo=function(property,scopeInfo){
     return {
         index:_scopeIndex,
         exactLevel:exactLevel,
+        isCurrentScope:exactLevel&&(i==scopeInfo.length-1),
         name:__property,
         access:_property
     };
@@ -112,5 +115,6 @@ module.exports={
     getItem:getItem,
     getItemSimple:getItemSimple,
     getScopeInfo:getScopeInfo,
-    systemFn:systemFn
+    systemFn:systemFn,
+    formatJavascript:formatJavascript
 };

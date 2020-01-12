@@ -1,6 +1,7 @@
 const KaytanToken=require('./KaytanToken');
 const KaytanStatement=require('./KaytanStatement');
 const KaytanProperty=require('./KaytanProperty');
+const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanForStatement extends KaytanStatement{
     constructor(engine,_for,_loop,_else){        
@@ -22,31 +23,31 @@ class KaytanForStatement extends KaytanStatement{
         return "{{#"+this.for.toString()+"}}"+this.loop.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
     }
 
-    toJavascriptCode(ind){
-        let nind=ind+"   ";
-        let _for=this.for.toJavascriptCode(null);
-        let no=this.engine.varcounter;
-        this.engine.varcounter++;
+    toJavascriptCode(){
+        let _for=this.for.toJavascriptCode();
+        //let no=this.engine.varcounter;
+        //this.engine.varcounter++;
         
-        let retVal=`${ind}{
-${this.for.toJavascriptGetValueCode(nind)}
-${nind}let $arr${no}$=${_for};
-${nind}let $tmpo${no}$=$o$;
-${nind}if (Array.isArray($arr${no}$) || ($arr${no}$ && ($arr${no}$=[$arr${no}$]))){
-${nind}   let $l$=$arr${no}$.length;
-${nind}   let $o$=[...$tmpo${no}$,null];
-${nind}   for(let $i$=0;$i$<$arr${no}$.length;$i$++){
-${nind}      let $item$=$arr${no}$[$i$];
-${nind}      $o$[$o$.length-1]=$item$;
-${this.loop.toJavascriptCode(nind+"      ")}${nind}   }
-${nind}}`;
+        let retVal=`{
+${formatJavascript(this.for.toJavascriptGetValueCode(),1)}
+   let $arr=${_for};
+   let $_o=$o;
+   if (Array.isArray($arr) || ($arr && ($arr=[$arr]))){
+      let $l=$arr.length;
+      let $o=[...$_o,null];
+      for(let $i=0;$i<$arr.length;$i++){
+         let $scope=$arr[$i];
+         $o[$o.length-1]=$scope;
+${formatJavascript(this.loop.toJavascriptCode(),3)}
+      }
+   }`;
         if (this.else)
             retVal+=`else{
-${this.else.toJavascriptCode(nind+"      ")}${nind}}
-${ind}}`;
-        else
-            retVal+=`${ind}}
-`;
+${formatJavascript(this.else.toJavascriptCode(),2)}
+   }`;
+
+        retVal+=`
+}`;
         return retVal;
     }
 

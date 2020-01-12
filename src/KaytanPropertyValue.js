@@ -28,16 +28,17 @@ class KaytanPropertyValue extends KaytanToken{
         return "{{"+(this.escape?this.escape:"")+this.property.name+"}}";
     }
 
-    toJavascriptCode(ind){
+    toJavascriptCode(){
         let retVal="";
         if (!this.allreadyDefined){
-            retVal=`${this.property.toJavascriptGetValueCode(ind)}
+            retVal=`${this.property.toJavascriptGetValueCode()}
 `;
         }
-        retVal+=`${ind}if (${this.property.access}!=null){
-${ind}   $retVal$+=_escape[${this.escape?`"${Helper.escape["\\"](this.escape)}"`:undefined}](${this.property.access}.toString());
-${ind}}
-`;
+        let access=this.property.toJavascriptCode();
+        if (this.escape=="&")
+            retVal+=`$r+=${access}!=null?${access}.toString():"";`;
+        else
+            retVal+=`$r+=${access}!=null?$escape[${this.escape?`"${Helper.escape["\\"](this.escape)}"`:undefined}](${access}.toString()):"";`;
         return retVal;
     }
 

@@ -9,12 +9,12 @@ class KaytanGlobalProperty extends KaytanProperty{
         return global[this.name];
     }
 
-    toJavascriptGetValueCode(ind){
+    toJavascriptGetValueCode(){
         return "";
     }
 
-    toJavascriptCode(ind){
-        return `$global$.${this.name}`;
+    toJavascriptCode(){
+        return `$global.${this.name}`;
     }
 }
 

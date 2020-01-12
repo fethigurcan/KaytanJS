@@ -37,11 +37,12 @@ class KaytanTokenList extends KaytanToken{
         return s;
     }
 
-    toJavascriptCode(ind){
+    toJavascriptCode(){
         let s="";
         for(let token of this) 
-            s+=token.toJavascriptCode(ind);
-        return s;
+            s+=token.toJavascriptCode()+`
+`;
+        return s.trim('\r\n');
     }     
 
     execute(global,objectArray,parentIndex,parentLength){

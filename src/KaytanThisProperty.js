@@ -4,7 +4,9 @@ class KaytanThisProperty extends KaytanProperty{
     constructor(engine,scopeInfo){
         super(engine,'.',scopeInfo);
         Object.defineProperties(this,{
-            access:{ value:"$o$[$o$.length-1]", writable:false }
+            access:{ value:".", writable:false },
+            exactLevel:{ value:true, writable:false },
+            isCurrentScope:{ value:true, writable:false }
         });
 
     }
@@ -13,12 +15,12 @@ class KaytanThisProperty extends KaytanProperty{
         return objectArray[objectArray.length-1];
     }
 
-    toJavascriptGetValueCode(ind){
+    toJavascriptGetValueCode(){
         return "";
     }
 
-    toJavascriptCode(ind){
-        return "$o$[$o$.length-1]";
+    toJavascriptCode(){
+        return "$scope";
     }
 }
 

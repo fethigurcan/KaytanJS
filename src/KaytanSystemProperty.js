@@ -25,12 +25,12 @@ class KaytanSystemProperty extends KaytanProperty{
       return "{{#"+this.name+"}}";
     }
 
-    toJavascriptGetValueCode(ind){
+    toJavascriptGetValueCode(){
         return "";
 }
 
-    toJavascriptCode(ind){
-        return `systemFn["${this.name}"]($i$,$l$)`;
+    toJavascriptCode(){
+        return `$systemFn["${this.name}"]($i,$l)`;
     }
 }
 

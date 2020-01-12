@@ -11,6 +11,7 @@ class KaytanProperty extends KaytanLogicToken{
                 name:{ value:scopeResult.name, writable:false },
                 access:{ value:scopeResult.access, writable:false },
                 exactLevel:{ value:scopeResult.exactLevel, writable:false },
+                isCurrentScope:{ value:scopeResult.isCurrentScope, writable:false },
                 index:{ value:scopeResult.index, writable:false }
             });
         }else{
@@ -28,12 +29,20 @@ class KaytanProperty extends KaytanLogicToken{
         return Helper.getItem(this.access,objectArray,this.index,this.exactLevel); 
     }
 
-    toJavascriptGetValueCode(ind){
-        return `${ind}let ${this.name}=getItemSimple("${this.name}",$o$,${this.index},${this.exactLevel});`;
+    toJavascriptGetValueCode(){
+        if (this.exactLevel)
+            return '';
+        else
+            return `let ${this.name}=$getItemSimple("${this.name}",$o,${this.index},${this.exactLevel});`;
     }
 
-    toJavascriptCode(ind){
-        return this.access;
+    toJavascriptCode(){
+        if (this.isCurrentScope)
+            return '$scope'+(this.name=='.'?'':'.'+this.access);
+        else if (this.exactLevel)
+            return `$o[${this.index}]`+(this.name=='.'?'':'.'+this.access);
+        else
+            return this.access;
     }
 }
 

@@ -31,16 +31,16 @@ class KaytanOperator extends KaytanExpression{
         return left+this.operator+right;
     }
 
-    toJavascriptGetValueCode(ind){
-        let l=this.left.toJavascriptGetValueCode(ind);
-        let r=this.right.toJavascriptGetValueCode(ind);
+    toJavascriptGetValueCode(){
+        let l=this.left.toJavascriptGetValueCode();
+        let r=this.right.toJavascriptGetValueCode();
         return l+`
 `+r;
     }
 
-    toJavascriptCode(ind){
-        let left=this.left.toJavascriptCode(ind);
-        let right=this.right.toJavascriptCode(ind);
+    toJavascriptCode(){
+        let left=this.left.toJavascriptCode();
+        let right=this.right.toJavascriptCode();
 
         if (Helper.checkRegexForExpressionToString.test(left))
             left="("+left+")";
