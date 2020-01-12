@@ -24,7 +24,7 @@ class KaytanForStatement extends KaytanStatement{
     }
 
     toJavascriptCode(){
-        let _for=this.for.toJavascriptCode();
+        let _for=this.for.toJavascriptCheckCode();
         //let no=this.engine.varcounter;
         //this.engine.varcounter++;
         

@@ -1,6 +1,6 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{?a&b|!c}}true{{/}}"
+dd=new Kaytan("{{#a}}true{{:a}}false{{/a}}"
         ,{ optimized:true });
 console.log(dd);
 
