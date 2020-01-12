@@ -9,7 +9,9 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
     }
 
     toString(){
-        return "{{$"+this.name+"}}";
+        let s=this.engine.defaultStartDelimiter;
+        let e=this.engine.defaultEndDelimiter;
+        return `${s}$${this.name}${e}`;
     }
 
     execute(global,objectArray){

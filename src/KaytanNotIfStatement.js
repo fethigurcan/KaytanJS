@@ -7,7 +7,8 @@ class KaytanNotIfStatement extends KaytanIfStatement{
     }
 
     toString(){
-        return "{{^"+super.toString().substring(3);
+        let s=this.engine.defaultStartDelimiter;
+        return `${s}^${super.toString().substring(s.length+1)}`;
     }
 
     toJavascriptCode(){

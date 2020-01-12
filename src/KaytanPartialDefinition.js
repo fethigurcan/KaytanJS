@@ -13,7 +13,9 @@ class KaytanPartialDefinition extends KaytanToken{
     }
 
     toString(){
-        return "{{<"+this.name+"}}"+this.token.toString()+"{{/}}";
+        let s=this.engine.defaultStartDelimiter;
+        let e=this.engine.defaultEndDelimiter;
+        return `${s}<${this.name}${e}${this.token.toString()}${s}/${e}`;
     }
 
     execute(global,objectArray){

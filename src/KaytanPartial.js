@@ -10,7 +10,9 @@ class KaytanPartial extends KaytanToken{
     }
 
     toString(){
-        return "{{>"+this.name.toString()+"}}";
+        let s=this.engine.defaultStartDelimiter;
+        let e=this.engine.defaultEndDelimiter;
+        return `${s}>${this.name}${e}`;
     }
 
     execute(global,objectArray,parentIndex,parentLength){

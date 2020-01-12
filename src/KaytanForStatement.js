@@ -20,7 +20,9 @@ class KaytanForStatement extends KaytanStatement{
     }
 
     toString(){
-        return "{{#"+this.for.toString()+"}}"+this.loop.toString()+(this.else?"{{:}}"+this.else.toString():"")+"{{/}}";
+        let s=this.engine.defaultStartDelimiter;
+        let e=this.engine.defaultEndDelimiter;
+        return `${s}#${this.for.toString()}${e}${this.loop.toString()}${(this.else?`${s}:${e}`+this.else.toString():"")}${s}/${e}`;
     }
 
     toJavascriptCode(){

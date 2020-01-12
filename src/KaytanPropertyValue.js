@@ -25,7 +25,9 @@ class KaytanPropertyValue extends KaytanToken{
     }
 
     toString(){
-        return "{{"+(this.escape?this.escape:"")+this.property.name+"}}";
+        let s=this.engine.defaultStartDelimiter;
+        let e=this.engine.defaultEndDelimiter;
+        return `${s}${this.escape?this.escape:""}${this.property.name}${e}`;
     }
 
     toJavascriptCode(){
