@@ -1,7 +1,0 @@
-{
-  "groupname": "If Else Block (Basic)",
-  "testname": "String Object",
-  "template": "{{?a}}true{{:}}false{{/}}",
-  "data": "fethi",
-  "output": "false"
-}

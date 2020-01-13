@@ -1,9 +1,0 @@
-{
-  "groupname": "Simple Value",
-  "testname": "Parathesis Escape",
-  "template": "SELECT * FROM ({{(TableName}})",
-  "data": {
-    "TableName": "Employees (aka) Friends"
-  },
-  "output": "SELECT * FROM (Employees (aka\\) Friends)"
-}

@@ -1,7 +1,0 @@
-{
-  "groupname": "NotIf Block (Basic)",
-  "testname": "String Object",
-  "template": "t{{^a}}a{{/}}m",
-  "data": "fethi",
-  "output": "tam"
-}

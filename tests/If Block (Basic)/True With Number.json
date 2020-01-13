@@ -1,9 +1,0 @@
-{
-  "groupname": "If Block (Basic)",
-  "testname": "True With Number",
-  "template": "t{{?a}}a{{/}}m",
-  "data": {
-    "a": 1
-  },
-  "output": "tam"
-}

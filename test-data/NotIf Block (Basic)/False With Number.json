@@ -1,0 +1,7 @@
+{
+  "template": "t{{^a}}a{{/}}m",
+  "data": {
+    "a": 1
+  },
+  "expected": "tm"
+}

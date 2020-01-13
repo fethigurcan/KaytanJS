@@ -1,7 +1,0 @@
-{
-  "groupname": "Simple Value",
-  "testname": "Empty Array",
-  "template": "{{MyName}}",
-  "data": [],
-  "output": ""
-}

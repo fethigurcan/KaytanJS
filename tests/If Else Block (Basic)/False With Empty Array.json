@@ -1,9 +1,0 @@
-{
-  "groupname": "If Else Block (Basic)",
-  "testname": "False With Empty Array",
-  "template": "{{?a}}true{{:}}false{{/}}",
-  "data": {
-    "a": []
-  },
-  "output": "false"
-}

@@ -1,0 +1,8 @@
+{
+  "template": "",
+  "data": {
+    "a": true,
+    "b": false
+  },
+  "expected": ""
+}

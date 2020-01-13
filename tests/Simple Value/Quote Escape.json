@@ -1,9 +1,0 @@
-{
-  "groupname": "Simple Value",
-  "testname": "Quote Escape",
-  "template": "{{\"MyName}}",
-  "data": {
-    "MyName": "<span id=\"x\" class='bold'>`fethi`</span>\r\n\tgurcan"
-  },
-  "output": "<span id=\"\"x\"\" class='bold'>`fethi`</span>\r\n\tgurcan"
-}

@@ -1,7 +1,0 @@
-{
-  "groupname": "If Block (Basic)",
-  "testname": "Undefined Data",
-  "template": "t{{?a}}a{{/}}m",
-  "data": null,
-  "output": "tm"
-}

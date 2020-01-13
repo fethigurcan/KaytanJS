@@ -1,0 +1,5 @@
+{
+  "template": "{{.}}",
+  "data": 0,
+  "expected": "0"
+}

@@ -1,0 +1,5 @@
+{
+  "template": "{{^a}}true{{:}}false{{/}}",
+  "data": "fethi",
+  "expected": "true"
+}

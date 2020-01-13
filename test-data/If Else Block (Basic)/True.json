@@ -1,0 +1,7 @@
+{
+  "template": "{{?a}}true{{:}}false{{/}}",
+  "data": {
+    "a": true
+  },
+  "expected": "true"
+}

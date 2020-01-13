@@ -1,0 +1,5 @@
+{
+  "template": "t{{^a}}a{{/}}m",
+  "data": "fethi",
+  "expected": "tam"
+}

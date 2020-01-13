@@ -1,0 +1,7 @@
+{
+  "template": "{{MyName}}",
+  "data": {
+    "MyName": "fethi"
+  },
+  "expected": "fethi"
+}

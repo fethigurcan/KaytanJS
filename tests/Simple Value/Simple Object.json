@@ -1,9 +1,0 @@
-{
-  "groupname": "Simple Value",
-  "testname": "Simple Object",
-  "template": "{{MyName}}",
-  "data": {
-    "MyName": "fethi"
-  },
-  "output": "fethi"
-}

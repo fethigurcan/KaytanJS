@@ -1,0 +1,7 @@
+{
+  "template": "Hello {{where}}!",
+  "data": {
+    "where": "World"
+  },
+  "expected": "Hello World!"
+}

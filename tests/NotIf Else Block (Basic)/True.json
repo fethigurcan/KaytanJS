@@ -1,9 +1,0 @@
-{
-  "groupname": "NotIf Else Block (Basic)",
-  "testname": "True",
-  "template": "{{^a}}true{{:}}false{{/}}",
-  "data": {
-    "a": false
-  },
-  "output": "true"
-}

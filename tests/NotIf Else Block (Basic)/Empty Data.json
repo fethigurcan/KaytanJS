@@ -1,7 +1,0 @@
-{
-  "groupname": "NotIf Else Block (Basic)",
-  "testname": "Empty Data",
-  "template": "{{^a}}true{{:}}false{{/}}",
-  "data": {},
-  "output": "true"
-}

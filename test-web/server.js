@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require("fs");
 var testlist,testlisthtml;
-const testsPath=path.resolve("tests");
+const testsPath=path.resolve("test-data");
 
 let port = 4444
 const index = Math.max(process.argv.indexOf('--port'), process.argv.indexOf('-p'))
@@ -21,8 +21,7 @@ const app = express()
       if (!fs.existsSync(testsPath+"/"+req.body.groupname)){
         fs.mkdirSync(testsPath+"/"+req.body.groupname);
       }
-      req.body.data=JSON.parse(req.body.data);
-      let testcase=JSON.stringify(req.body,null,2);
+      let testcase=JSON.stringify({ template:req.body.template, data:JSON.parse(req.body.data), expected:req.body.output },null,2);
       fs.writeFileSync(testsPath+"/"+req.body.groupname+"/"+req.body.testname+".json",testcase);
       //TODO: save to ${req.body.testname}.json file.
       res.send(`<!DOCTYPE html>
@@ -31,6 +30,9 @@ const app = express()
           <title>Test Save Info</title>
         </head>
         <body>
+          <script>
+            window.history.back();
+          </script>
           Test case &quot;${req.body.testname}&quot; saved!.<br />
           <button onclick="window.history.back()">Back</button>
         </body>
@@ -41,7 +43,7 @@ const app = express()
     if (!testlist){
       const _escape=v=>v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;");
       testlist = JSON.parse(fs.readFileSync(path.resolve("test/testlist.json")));
-      testlisthtml='<select id="list" onchange="select()"><option></option>';
+      testlisthtml='<select id="list" onchange="select()" autofocus><option></option>';
 
       for (let block in testlist){
         let blockItem=testlist[block];
@@ -188,7 +190,7 @@ const app = express()
                 <div><pre id="expected"></pre></div>
               </td></tr>
               <tr><td style="text-align:center">
-                <button id="execute" name="execute" type="button" onclick="onExecute()">Execute</button> <input type="submit" value="Save As Test Case">
+                <button id="execute" name="execute" type="button" accesskey="e" onclick="onExecute()">Execute</button> <input type="submit" accesskey="s" value="Save As Test Case">
               </td></tr>
               </table>
             </form>

@@ -1,0 +1,7 @@
+{
+  "template": "{{MyName}}",
+  "data": {
+    "MyName": "<span id=\"x\" class='bold'>`fethi`</span>\r\n\tgurcan"
+  },
+  "expected": "&lt;span id=&quot;x&quot; class=&#039;bold&#039;&gt;`fethi`&lt;&#x2F;span&gt;\r\n\tgurcan"
+}
