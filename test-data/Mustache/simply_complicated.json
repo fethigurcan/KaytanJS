@@ -1,8 +1,16 @@
 {
-  "template": "Hi there {{yourname}}.  Your home directory is {{HOME}}.\r\n\r\n{{#friend}}\r\nYour friend is named {{name}}\r\n  {{#morr}}\r\n   Hey {{word}} {{up}} {{{awesomesauce}}}.\r\n   {{/morr}}\r\n   {{^morr}}\r\n   Booooo.  {{hiss}}\r\n   {{/morr}}\r\n   {{notinmorr}}\r\n   {{> partial1}}\r\n{{/friend}}\r\n{{^friend}}\r\nYou have no friends, {{person}}.  You suck.\r\n{{/friend}}\r\n\r\n{{> partial2}}\r\n{{! comments are awesome }}\r\n\r\n{{={% %}=}}\r\n\r\n{%love%}\r\n{%={{ }}=%}\r\n{{{triplestash}}}",
+  "template": "Hi there {{yourname}}.  Your home directory is {{HOME}}.\r\n{{<partial2}}partial2 exists! so what about the poor partial1?{{/}}{{! kaytan added to scenario }}\r\n{{#friend}}\r\nYour friend is named {{name}}\r\n  {{#morr}}\r\n   Hey {{word}} {{up}} {{{awesomesauce}}}.\r\n   {{/morr}}\r\n   {{^morr}}\r\n   Booooo.  {{hiss}}\r\n   {{/morr}}\r\n   {{notinmorr}}\r\n   {{> partial1}}\r\n{{/friend}}\r\n{{^friend}}\r\nYou have no friends, {{person}}.  You suck.\r\n{{/friend}}\r\n\r\n{{> partial2}}\r\n{{! comments are awesome }}\r\n\r\n{{={% %}=}}\r\n\r\n{%love%}\r\n{%={{ }}=%}\r\n{{{triplestash}}}",
   "data": {
     "yourname": "Fethi",
-    "HOME": "c:\\izmir"
+    "HOME": "c:\\izmir",
+    "friend": [
+      {
+        "name": "Süleyman",
+        "hiss": "Booo"
+      }
+    ],
+    "love": "love sea",
+    "notinmorr": "nothing more baby!"
   },
-  "expected": "needs to be inspected"
+  "expected": "Hi there Fethi.  Your home directory is c:\\izmir.\r\n\r\n\r\nYour friend is named Süleyman\r\n  \r\n   \r\n   Booooo.  Booo\r\n   \r\n   nothing more baby!\r\n   \r\n\r\n\r\n\r\npartial2 exists! so what about the poor partial1?\r\n\r\n\r\n\r\n\r\nlove sea\r\n\r\n"
 }

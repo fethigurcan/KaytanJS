@@ -6,9 +6,9 @@ class KaytanOrOperator extends KaytanOperator{
         super(engine,left,'|',right);
     }
 
-    executeLogic(objectArray,parentIndex,parentLength){
-        return this.left.executeLogic(objectArray,parentIndex,parentLength) 
-            || this.right.executeLogic(objectArray,parentIndex,parentLength); 
+    executeLogic(objectArray,parentIndex,parentLength,partialIndexAddition=0){
+        return this.left.executeLogic(objectArray,parentIndex,parentLength,partialIndexAddition=0) 
+            || this.right.executeLogic(objectArray,parentIndex,parentLength,partialIndexAddition); 
     }
 }
 

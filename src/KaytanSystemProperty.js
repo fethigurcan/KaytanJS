@@ -17,7 +17,7 @@ class KaytanSystemProperty extends KaytanProperty{
 
     }
 
-    execute(global,objectArray,parentIndex,parentLength){
+    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
       return this.fn(parentIndex,parentLength);
     }
 

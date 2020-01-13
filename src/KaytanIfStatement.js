@@ -41,11 +41,11 @@ ${formatJavascript(this.else.toJavascriptCode(),1)}
         return retVal;
     }
 
-    execute(global,objectArray,parentIndex,parentLength){
-        if (this.if.executeLogic(global,objectArray,parentIndex,parentLength))
-            return this.then.execute(global,objectArray,parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
+        if (this.if.executeLogic(global,objectArray,parentIndex,parentLength,partialIndexAddition=0))
+            return this.then.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
         else if (this.else)
-            return this.else.execute(global,objectArray,parentIndex,parentLength);
+            return this.else.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
         else
             return '';
     }

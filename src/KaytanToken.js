@@ -9,7 +9,7 @@ class KaytanToken{
         });
     }
 
-    execute(global,objectArray,parentIndex,parentLength){
+    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
         throw new Error('execute method is not implemented for:'+this.constructor.name); 
     }
 }

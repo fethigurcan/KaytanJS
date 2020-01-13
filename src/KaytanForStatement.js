@@ -53,8 +53,8 @@ ${formatJavascript(this.else.toJavascriptCode(),2)}
         return retVal;
     }
 
-    execute(global,objectArray,parentIndex,parentLength){
-        let obj=this.for.execute(global,objectArray,parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
+        let obj=this.for.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
 
         if (Array.isArray(obj) && obj.length){
             let childObjectArray=[...objectArray,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
@@ -68,7 +68,7 @@ ${formatJavascript(this.else.toJavascriptCode(),2)}
         }else if (obj)
             return this.loop.execute(global,[...objectArray,obj],0,1);
         else if (this.else)
-            return this.else.execute(global,objectArray,parentIndex,parentLength);
+            return this.else.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
         else
             return '';
     }

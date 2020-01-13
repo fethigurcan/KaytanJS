@@ -8,5 +8,5 @@
     "greeting": "Welcome",
     "farewell": "Fair enough, right?"
   },
-  "expected": "needs to be inspected"
+  "expected": "<h1>Welcome</h1>\r\nHello Bob\r\nYou have just won $100!\r\n\r\n\r\n<h3>Fair enough, right?</h3>"
 }

@@ -15,11 +15,13 @@ class KaytanPartial extends KaytanToken{
         return `${s}>${this.name}${e}`;
     }
 
-    execute(global,objectArray,parentIndex,parentLength){
+    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
         let rootObject=global[partialsHolder];
         let partial=rootObject && rootObject[this.name];
         if (partial)
-            return partial.execute(global,objectArray,parentIndex,parentLength);
+            return partial.execute(global,objectArray,parentIndex,parentLength,objectArray.length-1);
+        else
+            return "";
     }
 
 }

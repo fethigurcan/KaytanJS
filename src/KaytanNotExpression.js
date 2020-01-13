@@ -20,8 +20,8 @@ class KaytanNotExpression extends KaytanExpression{
         return "!"+expression;
     }
 
-    executeLogic(objectArray,parentIndex,parentLength){
-        return !this.expression.executeLogic(objectArray,parentIndex,parentLength);
+    executeLogic(objectArray,parentIndex,parentLength,partialIndexAddition=0){
+        return !this.expression.executeLogic(objectArray,parentIndex,parentLength,partialIndexAddition);
     }
 
     toJavascriptDefinitionsCode(){

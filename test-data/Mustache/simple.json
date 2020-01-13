@@ -6,5 +6,5 @@
     "taxed_value": 6000,
     "in_ca": true
   },
-  "expected": "needs to be inspected"
+  "expected": "  Hello Chris\r\nYou have just won $10000!\r\n\r\nWell, $6000, after taxes.\r\n"
 }
