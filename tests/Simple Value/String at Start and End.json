@@ -1,0 +1,9 @@
+{
+  "groupname": "Simple Value",
+  "testname": "String at Start and End",
+  "template": "Hello {{where}}!",
+  "data": {
+    "where": "World"
+  },
+  "output": "Hello World!"
+}

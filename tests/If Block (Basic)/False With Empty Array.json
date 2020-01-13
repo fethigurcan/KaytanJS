@@ -1,0 +1,9 @@
+{
+  "groupname": "If Block (Basic)",
+  "testname": "False With Empty Array",
+  "template": "t{{?a}}a{{/}}m",
+  "data": {
+    "a": []
+  },
+  "output": "tm"
+}

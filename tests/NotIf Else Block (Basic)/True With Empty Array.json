@@ -1,0 +1,9 @@
+{
+  "groupname": "NotIf Else Block (Basic)",
+  "testname": "True With Empty Array",
+  "template": "{{^a}}true{{:}}false{{/}}",
+  "data": {
+    "a": []
+  },
+  "output": "true"
+}

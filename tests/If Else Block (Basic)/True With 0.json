@@ -1,0 +1,9 @@
+{
+  "groupname": "If Else Block (Basic)",
+  "testname": "True With 0",
+  "template": "{{?a}}true{{:}}false{{/}}",
+  "data": {
+    "a": 0
+  },
+  "output": "true"
+}

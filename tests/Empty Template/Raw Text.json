@@ -1,0 +1,7 @@
+{
+  "groupname": "Empty Template",
+  "testname": "Raw Text",
+  "template": "Hello World!",
+  "data": {},
+  "output": "Hello World!"
+}

@@ -1,0 +1,10 @@
+{
+  "groupname": "Empty Template",
+  "testname": "Some Data",
+  "template": "",
+  "data": {
+    "a": true,
+    "b": false
+  },
+  "output": ""
+}

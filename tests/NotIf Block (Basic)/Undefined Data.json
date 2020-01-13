@@ -1,0 +1,7 @@
+{
+  "groupname": "NotIf Block (Basic)",
+  "testname": "Undefined Data",
+  "template": "t{{^a}}a{{/}}m",
+  "data": null,
+  "output": "tam"
+}

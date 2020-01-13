@@ -1,0 +1,9 @@
+{
+  "groupname": "NotIf Block (Basic)",
+  "testname": "False With String",
+  "template": "t{{^a}}a{{/}}m",
+  "data": {
+    "a": "fethi"
+  },
+  "output": "tm"
+}

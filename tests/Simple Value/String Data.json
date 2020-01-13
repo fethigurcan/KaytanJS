@@ -1,0 +1,7 @@
+{
+  "groupname": "Simple Value",
+  "testname": "String Data",
+  "template": "{{.}}",
+  "data": "fethi",
+  "output": "fethi"
+}

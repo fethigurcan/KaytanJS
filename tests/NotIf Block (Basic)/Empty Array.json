@@ -1,0 +1,7 @@
+{
+  "groupname": "NotIf Block (Basic)",
+  "testname": "Empty Array",
+  "template": "t{{^a}}a{{/}}m",
+  "data": [],
+  "output": "tam"
+}

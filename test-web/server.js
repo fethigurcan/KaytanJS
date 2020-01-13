@@ -1,7 +1,9 @@
-const path = require('path')
-const express = require('express')
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
 const fs = require("fs");
 var testlist,testlisthtml;
+const testsPath=path.resolve("tests");
 
 let port = 4444
 const index = Math.max(process.argv.indexOf('--port'), process.argv.indexOf('-p'))
@@ -10,7 +12,30 @@ if (index !== -1) {
 }
 
 const app = express()
+  .use(bodyParser.urlencoded({ extended: true }))
   .use("/dist",express.static(path.resolve('dist')))
+  .post("/test-case",(req, res) => {
+      if (!fs.existsSync(testsPath)){
+        fs.mkdirSync(testsPath);
+      }
+      if (!fs.existsSync(testsPath+"/"+req.body.groupname)){
+        fs.mkdirSync(testsPath+"/"+req.body.groupname);
+      }
+      req.body.data=JSON.parse(req.body.data);
+      let testcase=JSON.stringify(req.body,null,2);
+      fs.writeFileSync(testsPath+"/"+req.body.groupname+"/"+req.body.testname+".json",testcase);
+      //TODO: save to ${req.body.testname}.json file.
+      res.send(`<!DOCTYPE html>
+      <html>
+        <head>
+          <title>Test Save Info</title>
+        </head>
+        <body>
+          Test case &quot;${req.body.testname}&quot; saved!.<br />
+          <button onclick="window.history.back()">Back</button>
+        </body>
+      </html>`);
+  })
   .get("/:jslibrary",(req, res) => {
     
     if (!testlist){
@@ -62,49 +87,28 @@ const app = express()
         </head>
         <body>
           <h1>Test ${req.params.jslibrary}.js</h1>
-          <table>
-              <tr><td>
-              Test:
-              ${testlisthtml}
-            </td></tr>
-            <tr><td>
-              Template:
-              <div><textarea id="template" rows="10" onchange="userchange()">Hello {{who}}!</textarea></div>
-            </td></tr>
-            <tr><td>
-              JSON Data:
-              <div><textarea id="data" rows="5" onchange="userchange()">{ "who":"World" }</textarea></div>
-            </td></tr>
-            <tr><td>
-              Output:
-              <div><pre id="output"></pre></div>
-            </td></tr>
-            <tr style="display:none"><td>
-              <span id="expectedlabel">Expected:</span>
-              <div><pre id="expected"></pre></div>
-            </td></tr>
-            <tr><td style="text-align:center">
-              <button id="execute" onclick="execute()">Execute</button>
-            </td></tr>
-            </table>
           <script src="/dist/${req.params.jslibrary}.js"></script>
           <script>
             const _escape=v=>v;//.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
             var selected,selectedGroup;
-            function execute(){
+            function onExecute(){
               let outputel=document.getElementById('output');
+              let outputhiddenel=document.getElementById('output-hidden');
               let templateel=document.getElementById('template');
               let datael=document.getElementById('data');
               try{
                 let data=JSON.parse(datael.value);
                 let kaytan=new Kaytan(template.value);
                 let output=kaytan.execute(data);
+                outputhiddenel.value=output;
                 outputel.innerText=_escape(output);
                 if (selected){
                   document.getElementById('expectedlabel').style.color=output==selected[2]?'green':null;
                 }
               }catch(e){
+                debugger;
+                outputhiddenel.value=JSON.stringify({ error:e.name,message:e.message });
                 outputel.innerText=_escape(e.message);
               }
             }
@@ -112,21 +116,29 @@ const app = express()
             var selected,selectedGroup;
             function select(e){
               let outputel=document.getElementById('output');
+              let outputhiddenel=document.getElementById('output-hidden');
               let expectedel=document.getElementById('expected');
               let templateel=document.getElementById('template');
+              let testnameel=document.getElementById('testname');
+              let groupnameel=document.getElementById('groupname');
               let datael=document.getElementById('data');
               
               if (event.target.value){
                 selectedGroup=testlist[event.target.selectedOptions[0].parentElement.label];
                 selected=selectedGroup[event.target.value];
+                testnameel.value=event.target.value;
+                groupnameel.value=event.target.selectedOptions[0].parentElement.label;
 
                 outputel.innerText="";
+                outputhiddenel.value="";
                 templateel.value=selected[0]?selected[0]:"";
                 datael.value=JSON.stringify(selected[1]);
                 expectedel.innerText=selected[2];
                 expectedel.parentElement.parentElement.parentElement.style.display=null;
-                execute();
+                onExecute();
               }else{
+                testnameel.value=event.target.value;
+                groupnameel.value="";
                 selectedGroup=null;
                 selected=null;
                 expectedel.innerText="";
@@ -139,12 +151,47 @@ const app = express()
               document.getElementById('list').value="";
               document.getElementById('expectedlabel').style.color=null;
               document.getElementById('output').innerText="";
+              document.getElementById('output-hidden').value="";
+
               let expectedel=document.getElementById('expected');
               expectedel.innerText="";
               expectedel.parentElement.parentElement.parentElement.style.display="none";
-          }
+            }
 
+            function onSubmit(){
+              onExecute();
+              return true;
+            }
           </script>
+          <form id="form" action="/test-case" method="post" onsubmit="return onSubmit()">
+            <table>
+                <tr><td>
+                Test:
+                ${testlisthtml}
+                <input type="text" id="groupname" name="groupname" required/>
+                <input type="text" id="testname" name="testname" required/>
+              </td></tr>
+              <tr><td>
+                Template:
+                <div><textarea id="template" name="template" rows="10" onchange="userchange()">Hello {{who}}!</textarea></div>
+              </td></tr>
+              <tr><td>
+                JSON Data:
+                <div><textarea id="data" name="data" rows="5" onchange="userchange()">{ "who":"World" }</textarea></div>
+              </td></tr>
+              <tr><td>
+                Output:
+                <div><pre id="output"></pre><input type="hidden" id="output-hidden" name="output" required/></div>
+              </td></tr>
+              <tr style="display:none"><td>
+                <span id="expectedlabel">Expected:</span>
+                <div><pre id="expected"></pre></div>
+              </td></tr>
+              <tr><td style="text-align:center">
+                <button id="execute" name="execute" type="button" onclick="onExecute()">Execute</button> <input type="submit" value="Save As Test Case">
+              </td></tr>
+              </table>
+            </form>
         </body>
       </html>`
     );

@@ -1,0 +1,9 @@
+{
+  "groupname": "NotIf Block (Basic)",
+  "testname": "True With Empty String",
+  "template": "t{{^a}}a{{/}}m",
+  "data": {
+    "a": ""
+  },
+  "output": "tam"
+}

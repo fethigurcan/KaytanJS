@@ -1,0 +1,9 @@
+{
+  "groupname": "If Block (Basic)",
+  "testname": "True With String",
+  "template": "t{{?a}}a{{/}}m",
+  "data": {
+    "a": "fethi"
+  },
+  "output": "tam"
+}

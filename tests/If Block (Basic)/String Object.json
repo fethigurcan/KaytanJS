@@ -1,0 +1,7 @@
+{
+  "groupname": "If Block (Basic)",
+  "testname": "String Object",
+  "template": "t{{?a}}a{{/}}m",
+  "data": "fethi",
+  "output": "tm"
+}
