@@ -22,13 +22,14 @@ for (let block in testlist){
     describe(block,()=>{
         for (let title in blockItem){
             let item=JSON.parse(fs.readFileSync(blockItem[title]));
+            item.expected=item.expected.replace(/\r\n/g,"\n");
             if (Kaytan){ //Node test
                 test(title, () => {
-                    expect((new Kaytan(item.template,options)).execute(item.data)).toBe(item.expected);
+                    expect((new Kaytan(item.template,options)).execute(item.data).replace(/\r\n/g,"\n")).toBe(item.expected);
                 });
             }else{ //web test
                 test(title, async () => {
-                    const result = await page.evaluate((template,data,options) => (new Kaytan(template,options)).execute(data) ,item.template,item.data,options);
+                    const result = await page.evaluate((template,data,options) => (new Kaytan(template,options)).execute(data).replace(/\r\n/g,"\n") ,item.template,item.data,options);
                     expect(result).toEqual(item.expected);
                 });    
             }

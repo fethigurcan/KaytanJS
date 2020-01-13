@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require("fs");
 const testlist=require("../test-data");
+const testDataPath=path.resolve("./test-data");
 const _escape=v=>v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;");
 
 let port = 4444
@@ -17,14 +18,11 @@ const app = express()
   .use(bodyParser.urlencoded({ extended: true }))
   .use("/dist",express.static(path.resolve('dist')))
   .post("/test-data",(req, res) => {
-      if (!fs.existsSync(testsPath)){
-        fs.mkdirSync(testsPath);
-      }
-      if (!fs.existsSync(testsPath+"/"+req.body.groupname)){
-        fs.mkdirSync(testsPath+"/"+req.body.groupname);
+      if (!fs.existsSync(testDataPath+"/"+req.body.groupname)){
+        fs.mkdirSync(testDataPath+"/"+req.body.groupname);
       }
       let testcase=JSON.stringify({ template:req.body.template, data:JSON.parse(req.body.data), expected:req.body.output },null,2);
-      fs.writeFileSync(testsPath+"/"+req.body.groupname+"/"+req.body.testname+".json",testcase);
+      fs.writeFileSync(testDataPath+"/"+req.body.groupname+"/"+req.body.testname+".json",testcase);
       //TODO: save to ${req.body.testname}.json file.
       res.send(`<!DOCTYPE html>
       <html>
@@ -92,7 +90,7 @@ const app = express()
               try{
                 let data=JSON.parse(datael.value);
                 let kaytan=new Kaytan(template.value,{ optimized:optimizedel.checked,optimizeddebugger:optimizeddebuggerel.checked });
-                let output=kaytan.execute(data);
+                let output=kaytan.execute(data).replace(/\\r\\n/g,"\\n");
                 outputhiddenel.value=output;
                 outputel.innerText=_escape(output);
                 document.getElementById('expectedlabel').style.color=output==expectedhiddenel.value?'green':null;
@@ -129,6 +127,7 @@ const app = express()
                   let test=JSON.parse(xhr.responseText);
                   templateel.value=test.template;
                   datael.value=JSON.stringify(test.data);
+                  test.expected=test.expected.replace(/\\r\\n/g,"\\n");
                   expectedel.innerText=test.expected;
                   expectedhiddenel.value=test.expected;
                   expectedel.parentElement.parentElement.style.display=null;
