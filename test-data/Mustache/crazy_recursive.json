@@ -32,5 +32,5 @@
       }
     ]
   },
-  "expected": "needs to be inspected"
+  "expected": "\r\n<html>\r\n  <body>\r\n    <ul>\r\n      \r\n      \r\n<li>\r\n  1\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  2\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  3\r\n  <ul>\r\n    \r\n  </ul>\r\n</li>\r\n\r\n    \r\n  </ul>\r\n</li>\r\n\r\n    \r\n    \r\n<li>\r\n  4\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  5\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  6\r\n  <ul>\r\n    \r\n  </ul>\r\n</li>\r\n\r\n    \r\n  </ul>\r\n</li>\r\n\r\n    \r\n  </ul>\r\n</li>\r\n\r\n    \r\n  </ul>\r\n</li>\r\n\r\n      \r\n    </ul>\r\n  </body>\r\n</html>"
 }
