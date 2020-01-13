@@ -11,7 +11,9 @@ Mustache like Template Engine with some logic extensions. Mustache templates als
 
 ## Run Tests
    - npm run test
+   - npm run test-optimized
    - npm run test-web
+   - npm run test-web-optimized
 
 ## Basic Usage Sample (Nodejs)
 ```javascript
