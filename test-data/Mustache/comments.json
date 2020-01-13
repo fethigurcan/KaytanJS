@@ -1,0 +1,7 @@
+{
+  "template": "<h1>{{title}}{{! just something interesting... #or not... }}</h1>",
+  "data": {
+    "title": "A Comedy of Errors"
+  },
+  "expected": "<h1>A Comedy of Errors</h1>"
+}

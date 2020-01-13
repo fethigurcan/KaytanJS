@@ -1,0 +1,10 @@
+{
+  "template": "{{first-name}} {{middle_name}} {{lastName}} {{street-address}}{{! kaytan does not accept ! or ? postfixes }}",
+  "data": {
+    "first_name": "kevin",
+    "middle_name": "j",
+    "lastName": "sheurs",
+    "street-address": "123 Somewhere St"
+  },
+  "expected": " j sheurs 123 Somewhere St"
+}

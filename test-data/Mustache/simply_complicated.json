@@ -1,0 +1,8 @@
+{
+  "template": "Hi there {{yourname}}.  Your home directory is {{HOME}}.\r\n\r\n{{#friend}}\r\nYour friend is named {{name}}\r\n  {{#morr}}\r\n   Hey {{word}} {{up}} {{{awesomesauce}}}.\r\n   {{/morr}}\r\n   {{^morr}}\r\n   Booooo.  {{hiss}}\r\n   {{/morr}}\r\n   {{notinmorr}}\r\n   {{> partial1}}\r\n{{/friend}}\r\n{{^friend}}\r\nYou have no friends, {{person}}.  You suck.\r\n{{/friend}}\r\n\r\n{{> partial2}}\r\n{{! comments are awesome }}\r\n\r\n{{={% %}=}}\r\n\r\n{%love%}\r\n{%={{ }}=%}\r\n{{{triplestash}}}",
+  "data": {
+    "yourname": "Fethi",
+    "HOME": "c:\\izmir"
+  },
+  "expected": "needs to be inspected"
+}

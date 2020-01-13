@@ -1,0 +1,10 @@
+{
+  "template": "  Hello {{name}}\r\nYou have just won ${{value}}!\r\n{{#in_ca}}\r\nWell, ${{ taxed_value }}, after taxes.\r\n{{/in_ca}}",
+  "data": {
+    "name": "Chris",
+    "value": 10000,
+    "taxed_value": 6000,
+    "in_ca": true
+  },
+  "expected": "needs to be inspected"
+}

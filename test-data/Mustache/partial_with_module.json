@@ -1,0 +1,12 @@
+{
+  "template": "{{<simple}}Hello {{name}}\r\nYou have just won ${{value}}!\r\n{{#in_ca}}\r\nWell, ${{ taxed_value }}, after taxes.\r\n{{/in_ca}}{{/simple}}<h1>{{greeting}}</h1>\r\n{{>simple}}\r\n\r\n<h3>{{farewell}}</h3>",
+  "data": {
+    "name": "Bob",
+    "value": 100,
+    "taxed_value": 60,
+    "in_ca": false,
+    "greeting": "Welcome",
+    "farewell": "Fair enough, right?"
+  },
+  "expected": "needs to be inspected"
+}

@@ -1,0 +1,18 @@
+{
+  "template": "* {{person.name.first}} {{person.name.last}}\r\n* {{person.age}}\r\n* {{person.hometown.city}}, {{person.hometown.state}}\r\n* {{#person}}{{hometown.city}}, {{hometown.state}}{{/person}}\r\n* {{#person}}{{#hometown}}{{city}}, {{state}}{{/hometown}}{{/person}}\r\n* {{#person.hometown}}{{city}}, {{state}}{{/person.hometown}}\r\n* {{normal}}\r\n\r\n* {{{person.name.first}}} {{&person.name.last}}\r\n* {{^person.alien}}{{person.hometown.city}}, {{person.hometown.state}}{{/person.alien}}{{! end question mark notation does'nt supported for alien? at kaytan }}",
+  "data": {
+    "person": {
+      "name": {
+        "first": "Chris",
+        "last": "Firescythe"
+      },
+      "age": 24,
+      "hometown": {
+        "city": "Cincinnati",
+        "state": "OH"
+      }
+    },
+    "normal": "Normal"
+  },
+  "expected": "needs to be inspected"
+}

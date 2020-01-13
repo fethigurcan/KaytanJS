@@ -1,0 +1,7 @@
+{
+  "template": "{{< inner_partial}}Again, {{title}}!{{/inner_partial}}<h1>{{title}}</h1>My opinion: {{>inner_partial}} {{! this is not the exact test case !! }}",
+  "data": {
+    "title": "Dragon < Tiger"
+  },
+  "expected": "<h1>Dragon &lt; Tiger</h1>My opinion: Again, Dragon &lt; Tiger! "
+}

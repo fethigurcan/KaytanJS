@@ -1,0 +1,36 @@
+{
+  "template": "{{< node}}{{! kaytan can define partials with this notation }}\r\n<li>\r\n  {{contents}}\r\n  <ul>\r\n    {{#children}}\r\n    {{> node}}\r\n    {{/children}}\r\n  </ul>\r\n</li>\r\n{{/node}}\r\n<html>\r\n  <body>\r\n    <ul>\r\n      {{#top_nodes}}\r\n      {{> node}}\r\n      {{/top_nodes}}\r\n    </ul>\r\n  </body>\r\n</html>",
+  "data": {
+    "top_nodes": [
+      {
+        "contents": "1",
+        "children": [
+          {
+            "contents": "2",
+            "children": [
+              {
+                "contents": "3",
+                "children": []
+              }
+            ]
+          },
+          {
+            "contents": "4",
+            "children": [
+              {
+                "contents": "5",
+                "children": [
+                  {
+                    "contents": "6",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected": "needs to be inspected"
+}

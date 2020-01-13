@@ -1,0 +1,8 @@
+{
+  "template": "{{^t}}\r\n  * first\r\n{{/t}}\r\n* {{two}}\r\n{{^t}}\r\n  * third\r\n{{/t}}",
+  "data": {
+    "t": false,
+    "two": "second"
+  },
+  "expected": "\r\n  * first\r\n\r\n* second\r\n\r\n  * third\r\n"
+}
