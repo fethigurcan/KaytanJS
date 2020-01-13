@@ -57,7 +57,7 @@ class Kaytan{
             let fn=`let $fn=function($oo){
    ${options.optimizeddebugger?"debugger;":""}
    let $r='';
-   let $global={ $partials:{} };
+   let $global={ $partials:{}, $parameterUsage:{} };
    let $o=$oo;
    let $scope=$o[$o.length-1];
    let $check=v=>v!=null&&v!==false;

@@ -21,6 +21,10 @@ class KaytanParameterUsage extends KaytanToken{
         global[parameterUsageHolder].push(this.name);
         return '';
     }
+
+    toJavascriptCode(){
+        return `$global.${parameterUsageHolder}.push("${this.name}");`;
+    }
 }
 
 module.exports=KaytanParameterUsage;
