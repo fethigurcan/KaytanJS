@@ -2,10 +2,11 @@ const KaytanToken=require('./KaytanToken');
 const partialsHolder=require('./Helper').partialsHolder;
 
 class KaytanPartial extends KaytanToken{
-    constructor(engine,name){
+    constructor(engine,name,partialIndexAddition){
         super(engine);
         Object.defineProperties(this,{
-            name:{ value:name, writable:false }
+            name:{ value:name, writable:false },
+            partialIndexAddition:{ value:partialIndexAddition, writable:false }
         });
     }
 
@@ -17,7 +18,7 @@ class KaytanPartial extends KaytanToken{
 
     toJavascriptCode(){
         return `if ($global.${partialsHolder}.${this.name})
-   $global.${partialsHolder}.${this.name}($scope,$o);`;
+   $global.${partialsHolder}.${this.name}($scope,$o,$pia+${this.partialIndexAddition});`;
     }
 
     execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){

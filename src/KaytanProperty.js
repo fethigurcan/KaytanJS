@@ -33,7 +33,7 @@ class KaytanProperty extends KaytanLogicToken{
         if (this.exactLevel)
             return '';
         else
-            return `let ${this.name}=$findPropertyValue("${this.name}",$o,${this.index});`;
+            return `let ${this.name}=$findPropertyValue("${this.name}",$o,${this.index?`$pia+${this.index}`:'$pia'});`;
     }
 
     toJavascriptCheckCode()
@@ -46,7 +46,7 @@ class KaytanProperty extends KaytanLogicToken{
         if (this.isCurrentScope)
             return '$scope'+(this.name=='.'?'':'.'+this.access);
         else if (this.exactLevel)
-            return `$o[${this.index}]`+(this.name=='.'?'':'.'+this.access);
+            return `$o[${this.index?`$pia+${this.index}`:'$pia'}]`+(this.name=='.'?'':'.'+this.access);
         else
             return this.access;
     }

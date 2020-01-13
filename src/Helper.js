@@ -1,4 +1,4 @@
-const commandRegexBaseStr="[a-zA-Z_][a-zA-Z0-9-_]*";
+const commandRegexBaseStr="[a-zA-Z_][a-zA-Z0-9_]*";
 const commandNameRegex=new RegExp("^#(first|last|odd|even|intermediate)$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
 const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
 const commandPrefixToken=/^[[('"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
@@ -76,7 +76,7 @@ const getPropertyValue=function(property,objectArray,index,exactLevel){
 
     let retVal;
     if (exactLevel)
-        retVal=objectArray[index][property];
+        retVal=objectArray[index][_property];
     else 
         retVal=findPropertyValue(_property,objectArray,index);
 
@@ -84,7 +84,7 @@ const getPropertyValue=function(property,objectArray,index,exactLevel){
         return retVal;
     else
         if (retVal!=null && typeof(retVal)=='object')
-            return getPropertyValue(property.substring(childIndex),[...objectArray,retVal]);
+            return getPropertyValue(property.substring(childIndex+1),[...objectArray,retVal],objectArray.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };

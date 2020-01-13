@@ -1,10 +1,10 @@
 {
-  "template": "{{first-name}} {{middle_name}} {{lastName}} {{street-address}}{{! kaytan does not accept ! or ? postfixes }}",
+  "template": "{{first_name}} {{middle_name}} {{lastName}} {{street_address}}{{! kaytan does not accept ! or ? postfixes and properties which contains - is also not accepted }}",
   "data": {
     "first_name": "kevin",
     "middle_name": "j",
     "lastName": "sheurs",
-    "street-address": "123 Somewhere St"
+    "street_address": "123 Somewhere St"
   },
-  "expected": " j sheurs 123 Somewhere St"
+  "expected": "kevin j sheurs 123 Somewhere St"
 }

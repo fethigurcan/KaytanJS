@@ -236,9 +236,9 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             command=command.replace(/^=|=$/g,"");
                             let newDelimiters=command.split(' ');
                             if (newDelimiters.length==2){
-                                let delimiterIllegalRegex=/[a-zA-Z0-9-_=&|!]/g;
+                                let delimiterIllegalRegex=/[a-zA-Z0-9_=&|!]/g;
                                 if (delimiterIllegalRegex.test(newDelimiters[0])||delimiterIllegalRegex.test(newDelimiters[1]))
-                                    throw new KaytanSyntaxError('Delimiters can\'t contain [a-zA-Z0-9-_=]',i,this.template);
+                                    throw new KaytanSyntaxError('Delimiters can\'t contain [a-zA-Z0-9_=]',i,this.template);
                                 delimiterStart=newDelimiters[0];
                                 delimiterEnd=newDelimiters[1];
                             }else
@@ -263,7 +263,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                     }else if (command[0]=='>'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleCommandNameRegex.test(command1)){
-                            retVal.push(new KaytanPartial(this,command1));
+                            retVal.push(new KaytanPartial(this,command1,scopeInfo.length-1));
                         }else
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
                     }else{
