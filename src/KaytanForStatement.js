@@ -55,13 +55,16 @@ ${formatJavascript(this.else.toJavascriptCode(),2)}
 
     execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
         let obj=this.for.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
+        let l=objectArray.length;
+
+        if (objectArray[l-1]==obj)
+            return ''; //prevents self recursion
 
         if (Array.isArray(obj) && obj.length){
             let childObjectArray=[...objectArray,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
-            let l=objectArray.length;
             let s="";
             for (let i=0;i<obj.length;i++){
-                childObjectArray[objectArray.length]=obj[i]; //son öğe ile scope'u belirle.
+                childObjectArray[l]=obj[i]; //son öğe ile scope'u belirle.
                 s+=this.loop.execute(global,childObjectArray,i,obj.length);
             }
             return s;
