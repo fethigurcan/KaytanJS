@@ -81,6 +81,8 @@ const app = express()
 
             var selected,selectedGroup;
             function onExecute(){
+              let optimizedel=document.getElementById('optimized');
+              let optimizeddebuggerel=document.getElementById('optimizeddebugger');
               let outputel=document.getElementById('output');
               let outputhiddenel=document.getElementById('output-hidden');
               let templateel=document.getElementById('template');
@@ -89,7 +91,7 @@ const app = express()
 
               try{
                 let data=JSON.parse(datael.value);
-                let kaytan=new Kaytan(template.value);
+                let kaytan=new Kaytan(template.value,{ optimized:optimizedel.checked,optimizeddebugger:optimizeddebuggerel.checked });
                 let output=kaytan.execute(data);
                 outputhiddenel.value=output;
                 outputel.innerText=_escape(output);
@@ -167,12 +169,14 @@ const app = express()
           </script>
           <form id="form" action="/test-data" method="post" onsubmit="return onSubmit()">
             <table>
-                <tr colspan="2"><td>
+                <tr><td colspan="2">
                 Test:
                 ${testlisthtml}
                 <input type="text" id="groupname" name="groupname" required/>
                 <input type="text" id="testname" name="testname" required/>
-                <button id="execute" name="execute" type="button" accesskey="e" onclick="onExecute()">Execute</button> <input type="submit" id="submit" accesskey="s" value="Save As Test Case">
+                <button id="execute" name="execute" type="button" accesskey="e" onclick="onExecute()">Execute</button>
+                <input type="submit" id="submit" accesskey="s" value="Save As Test Case">
+                <input type="checkbox" id="optimized"> Optimized <input type="checkbox" id="optimizeddebugger"> Optimized Debugger 
               </td></tr>
               <tr><td width="50%">
                 Template:

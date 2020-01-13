@@ -55,6 +55,7 @@ class Kaytan{
         if (options && options.optimized){
             //this.varcounter=0;
             let fn=`let $fn=function($oo){
+   ${options.optimizeddebugger?"debugger;":""}
    let $r='';
    let $global={};
    let $o=$oo;
