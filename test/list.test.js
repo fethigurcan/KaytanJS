@@ -1,7 +1,7 @@
 var Kaytan=require(__ENTRYPOINT__);
 var fs = require("fs");
 var path = require("path");
-var testlist = JSON.parse(fs.readFileSync(path.resolve("test/testlist.json")));
+var testlist = require("../test-data")();
 
 var options;
 if (__OPTIMIZED__=="YES"){
@@ -11,23 +11,11 @@ if (__OPTIMIZED__=="YES"){
 
 for (let block in testlist){
     let blockItem=testlist[block];
-    let lasttemplate,lastobj,lastexpectedResult;
     describe(block,()=>{
         for (let title in blockItem){
-            let template,obj,expectedResult;
-            let item=blockItem[title];
-            
-            template=item[0]===-1?lasttemplate:item[0];
-            obj=item[1]===-1?lastobj:item[1];
-            expectedResult=item[2]===-1?lastexpectedResult:item[2];
-            
-            //this approach prevents value changes in parallel processing
-            lasttemplate=template;
-            lastobj=obj;
-            lastexpectedResult=expectedResult;
-
+            let item=JSON.parse(fs.readFileSync(blockItem[title]));
             test(title, () => {
-                expect((new Kaytan(template,options)).execute(obj)).toBe(expectedResult);
+                expect((new Kaytan(item.template,options)).execute(item.data)).toBe(item.expected);
             });
         }
     });
