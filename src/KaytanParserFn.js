@@ -227,7 +227,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             i++;
                         let command1=command.substring(1).trim().replace(/}$/,'').trim();
                         retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,"&"));
-                    }else if (command=='.'){ //DİKKAT: ilk karakter değil tümü=.
+                    }else if (command.trim()=='.'){ //DİKKAT: ilk karakter değil tümü=.
                         retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
                     }else if (command[0]=='!'){ 
                         //ignore comments
@@ -267,7 +267,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         }else
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
                     }else{
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command,i,scopeInfo),scopeInfo));
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command.trim(),i,scopeInfo),scopeInfo));
                     }
                     j=retVal.length;
                     buffer=null;
