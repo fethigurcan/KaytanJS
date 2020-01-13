@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --config jest.config.js --coverage",
     "test-optimized": "jest --config jest.config.optimized.js --coverage",
-    "test-server": "node test-web/server.js",
+    "test-server": "node test-server/index.js",
     "test-web": "jest --config jest.web.config.js --detectOpenHandles",
     "test-web-optimized": "jest --config jest.web.config.optimized.js --detectOpenHandles",
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack --config webpack.config.babel.js",
