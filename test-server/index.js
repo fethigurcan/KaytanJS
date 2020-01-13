@@ -177,11 +177,11 @@ const app = express()
                 <input type="submit" id="submit" accesskey="s" value="Save As Test Case">
                 <input type="checkbox" id="optimized"> Optimized <input type="checkbox" id="optimizeddebugger"> Optimized Debugger 
               </td></tr>
-              <tr><td width="50%">
+              <tr><td width="50%" valign="top">
                 Template:
                 <div><textarea id="template" name="template" rows="10" onchange="userchange()">Hello {{who}}!</textarea></div>
               </td>
-              <td width="50%">
+              <td width="50%" valign="top">
                 JSON Data:
                 <div><textarea id="data" name="data" rows="10" onchange="userchange()">{ "who":"World" }</textarea></div>
               </td></tr>
