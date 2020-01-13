@@ -13,7 +13,7 @@ class KaytanGlobalProperty extends KaytanProperty{
         return "";
     }
 
-    toJavascriptCode(){
+    toJavascriptAccessCode(){
         return `$global.${this.name}`;
     }
 }
