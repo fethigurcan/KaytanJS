@@ -248,7 +248,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                     }else if (command[0]=='<'){
                         let a={};
                         command=command.substring(1).trim();
-                        let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command);
+                        let r=parseTemplate.call(this,[{ defined:[] }],delimiterStart,delimiterEnd,i+1,command); //[{ defined:[] }] means independent scopeInfo for every partial definition
                         if (command){
                             if (Helpers.simpleCommandNameRegex.test(command)){
                                 if (r.data.else)
@@ -277,8 +277,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                 buffer+=this.template[i];
         }
     }
-    //if (retVal.length>0 && typeof(retVal[retVal.length-1])=="string")
-    //    retVal[retVal.length-1]=new KaytanStringToken(this,retVal[retVal.length-1]);
+
     if (buffer)
         if (typeof(retVal[retVal.length-1])=="string")
             retVal[retVal.length-1]+=buffer;

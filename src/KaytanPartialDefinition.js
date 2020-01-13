@@ -1,5 +1,6 @@
 const KaytanToken=require('./KaytanToken');
 const partialsHolder=require('./Helper').partialsHolder;
+const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanPartialDefinition extends KaytanToken{
     constructor(engine,name,token){
@@ -16,6 +17,11 @@ class KaytanPartialDefinition extends KaytanToken{
         let s=this.engine.defaultStartDelimiter;
         let e=this.engine.defaultEndDelimiter;
         return `${s}<${this.name}${e}${this.token.toString()}${s}/${e}`;
+    }
+
+    toJavascriptCode(){
+        return `$global.${partialsHolder}.${this.name}=function($scope,$o,$partialIndexAddition) {
+${formatJavascript(this.token.toJavascriptCode(),1)}}`;
     }
 
     execute(global,objectArray){

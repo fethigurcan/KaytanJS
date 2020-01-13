@@ -1,6 +1,6 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{=<} >=}}<! ct >"
+dd=new Kaytan("{{< deneme }}den{{aaa}}eme{{/}}{{> deneme}}"
         ,{ optimized:true,defaultStartDelimiter:'{{',defaultEndDelimiter:'}}' });
 console.log(dd);
 
