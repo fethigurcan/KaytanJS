@@ -19,7 +19,7 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
         return '';
     }
 
-    toJavascriptAccessCode(){
+    toJavascriptCode(){
         return `$global.${this.name}=true;`;
     }
 }
