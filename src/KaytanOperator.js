@@ -34,8 +34,7 @@ class KaytanOperator extends KaytanExpression{
     toJavascriptDefinitionsCode(){
         let l=this.left.toJavascriptDefinitionsCode();
         let r=this.right.toJavascriptDefinitionsCode();
-        return l+`
-`+r;
+        return l+r;
     }
 
     toJavascriptCheckCode(){

@@ -95,7 +95,6 @@ const app = express()
                 outputel.innerText=_escape(output);
                 document.getElementById('expectedlabel').style.color=output==expectedhiddenel.value?'green':null;
               }catch(e){
-                debugger;
                 outputhiddenel.value=JSON.stringify({ error:e.name,message:e.message });
                 outputel.innerText=_escape(e.message);
               }

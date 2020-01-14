@@ -26,19 +26,18 @@ class KaytanForStatement extends KaytanStatement{
     }
 
     toJavascriptCode(){
-        //let no=this.engine.varcounter;
-        //this.engine.varcounter++;
+        let no=this.engine.varcounter;
+        this.engine.varcounter++;
         
-        let retVal=`{
-${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}
-   let $arr=${this.for.toJavascriptAccessCode()};
-   if ($o[$o.length-1]!=$arr){
-      let $_o=$o;
-      if (Array.isArray($arr) || ($arr!=null && $arr!==false && ($arr=[$arr]))){
-         let $l=$arr.length;
-         let $o=[...$_o,null];
-         for(let $i=0;$i<$arr.length;$i++){
-            let $scope=$arr[$i];
+        let retVal=`//{
+${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}let $arr${no}=${this.for.toJavascriptAccessCode()};
+   if ($o[$o.length-1]!=$arr${no}){
+      let $_o${no}=$o;
+      if (Array.isArray($arr${no}) || ($arr${no}!=null && $arr${no}!==false && ($arr${no}=[$arr${no}]))){
+         let $l=$arr${no}.length;
+         let $o=[...$_o${no},null];
+         for(let $i=0;$i<$arr${no}.length;$i++){
+            let $scope=$arr${no}[$i];
             $o[$o.length-1]=$scope;
 ${formatJavascript(this.loop.toJavascriptCode(),4)}
          }
@@ -47,11 +46,11 @@ ${formatJavascript(this.loop.toJavascriptCode(),4)}
             retVal+=`else{
 ${formatJavascript(this.else.toJavascriptCode(),3)}
    }
-}`;
+//}`;
 
         retVal+=`
    }
-}`;
+//}`;
         return retVal;
     }
 

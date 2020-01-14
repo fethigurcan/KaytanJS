@@ -53,7 +53,7 @@ class Kaytan{
         ast=tokenList.length==1?tokenList[0]:tokenList;
 
         if (options && options.optimized){
-            //this.varcounter=0;
+            this.varcounter=0;
             let fn=`let $fn=function($oo){
    ${options.optimizeddebugger?"debugger;":""}
    let $r='';
