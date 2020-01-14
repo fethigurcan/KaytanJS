@@ -33,7 +33,7 @@ ${formatJavascript(this.then.toJavascriptCode(),2)}
    }`;
         if (this.else)
             retVal+=`else{
-${formatJavascript(this.else.toJavascriptCode(),1)}
+${formatJavascript(this.else.toJavascriptCode(),2)}
    }`;
         
         retVal+=`

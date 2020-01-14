@@ -156,15 +156,16 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         else
                             throw new KaytanSyntaxError('Unexpected /',i,this.template);
                     }else if (Helpers.logicCommandPrefixToken.test(command[0])){
+                        this._temporaryBlockFlag=2;
                         let command1=command.substring(1).trim();
                         let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command1);
                         if (command1){
+                            this._temporaryBlockFlag=1;
                             let block={ 
                                 if:parseExpression.call(this,command1,i-command.length,scopeInfo).data,
                                 then:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
-
                             if (typeof(block.then)=="string")
                                 block.then=new KaytanStringToken(this,block.then);
                             if (typeof(block.else)=="string")
@@ -177,9 +178,13 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             i=r.i;
                         }else
                             throw new KaytanSyntaxError('Empty expression',i,this.template);
+                        
+                        delete this._temporaryBlockFlag;
                     }else if (command[0]=='#'){
+                        this._temporaryBlockFlag=2;
                         command=command.substring(1).trim();
                         if (command){
+                            this._temporaryBlockFlag=1;
                             let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],delimiterStart,delimiterEnd,i+1,command);
                             let block={ 
                                 for:parseProperty.call(this,command,i,scopeInfo,null),
@@ -196,7 +201,10 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             i=r.i;
                         }else
                             throw new KaytanSyntaxError('Empty variable',i,this.template);
+
+                        delete this._temporaryBlockFlag;
                     }else if (command[0]==':'){
+                        this._temporaryBlockFlag=3;
                         if (blockName){
                             command=command.substring(1).trim();
                             if (command && blockName!=command) //end tags supported but optional. But if used it must be matched.
@@ -248,7 +256,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                     }else if (command[0]=='<'){
                         let a={};
                         command=command.substring(1).trim();
-                        let r=parseTemplate.call(this,[{ defined:[] }],delimiterStart,delimiterEnd,i+1,command); //[{ defined:[] }] means independent scopeInfo for every partial definition
+                        let r=parseTemplate.call(this,[{ defined:{} }],delimiterStart,delimiterEnd,i+1,command); //[{ defined:{} }] means independent scopeInfo for every partial definition
                         if (command){
                             if (Helpers.simpleCommandNameRegex.test(command)){
                                 if (r.data.else)
