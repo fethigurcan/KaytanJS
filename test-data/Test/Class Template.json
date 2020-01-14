@@ -1,0 +1,68 @@
+{
+  "template": "{{=<% %>=}}\r\n<%< parameters%>object <%.%><%^#last%>, <%/%><%/parameters%>\r\n<%#children%>\r\nClass <%name%> <%?extends%>: <%extends%><%/extends%>\r\n{\r\n<%#constructors%>\r\n   public <%..name%>(<%#parameters%><%>parameters%><%/parameters%>){\r\n<%&code%>\r\n   }\r\n<%/constructors%>\r\n<%#properties%>\r\n<%?writable%>\r\n   public object <%name%> { get; set; }\r\n<%:writable%>\r\n   private object _<%.name%>;\r\n   public object <%.name%> {\r\n     get {\r\n       return _<%.name%>;\r\n     }\r\n   }\r\n<%/writable%>\r\n<%/properties%>\r\n<%#methods%>\r\n   <%?private%>private<%:%>public<%/%> <%?static%>static <%/%> <%name%>(<%#parameters%><%>parameters%><%/parameters%>){\r\n<%&code%>\r\n   }\r\n<%/methods%>\r\n}\r\n<%/children%>",
+  "data": {
+    "type": "program",
+    "children": [
+      {
+        "type": "class",
+        "name": "KaytanGlobalPropertyDefinition",
+        "extends": "KaytanToken",
+        "constructors": [
+          {
+            "type": "constructor",
+            "static": false,
+            "parameters": [
+              "engine",
+              "name"
+            ],
+            "name": "constructor",
+            "children": [],
+            "code": "      //  super(engine);\n      //  Object.defineProperties(this, {\n      //    name: {\n      //      value: name,\n      //      writable: false\n      //    }\n      //  });"
+          }
+        ],
+        "properties": [
+          {
+            "type": "property",
+            "name": "name",
+            "writable": false
+          },
+          {
+            "type": "property",
+            "name": "comments",
+            "writable": true
+          }
+        ],
+        "methods": [
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [],
+            "name": "toString",
+            "children": [],
+            "code": "      //  let s = this.engine.defaultStartDelimiter;\n      //  let e = this.engine.defaultEndDelimiter;\n      //  return `${s}$${this.name}${e}`;"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [
+              "global",
+              "objectArray"
+            ],
+            "name": "execute",
+            "children": [],
+            "code": "      //  global[this.name] = true;\n      //  return '';"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [],
+            "name": "toJavascriptCode",
+            "children": [],
+            "code": "      //  return `$global.${this.name}=true;`;"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": "\r\n\r\n\r\nClass KaytanGlobalPropertyDefinition : KaytanToken\r\n{\r\n\r\n   public KaytanGlobalPropertyDefinition(object engine, object name){\r\n      //  super(engine);\r\n      //  Object.defineProperties(this, {\r\n      //    name: {\r\n      //      value: name,\r\n      //      writable: false\r\n      //    }\r\n      //  });\r\n   }\r\n\r\n\r\n\r\n   private object _name;\r\n   public object name {\r\n     get {\r\n       return _name;\r\n     }\r\n   }\r\n\r\n\r\n\r\n   public object comments { get; set; }\r\n\r\n\r\n\r\n   public  toString(){\r\n      //  let s = this.engine.defaultStartDelimiter;\r\n      //  let e = this.engine.defaultEndDelimiter;\r\n      //  return `${s}$${this.name}${e}`;\r\n   }\r\n\r\n   public  execute(object global, object objectArray){\r\n      //  global[this.name] = true;\r\n      //  return '';\r\n   }\r\n\r\n   public  toJavascriptCode(){\r\n      //  return `$global.${this.name}=true;`;\r\n   }\r\n\r\n}\r\n"
+}
