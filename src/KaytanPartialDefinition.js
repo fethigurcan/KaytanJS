@@ -20,7 +20,7 @@ class KaytanPartialDefinition extends KaytanToken{
     }
 
     toJavascriptCode(){
-        return `$global.${partialsHolder}.${this.name}=function($scope,$o,$pia) {
+        return `$global.${partialsHolder}.${this.name}=function($scope,$o,$pia,$i,$l) {
 ${formatJavascript(this.token.toJavascriptCode(),1)}
 }`;
     }

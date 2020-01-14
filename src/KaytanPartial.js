@@ -18,7 +18,7 @@ class KaytanPartial extends KaytanToken{
 
     toJavascriptCode(){
         return `if ($global.${partialsHolder}.${this.name})
-   $global.${partialsHolder}.${this.name}($scope,$o,$pia+${this.partialIndexAddition});`;
+   $global.${partialsHolder}.${this.name}($scope,$o,$pia+${this.partialIndexAddition},$i,$l);`;
     }
 
     execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
