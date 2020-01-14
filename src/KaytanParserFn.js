@@ -142,6 +142,21 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                 }
             }else if (buffer.length>=delimiterStart.length+delimiterEnd.length && buffer.substring(buffer.length-(delimiterEnd.length-1))+this.template[i]==delimiterEnd){
                 buffer+=this.template[i];
+                
+                /*do not use start and end newlines around template tags. user double enter if you really want */
+                if (retVal[j] && typeof(retVal[j])=="string"){
+                    if (retVal[j][retVal[j].length-1]=="\n"){
+                        let oldi=i;
+                        if (this.template[i+1]=="\r" || this.template[i+1]=="\n")
+                            i++;
+                        if (this.template[i]=="\r" && this.template[i+1]=="\n")
+                            i++;
+                        if (i!=oldi)
+                            retVal[j]=retVal[j].replace(/(\r)?\n$/,"");
+                    }
+                }
+                /*END OF: do not use start and end newlines around template tags. user double enter if you really want */
+
                 if (buffer.length>delimiterStart.length+delimiterEnd.length){
                     let command=buffer.substring(delimiterStart.length,buffer.length-delimiterEnd.length);
                     if (command[0]=='/'){

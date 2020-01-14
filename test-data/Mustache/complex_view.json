@@ -36,5 +36,5 @@
     ],
     "empty": []
   },
-  "expected": "<h1>Colors</h1>\r\n\r\n  <ul>\r\n  \r\n    \r\n      <li><strong>red</strong></li>\r\n    \r\n    \r\n      <li><a href=\"#Red\">red</a></li>\r\n    \r\n  \r\n  </ul>\r\n\r\n  <ul>\r\n  \r\n    \r\n    \r\n      <li><a href=\"#Green\">green</a></li>\r\n    \r\n  \r\n  </ul>\r\n\r\n  <ul>\r\n  \r\n    \r\n    \r\n      <li><a href=\"#Blue\">blue</a></li>\r\n    \r\n  \r\n  </ul>\r\n\r\n\r\n"
+  "expected": "<h1>Colors</h1>  <ul>\r\n  \r\n    \r\n      <li><strong>red</strong></li>\r\n    \r\n    \r\n      <li><a href=\"#Red\">red</a></li>\r\n    \r\n  \r\n  </ul>  <ul>\r\n  \r\n    \r\n    \r\n      <li><a href=\"#Green\">green</a></li>\r\n    \r\n  \r\n  </ul>  <ul>\r\n  \r\n    \r\n    \r\n      <li><a href=\"#Blue\">blue</a></li>\r\n    \r\n  \r\n  </ul>"
 }
