@@ -1,18 +1,26 @@
 {
-  "template": "{{=<% %>=}}\r\n<%< parameters%>object <%.name%><%^$last%>, <%/%><%/parameters%>\r\n<%#children%>\r\n<%?.type.class%>\r\n<%?!private%>public <%/%><%?abstract%>abstract <%/%><%?static%>static <%/%>class <%name%> <%?extends%>: <%extends%><%/extends%>\r\n{\r\n\r\n<%#constructors%>\r\n   public <%..name%>(<%[parameters%><%>parameters%><%/parameters%>)<%?super%>: base(<%#super%><%.%><%^$last%>, <%/%><%/%>)<%/super%>{\r\n\r\n<%&code%>\r\n\r\n   }\r\n\r\n<%/constructors%>\r\n\r\n\r\n<%[properties%>\r\n<%?writable%>\r\n   public object <%name%> { get; set; }\r\n\r\n<%:writable%>\r\n   private object _<%name%>;\r\n   public object <%name%> {\r\n     get {\r\n       return _<%name%>;\r\n     }\r\n   }\r\n\r\n<%/writable%>\r\n<%/properties%>\r\n\r\n<%#methods%>\r\n   <%?private%>private<%:%>public<%/%> <%?static%>static <%/%><%#returnType%><%.%> <%:%>void <%/%><%name%>(<%[parameters%><%>parameters%><%/parameters%>){\r\n\r\n<%&code%>\r\n\r\n   }\r\n\r\n\r\n<%/methods%>\r\n}\r\n<%/%>\r\n<%/children%>",
+  "template": "{{=<% %>=}}\r\n<%< parameters%><%#parameterType%><%.%><%:%>object<%/%> <%.name%><%#default%> = <%default%><%/%><%^$last%>, <%/%><%/parameters%>\r\n<%#children%>\r\n<%?.type.class%>\r\n<%?!private%>public <%/%><%?abstract%>abstract <%/%><%?static%>static <%/%>class <%name%> <%?extends%>: <%extends%><%/extends%>\r\n{\r\n\r\n<%#constructors%>\r\n   public <%..name%>(<%[parameters%><%>parameters%><%/parameters%>)<%?super%>: base(<%#super%><%.%><%^$last%>, <%/%><%/%>)<%/super%>{\r\n\r\n<%&code%>\r\n\r\n<%[..properties%>\r\n<%?.initializedBy%>\r\n      this.<%^.writable%>_<%/%><%.name%>=<%.initializedBy%>;\r\n<%/%>\r\n<%/%>\r\n\r\n   }\r\n\r\n<%/constructors%>\r\n\r\n\r\n<%[properties%>\r\n<%?writable%>\r\n   public <%#.propertyType%><%.%><%:%>object<%/%> <%name%> { get; set; }\r\n\r\n\r\n<%:writable%>\r\n   private <%#.propertyType%><%.%><%:%>object<%/%> _<%name%>;\r\n   public <%#.propertyType%><%.%><%:%>object<%/%> <%name%> {\r\n     get {\r\n       return _<%name%>;\r\n     }\r\n   }\r\n\r\n\r\n<%/writable%>\r\n<%/properties%>\r\n\r\n<%#methods%>\r\n   <%?private%>private<%:%>public<%/%> <%?static%>static <%/%><%#returnType%><%.%> <%:%>void <%/%><%name%>(<%[parameters%><%>parameters%><%/parameters%>){\r\n\r\n<%&code%>\r\n\r\n   }\r\n\r\n\r\n<%/methods%>\r\n}\r\n<%/%>\r\n<%/children%>",
   "data": {
     "type": "program",
     "requires": [
       {
         "name": "KaytanToken",
         "path": "./KaytanToken"
+      },
+      {
+        "name": "KaytanStatement",
+        "path": "./KaytanStatement"
+      },
+      {
+        "name": "KaytanProperty",
+        "path": "./KaytanProperty"
       }
     ],
     "children": [
       {
         "type": "class",
-        "name": "KaytanGlobalPropertyDefinition",
-        "extends": "KaytanToken",
+        "name": "KaytanForStatement",
+        "extends": "KaytanStatement",
         "constructors": [
           {
             "type": "constructor",
@@ -21,21 +29,47 @@
               "engine": {
                 "name": "engine"
               },
-              "name": {
-                "name": "name"
+              "_for": {
+                "name": "_for",
+                "parameterType": "KaytanProperty"
+              },
+              "_loop": {
+                "name": "_loop",
+                "parameterType": "KaytanToken"
+              },
+              "_else": {
+                "name": "_else",
+                "parameterType": "KaytanToken"
               }
             },
             "name": "constructor",
             "super": [
               "engine"
-            ]
+            ],
+            "code": "      //{}"
           }
         ],
         "properties": {
-          "name": {
+          "for": {
             "type": "property",
-            "name": "name",
-            "writable": false
+            "name": "for",
+            "writable": false,
+            "initializedBy": "_for",
+            "propertyType": "KaytanProperty"
+          },
+          "loop": {
+            "type": "property",
+            "name": "loop",
+            "writable": false,
+            "initializedBy": "_loop",
+            "propertyType": "KaytanToken"
+          },
+          "else": {
+            "type": "property",
+            "name": "else",
+            "writable": false,
+            "initializedBy": "_else",
+            "propertyType": "KaytanToken"
           }
         },
         "methods": [
@@ -43,7 +77,13 @@
             "type": "method",
             "static": false,
             "name": "toString",
-            "code": "      //let s = this.engine.defaultStartDelimiter;\n      //let e = this.engine.defaultEndDelimiter;\n      //return `${s}$${this.name}${e}`;"
+            "code": "      //{\n      //  let s = this.engine.defaultStartDelimiter;\n      //  let e = this.engine.defaultEndDelimiter;\n      //  return `${s}#${this.for.toString()}${e}${this.loop.toString()}${this.else ? `${s}:${e}` + this.else.toString() : \"\"}${s}/${e}`;\n      //}"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "name": "toJavascriptCode",
+            "code": "      //{\n      //  let no = this.engine.varcounter;\n      //  this.engine.varcounter++;\n      //  let retVal = `//{\n      //${formatJavascript(this.for.toJavascriptDefinitionsCode(), 1)}let $arr${no}=${this.for.toJavascriptAccessCode()};\n      //   if ($o[$o.length-1]!=$arr${no}){\n      //      let $_o${no}=$o;\n      //      if (Array.isArray($arr${no}) || ($arr${no}!=null && $arr${no}!==false && ($arr${no}=[$arr${no}]))){\n      //         let $l=$arr${no}.length;\n      //         let $o=[...$_o${no},null];\n      //         for(let $i=0;$i<$arr${no}.length;$i++){\n      //            let $k=$i;\n      //            let $scope=$arr${no}[$i];\n      //            $o[$o.length-1]=$scope;\n      //${formatJavascript(this.loop.toJavascriptCode(), 4)}\n      //         }\n      //      }`;\n      //  if (this.else) retVal += `else{\n      //${formatJavascript(this.else.toJavascriptCode(), 3)}\n      //   }\n      ////}`;\n      //  retVal += `\n      //   }\n      ////}`;\n      //  return retVal;\n      //}"
           },
           {
             "type": "method",
@@ -54,20 +94,28 @@
               },
               "objectArray": {
                 "name": "objectArray"
+              },
+              "parentIndex": {
+                "name": "parentIndex"
+              },
+              "parentLength": {
+                "name": "parentLength"
+              },
+              "parentKey": {
+                "name": "parentKey"
+              },
+              "undefined": {
+                "name": "partialIndexAddition",
+                "parameterType": "int",
+                "default": 0
               }
             },
             "name": "execute",
-            "code": "      //global[this.name] = true;\n      //return '';"
-          },
-          {
-            "type": "method",
-            "static": false,
-            "name": "toJavascriptCode",
-            "code": "      //return `$global.${this.name}=true;`;"
+            "code": "      //{\n      //  let obj = this.for.execute(global, objectArray, parentIndex, parentLength, parentKey, partialIndexAddition);\n      //  let l = objectArray.length;\n      //  if (objectArray[l - 1] == obj) return ''; //prevents self recursion\n      //\n      //  if (Array.isArray(obj) && obj.length) {\n      //    let childObjectArray = [...objectArray, null]; //son null oge her bir item ile değiştirilerek çalıştırılacak\n      //\n      //    let s = \"\";\n      //\n      //    for (let i = 0; i < obj.length; i++) {\n      //      childObjectArray[l] = obj[i]; //son öğe ile scope'u belirle.\n      //\n      //      s += this.loop.execute(global, childObjectArray, i, obj.length, i, partialIndexAddition);\n      //    }\n      //\n      //    return s;\n      //  } else if (obj) return this.loop.execute(global, [...objectArray, obj], 0, 1, 0, partialIndexAddition);else if (this.else) return this.else.execute(global, objectArray, parentIndex, parentLength, parentKey, partialIndexAddition);else return '';\n      //}"
           }
         ]
       }
     ]
   },
-  "expected": "\r\n\r\npublic class KaytanGlobalPropertyDefinition : KaytanToken\r\n{\r\n   public KaytanGlobalPropertyDefinition(object engine, object name): base(engine){\r\n\r\n   }\r\n\r\n   private object _name;\r\n   public object name {\r\n     get {\r\n       return _name;\r\n     }\r\n   }\r\n\r\n   public void toString(){\r\n      //let s = this.engine.defaultStartDelimiter;\r\n      //let e = this.engine.defaultEndDelimiter;\r\n      //return `${s}$${this.name}${e}`;\r\n   }\r\n\r\n   public void execute(object global, object objectArray){\r\n      //global[this.name] = true;\r\n      //return '';\r\n   }\r\n\r\n   public void toJavascriptCode(){\r\n      //return `$global.${this.name}=true;`;\r\n   }\r\n\r\n}"
+  "expected": "\r\n\r\npublic class KaytanForStatement : KaytanStatement\r\n{\r\n   public KaytanForStatement(object engine, KaytanProperty _for, KaytanToken _loop, KaytanToken _else): base(engine){\r\n      //{}\r\n      this._for=_for;\r\n      this._loop=_loop;\r\n      this._else=_else;\r\n\r\n   }\r\n\r\n   private KaytanProperty _for;\r\n   public KaytanProperty for {\r\n     get {\r\n       return _for;\r\n     }\r\n   }\r\n\r\n   private KaytanToken _loop;\r\n   public KaytanToken loop {\r\n     get {\r\n       return _loop;\r\n     }\r\n   }\r\n\r\n   private KaytanToken _else;\r\n   public KaytanToken else {\r\n     get {\r\n       return _else;\r\n     }\r\n   }\r\n\r\n\r\n   public void toString(){\r\n      //{\r\n      //  let s = this.engine.defaultStartDelimiter;\r\n      //  let e = this.engine.defaultEndDelimiter;\r\n      //  return `${s}#${this.for.toString()}${e}${this.loop.toString()}${this.else ? `${s}:${e}` + this.else.toString() : \"\"}${s}/${e}`;\r\n      //}\r\n   }\r\n\r\n   public void toJavascriptCode(){\r\n      //{\r\n      //  let no = this.engine.varcounter;\r\n      //  this.engine.varcounter++;\r\n      //  let retVal = `//{\r\n      //${formatJavascript(this.for.toJavascriptDefinitionsCode(), 1)}let $arr${no}=${this.for.toJavascriptAccessCode()};\r\n      //   if ($o[$o.length-1]!=$arr${no}){\r\n      //      let $_o${no}=$o;\r\n      //      if (Array.isArray($arr${no}) || ($arr${no}!=null && $arr${no}!==false && ($arr${no}=[$arr${no}]))){\r\n      //         let $l=$arr${no}.length;\r\n      //         let $o=[...$_o${no},null];\r\n      //         for(let $i=0;$i<$arr${no}.length;$i++){\r\n      //            let $k=$i;\r\n      //            let $scope=$arr${no}[$i];\r\n      //            $o[$o.length-1]=$scope;\r\n      //${formatJavascript(this.loop.toJavascriptCode(), 4)}\r\n      //         }\r\n      //      }`;\r\n      //  if (this.else) retVal += `else{\r\n      //${formatJavascript(this.else.toJavascriptCode(), 3)}\r\n      //   }\r\n      ////}`;\r\n      //  retVal += `\r\n      //   }\r\n      ////}`;\r\n      //  return retVal;\r\n      //}\r\n   }\r\n\r\n   public void execute(object global, object objectArray, object parentIndex, object parentLength, object parentKey, int partialIndexAddition){\r\n      //{\r\n      //  let obj = this.for.execute(global, objectArray, parentIndex, parentLength, parentKey, partialIndexAddition);\r\n      //  let l = objectArray.length;\r\n      //  if (objectArray[l - 1] == obj) return ''; //prevents self recursion\r\n      //\r\n      //  if (Array.isArray(obj) && obj.length) {\r\n      //    let childObjectArray = [...objectArray, null]; //son null oge her bir item ile değiştirilerek çalıştırılacak\r\n      //\r\n      //    let s = \"\";\r\n      //\r\n      //    for (let i = 0; i < obj.length; i++) {\r\n      //      childObjectArray[l] = obj[i]; //son öğe ile scope'u belirle.\r\n      //\r\n      //      s += this.loop.execute(global, childObjectArray, i, obj.length, i, partialIndexAddition);\r\n      //    }\r\n      //\r\n      //    return s;\r\n      //  } else if (obj) return this.loop.execute(global, [...objectArray, obj], 0, 1, 0, partialIndexAddition);else if (this.else) return this.else.execute(global, objectArray, parentIndex, parentLength, parentKey, partialIndexAddition);else return '';\r\n      //}\r\n   }\r\n\r\n}"
 }
