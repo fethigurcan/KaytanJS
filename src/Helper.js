@@ -21,6 +21,7 @@ const htmlEscapeMap={
 const backslashEscapeMap={
     '"':'\\"',
     "'":"\\'",
+    "`":"\\`",
     "\t":"\\t",    
     "\r":"\\r",    
     "\n":"\\n",    
@@ -30,7 +31,7 @@ const backslashEscapeMap={
 const escape={
     undefined: v=>v.replace(/[&<>"'\/]/g, m=>htmlEscapeMap[m]),
     "&": v=>v,
-    "\\": v=>v.replace(/["'\t\r\n\\]/g, m=>backslashEscapeMap[m]),
+    "\\": v=>v.replace(/["'`\t\r\n\\]/g, m=>backslashEscapeMap[m]),
     "\"": v=>v.replace(/"/g,'""'),
     "'": v=>v.replace(/'/g,"''"),
     "`": v=>v.replace(/`/g,'``'),
