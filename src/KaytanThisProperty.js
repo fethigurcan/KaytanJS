@@ -11,7 +11,7 @@ class KaytanThisProperty extends KaytanProperty{
 
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         return objectArray[objectArray.length-1];
     }
 

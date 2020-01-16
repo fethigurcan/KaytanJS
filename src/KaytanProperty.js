@@ -51,7 +51,7 @@ class KaytanProperty extends KaytanLogicToken{
         return this.name;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         return Helper.getPropertyValue(this.access,objectArray,this.index+partialIndexAddition,this.exactLevel); 
     }
 

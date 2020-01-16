@@ -31,8 +31,8 @@ class KaytanPropertyValue extends KaytanToken{
         return retVal;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
-        let obj=this.property.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        let obj=this.property.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
         if (obj!=null)
             return Helper.escape[this.escape](obj.toString());
         else

@@ -17,8 +17,8 @@ class KaytanSystemProperty extends KaytanProperty{
 
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
-      return this.fn(parentIndex,parentLength);
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+      return this.fn(parentIndex,parentLength,parentKey);
     }
 
     toString(){
@@ -32,7 +32,7 @@ class KaytanSystemProperty extends KaytanProperty{
 }
 
     toJavascriptAccessCode(){
-        return `$systemFn["${this.name}"]($i,$l)`;
+        return `$systemFn["${this.name}"]($i,$l,$k)`;
     }
 }
 

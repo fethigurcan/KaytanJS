@@ -27,7 +27,8 @@ ${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}let $obj${no}=${thi
          let $l=$keys.length;
          let $o=[...$_o${no},null];
          for(let $i=0;$i<$keys.length;$i++){
-            let $scope=$obj${no}[$keys[$i]];
+            let $k=$keys[$i];
+            let $scope=$obj${no}[$k];
             $o[$o.length-1]=$scope;
 ${formatJavascript(this.loop.toJavascriptCode(),4)}
          }
@@ -44,8 +45,8 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         return retVal;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
-        let obj=this.for.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        let obj=this.for.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
         let l=objectArray.length;
 
         if (objectArray[l-1]==obj)
@@ -57,11 +58,11 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
             let s="";
             for (let i=0;i<keys.length;i++){
                 childObjectArray[l]=obj[keys[i]]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(global,childObjectArray,i,keys.length,partialIndexAddition);
+                s+=this.loop.execute(global,childObjectArray,i,keys.length,keys[i],partialIndexAddition);
             }
             return s;
         }else if (this.else)
-            return this.else.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
+            return this.else.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
         else
             return '';
     }

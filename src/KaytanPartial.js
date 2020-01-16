@@ -21,11 +21,11 @@ class KaytanPartial extends KaytanToken{
    $global.${partialsHolder}.${this.name}($scope,$o,$pia+${this.partialIndexAddition},$i,$l);`;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,partialIndexAddition=0){
+    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let rootObject=global[partialsHolder];
         let partial=rootObject && rootObject[this.name];
         if (partial)
-            return partial.execute(global,objectArray,parentIndex,parentLength,objectArray.length-1);
+            return partial.execute(global,objectArray,parentIndex,parentLength,parentKey,objectArray.length-1);
         else
             return "";
     }
