@@ -1,5 +1,5 @@
 {
-  "template": "{{#0._c}}{{.._a.0}}{{/}}  ",
+  "template": "{{#0._c}}{{..0._a.0}}{{/}}  ",
   "data": [
     {
       "_a": [
@@ -20,5 +20,5 @@
       "z"
     ]
   ],
-  "expected": "{\"error\":\"TypeError\",\"message\":\"Cannot read property '0' of undefined\"}"
+  "expected": "a  "
 }

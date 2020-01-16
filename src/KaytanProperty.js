@@ -77,6 +77,8 @@ class KaytanProperty extends KaytanLogicToken{
             return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access}")`;
         }else if (this.name==this.access)
             return Helper.numberRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
+        else if (Helper.numberRegex.test(this.name))
+            return `($isObjectOrArray($scope[${this.name}])?$scope[${this.name}]${Helper.replaceAccessToArray(this.access.substring(this.name.length))}:$scope[${this.name}]=="${this.access.substring(this.name.length+1)}")`;
         else
             return `($isObjectOrArray(_${this.name})?_${Helper.replaceAccessToArray(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
     }
