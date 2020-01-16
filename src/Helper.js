@@ -1,5 +1,6 @@
 const commandRegexBaseStr="[a-zA-Z_][a-zA-Z0-9_]*";
-const commandNameRegex=new RegExp("^#(first|last|odd|even|intermediate)$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
+const systemCommandRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
+const commandNameRegex=new RegExp("^"+systemCommandRegexBaseStr+"$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
 const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
 const commandPrefixToken=/^[[('"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
@@ -25,7 +26,9 @@ const systemFn={
     last:(i,l)=>i==l-1?true:null,
     intermediate:(i,l)=>i>0 && i<l-1?true:null,
     odd:(i,l)=>i%2==1?true:null,
-    even:(i,l)=>i%2==0?true:null
+    even:(i,l)=>i%2==0?true:null,
+    index:(i)=>i,
+    key:(i,l,k)=>k
 };
 
 const formatJavascript= (v,i) => v.replace(/^/gm," ".repeat(i*3));

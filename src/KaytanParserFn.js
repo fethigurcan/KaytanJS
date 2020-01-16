@@ -35,9 +35,9 @@ var Helpers=require('./Helper');
 //treat as member function of Kaytan
 function parseProperty(propertyName,errorIndex,scopeInfo){
     if (Helpers.commandNameRegex.test(propertyName)){
-        if (propertyName[0]=='$')
+        if (propertyName[0]=='~')
             return new KaytanGlobalProperty(this,propertyName.substring(1));
-        else if (propertyName[0]=='#')
+        else if (propertyName[0]=='$')
             return new KaytanSystemProperty(this,propertyName.substring(1));
         else
             return new KaytanProperty(this,propertyName,scopeInfo);
@@ -248,10 +248,10 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             escapeFnName="&";
                         }
                         retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
-                    }else if (command[0]=='$' || command[0]=='@'){
+                    }else if (command[0]=='~' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleCommandNameRegex.test(command1)){
-                            if (command[0]=='$')
+                            if (command[0]=='~')
                                 retVal.push(new KaytanGlobalPropertyDefiniton(this,command1));
                             else   
                                 retVal.push(new KaytanParameterUsage(this,command1));

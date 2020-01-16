@@ -24,7 +24,7 @@ class KaytanSystemProperty extends KaytanProperty{
     toString(){
       let s=this.engine.defaultStartDelimiter;
       let e=this.engine.defaultEndDelimiter;
-      return `${s}#${this.name}${e}`;
+      return `${s}$${this.name}${e}`;
     }
 
     toJavascriptDefinitionsCode(){
