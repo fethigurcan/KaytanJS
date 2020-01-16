@@ -9,10 +9,28 @@ const checkRegexForExpressionToString=/[&|]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
 
+const htmlEscapeMap={
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    "\"":"&quot;",
+    "'":"&#039;",
+    "/":"&#x2F;"
+};
+
+const backslashEscapeMap={
+    '"':'\\"',
+    "'":"\\'",
+    "\t":"\\t",    
+    "\r":"\\r",    
+    "\n":"\\n",    
+    "\\":"\\\\"
+};
+
 const escape={
-    undefined: v=>v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\//g, "&#x2F;"),
+    undefined: v=>v.replace(/[&<>"'\/]/g, m=>htmlEscapeMap[m]),
     "&": v=>v,
-    "\\": v=>v.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/'/g,"\\'").replace(/\t/g,'\\t').replace(/\r/g,'\\r').replace(/\n/g,'\\n'),
+    "\\": v=>v.replace(/["'\t\r\n\\]/g, m=>backslashEscapeMap[m]),
     "\"": v=>v.replace(/"/g,'""'),
     "'": v=>v.replace(/'/g,"''"),
     "`": v=>v.replace(/`/g,'``'),
