@@ -28,6 +28,7 @@ var KaytanNotExpression=require('./KaytanNotExpression');
 var KaytanIfStatement=require('./KaytanIfStatement');
 var KaytanNotIfStatement=require('./KaytanNotIfStatement');
 var KaytanForStatement=require('./KaytanForStatement');
+var KaytanKeyForStatement=require('./KaytanKeyForStatement');
 
 var Helpers=require('./Helper');
 
@@ -170,7 +171,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         }
                         else
                             throw new KaytanSyntaxError('Unexpected /',i,this.template);
-                    }else if (Helpers.logicCommandPrefixToken.test(command[0])){
+                    }else if (command[0]=="?" || command[0]=="^"){
                         this._temporaryBlockFlag=2;
                         let command1=command.substring(1).trim();
                         let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command1);
@@ -195,14 +196,14 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             throw new KaytanSyntaxError('Empty expression',i,this.template);
                         
                         delete this._temporaryBlockFlag;
-                    }else if (command[0]=='#'){
+                    }else if (command[0]=='#' || command[0]=="["){
                         this._temporaryBlockFlag=2;
-                        command=command.substring(1).trim();
-                        if (command){
+                        let command1=command.substring(1).trim();
+                        if (command1){
                             this._temporaryBlockFlag=1;
-                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],delimiterStart,delimiterEnd,i+1,command);
+                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],delimiterStart,delimiterEnd,i+1,command1);
                             let block={ 
-                                for:parseProperty.call(this,command,i,scopeInfo,null),
+                                for:parseProperty.call(this,command1,i,scopeInfo,null),
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
@@ -212,7 +213,10 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             if (typeof(block.else)=="string")
                                 block.else=new KaytanStringToken(this,block.else);
 
-                            retVal.push(new KaytanForStatement(this,block.for,block.loop,block.else));
+                            if (command[0]=='#')
+                                retVal.push(new KaytanForStatement(this,block.for,block.loop,block.else));
+                            else 
+                                retVal.push(new KaytanKeyForStatement(this,block.for,block.loop,block.else));
                             i=r.i;
                         }else
                             throw new KaytanSyntaxError('Empty variable',i,this.template);

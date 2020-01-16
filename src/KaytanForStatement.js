@@ -66,11 +66,11 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
             let s="";
             for (let i=0;i<obj.length;i++){
                 childObjectArray[l]=obj[i]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(global,childObjectArray,i,obj.length);
+                s+=this.loop.execute(global,childObjectArray,i,obj.length,partialIndexAddition);
             }
             return s;
         }else if (obj)
-            return this.loop.execute(global,[...objectArray,obj],0,1);
+            return this.loop.execute(global,[...objectArray,obj],0,1,partialIndexAddition);
         else if (this.else)
             return this.else.execute(global,objectArray,parentIndex,parentLength,partialIndexAddition);
         else
