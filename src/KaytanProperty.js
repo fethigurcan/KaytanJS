@@ -56,7 +56,7 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     toJavascriptDefinitionsCode(){
-        if (this.exactLevel || this.allreadyDefined)
+        if (this.exactLevel || this.allreadyDefined || (this.name==this.access && Helper.numberRegex.test(this.access)))
             return '';
         else
             return `let _${this.name}=$findPropertyValue("${this.name}",$o,${this.index?`$pia+${this.index}`:'$pia'});
@@ -71,14 +71,14 @@ class KaytanProperty extends KaytanLogicToken{
 
     toJavascriptAccessCode(){
         if (this.isCurrentScope)
-            return `($isObjectOrArray($scope)?${'$scope'+(this.name=='.'?'':'.'+this.access)}:$scope=="${this.access}")`;
+            return `($isObjectOrArray($scope)?${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:$scope=="${this.access}")`;
         else if (this.exactLevel){
             let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
-            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':'.'+this.access)}:${parentAccess}=="${this.access}")`;
+            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access}")`;
         }else if (this.name==this.access)
-            return "_"+this.access;
+            return Helper.numberRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
         else
-            return `($isObjectOrArray(_${this.name})?_${this.access}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
+            return `($isObjectOrArray(_${this.name})?_${Helper.replaceAccessToArray(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
     }
 }
 

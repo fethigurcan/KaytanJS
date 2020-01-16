@@ -1,0 +1,24 @@
+{
+  "template": "{{#0._c}}{{.._a.0}}{{/}}  ",
+  "data": [
+    {
+      "_a": [
+        "a",
+        "b",
+        "c"
+      ],
+      "_b": [
+        "d",
+        "e",
+        "f"
+      ],
+      "_c": {}
+    },
+    [
+      "x",
+      "y",
+      "z"
+    ]
+  ],
+  "expected": "{\"error\":\"TypeError\",\"message\":\"Cannot read property '0' of undefined\"}"
+}

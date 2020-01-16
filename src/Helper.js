@@ -1,9 +1,11 @@
-const commandRegexBaseStr="[a-zA-Z_][a-zA-Z0-9_]*";
+const commandRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
 const systemCommandRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
 const commandNameRegex=new RegExp("^"+systemCommandRegexBaseStr+"$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
 const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
 const commandPrefixToken=/^[[(\{'"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
+const numberRegex=/^[0-9]+$/;
+const replaceAccessToArray=v=>v.replace(/\.[0-9]+/g,m=>"["+m.substring(1)+"]");
 const partialsHolder="$partials";
 const checkRegexForExpressionToString=/[&|]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
@@ -140,5 +142,7 @@ module.exports={
     findPropertyValue:findPropertyValue,
     getScopeInfo:getScopeInfo,
     systemFn:systemFn,
-    formatJavascript:formatJavascript
+    formatJavascript:formatJavascript,
+    numberRegex:numberRegex,
+    replaceAccessToArray:replaceAccessToArray
 };
