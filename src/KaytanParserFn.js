@@ -201,7 +201,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         let command1=command.substring(1).trim();
                         if (command1){
                             this._temporaryBlockFlag=1;
-                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:[] }],delimiterStart,delimiterEnd,i+1,command1);
+                            let r=parseTemplate.call(this,[...scopeInfo,{ defined:{} }],delimiterStart,delimiterEnd,i+1,command1);
                             let block={ 
                                 for:parseProperty.call(this,command1,i,scopeInfo,null),
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),

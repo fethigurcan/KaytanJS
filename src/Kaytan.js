@@ -48,7 +48,7 @@ class Kaytan{
             defaultEndDelimiter:{ value:(options && options.defaultEndDelimiter)||"}}", writable:false, enumerable:true }
         });
         
-        let ast=parseTemplate.call(this,[{ defined:[] }],this.defaultStartDelimiter,this.defaultEndDelimiter).data;
+        let ast=parseTemplate.call(this,[{ defined:{} }],this.defaultStartDelimiter,this.defaultEndDelimiter).data;
         let tokenList=new KaytanTokenList(this,ast);
         ast=tokenList.length==1?tokenList[0]:tokenList;
 
