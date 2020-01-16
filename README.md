@@ -3,10 +3,10 @@ Mustache like Template Engine with some logic extensions. Mustache templates als
 
 ## Build Info
    - npm install
-   - npm run build
    - npm run test
 
-## Simple Test Server
+## Simple Test Server With An Interface
+   - npm run build
    - npm run test-server
 
 ## Run Tests
