@@ -1,5 +1,5 @@
 {
-  "template": "SELECT * FROM ({{(TableName}})",
+  "template": "SELECT * FROM ({{&(TableName}})",
   "data": {
     "TableName": "Employees (aka) Friends"
   },

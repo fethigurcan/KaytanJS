@@ -93,11 +93,11 @@ const app = express()
                 let output=kaytan.execute(data).replace(/\\r\\n/g,"\\n");
                 outputhiddenel.value=output;
                 outputel.innerText=_escape(output);
-                document.getElementById('expectedlabel').style.color=output==expectedhiddenel.value?'green':null;
               }catch(e){
                 outputhiddenel.value=JSON.stringify({ error:e.name,message:e.message });
                 outputel.innerText=_escape(e.message);
               }
+              document.getElementById('expectedlabel').style.color=outputhiddenel.value==expectedhiddenel.value?'green':null;
             }
 
             var selected,selectedGroup;

@@ -233,9 +233,17 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             break;
                         }else
                             throw new KaytanSyntaxError('Unexpected :',i,this.template);
-                    }else if (Helpers.commandPrefixToken.test(command[0])){
+                    }else if (command[0]=="&"){
                         let command1=command.substring(1).trim();
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,command[0]));
+                        let command2,escapeFnName;
+                        if (Helpers.commandPrefixToken.test(command1[0])){
+                            command2=command1.substring(1);
+                            escapeFnName=command1[0];
+                        }else{
+                            command2=command1;
+                            escapeFnName="&";
+                        }
+                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
                     }else if (command[0]=='$' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleCommandNameRegex.test(command1)){
