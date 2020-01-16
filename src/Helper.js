@@ -22,11 +22,11 @@ const escape={
 };
 
 const systemFn={
-    first:(i,l)=>i===0?true:null,
-    last:(i,l)=>i==l-1?true:null,
-    intermediate:(i,l)=>i>0 && i<l-1?true:null,
-    odd:(i,l)=>i%2==1?true:null,
-    even:(i,l)=>i%2==0?true:null,
+    first:(i,l)=>i===0?true:false,
+    last:(i,l)=>i==l-1?true:false,
+    intermediate:(i,l)=>i>0 && i<l-1?true:false,
+    odd:(i,l)=>i%2==1?true:false,
+    even:(i,l)=>i%2==0?true:false,
     index:(i)=>i,
     key:(i,l,k)=>k
 };
