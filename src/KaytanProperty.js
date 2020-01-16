@@ -71,11 +71,14 @@ class KaytanProperty extends KaytanLogicToken{
 
     toJavascriptAccessCode(){
         if (this.isCurrentScope)
-            return '$scope'+(this.name=='.'?'':'.'+this.access);
-        else if (this.exactLevel)
-            return `$o[${this.index?`$pia+${this.index}`:'$pia'}]`+(this.name=='.'?'':'.'+this.access);
-        else
+            return `($isObjectOrArray($scope)?${'$scope'+(this.name=='.'?'':'.'+this.access)}:$scope=="${this.access}")`;
+        else if (this.exactLevel){
+            let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
+            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':'.'+this.access)}:${parentAccess}=="${this.access}")`;
+        }else if (this.name==this.access)
             return "_"+this.access;
+        else
+            return `($isObjectOrArray(_${this.name})?_${this.access}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
     }
 }
 

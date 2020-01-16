@@ -61,6 +61,7 @@ class Kaytan{
    let $o=$oo;
    let $scope=$o[$o.length-1];
    let $check=v=>v!=null&&v!==false;
+   let $isObjectOrArray=v=>typeof(v)=="object" || Array.isArray(v);
    let $pia=0,$i,$l,$k;
 ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
    return $r;

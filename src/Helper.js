@@ -78,15 +78,19 @@ const getPropertyValue=function(property,objectArray,index,exactLevel){
     let _property=childIndex<0?property:property.substring(0,childIndex);
 
     let retVal;
-    if (exactLevel)
-        retVal=objectArray[index][_property];
-    else 
+    if (exactLevel){
+        let parent=objectArray[index];
+        if (typeof(parent)=="object" || Array.isArray(parent))
+            retVal=parent[_property];
+        else
+            retVal=parent==_property; //string or number values returns the equality to the property
+    }else 
         retVal=findPropertyValue(_property,objectArray,index);
 
     if (childIndex<0)
         return retVal;
     else
-        if (retVal!=null && typeof(retVal)=='object')
+        if (retVal!=null)
             return getPropertyValue(property.substring(childIndex+1),[...objectArray,retVal],objectArray.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
