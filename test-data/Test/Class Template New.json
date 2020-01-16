@@ -1,0 +1,73 @@
+{
+  "template": "{{=<% %>=}}\r\n<%< parameters%>object <%.name%><%^$last%>, <%/%><%/parameters%>\r\n<%#children%>\r\n<%?.type.class%>\r\n<%?!private%>public <%/%><%?abstract%>abstract <%/%><%?static%>static <%/%>class <%name%> <%?extends%>: <%extends%><%/extends%>\r\n{\r\n\r\n<%#constructors%>\r\n   public <%..name%>(<%[parameters%><%>parameters%><%/parameters%>)<%?super%>: base(<%#super%><%.%><%^$last%>, <%/%><%/%>)<%/super%>{\r\n\r\n<%&code%>\r\n\r\n   }\r\n\r\n<%/constructors%>\r\n\r\n\r\n<%[properties%>\r\n<%?writable%>\r\n   public object <%name%> { get; set; }\r\n\r\n<%:writable%>\r\n   private object _<%name%>;\r\n   public object <%name%> {\r\n     get {\r\n       return _<%name%>;\r\n     }\r\n   }\r\n\r\n<%/writable%>\r\n<%/properties%>\r\n\r\n<%#methods%>\r\n   <%?private%>private<%:%>public<%/%> <%?static%>static <%/%><%#returnType%><%.%> <%:%>void <%/%><%name%>(<%[parameters%><%>parameters%><%/parameters%>){\r\n\r\n<%&code%>\r\n\r\n   }\r\n\r\n\r\n<%/methods%>\r\n}\r\n<%/%>\r\n<%/children%>",
+  "data": {
+    "type": "program",
+    "requires": [
+      {
+        "name": "KaytanToken",
+        "path": "./KaytanToken"
+      }
+    ],
+    "children": [
+      {
+        "type": "class",
+        "name": "KaytanGlobalPropertyDefinition",
+        "extends": "KaytanToken",
+        "constructors": [
+          {
+            "type": "constructor",
+            "static": false,
+            "parameters": {
+              "engine": {
+                "name": "engine"
+              },
+              "name": {
+                "name": "name"
+              }
+            },
+            "name": "constructor",
+            "super": [
+              "engine"
+            ]
+          }
+        ],
+        "properties": {
+          "name": {
+            "type": "property",
+            "name": "name",
+            "writable": false
+          }
+        },
+        "methods": [
+          {
+            "type": "method",
+            "static": false,
+            "name": "toString",
+            "code": "      //let s = this.engine.defaultStartDelimiter;\n      //let e = this.engine.defaultEndDelimiter;\n      //return `${s}$${this.name}${e}`;"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "parameters": {
+              "global": {
+                "name": "global"
+              },
+              "objectArray": {
+                "name": "objectArray"
+              }
+            },
+            "name": "execute",
+            "code": "      //global[this.name] = true;\n      //return '';"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "name": "toJavascriptCode",
+            "code": "      //return `$global.${this.name}=true;`;"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": "\r\n\r\npublic class KaytanGlobalPropertyDefinition : KaytanToken\r\n{\r\n   public KaytanGlobalPropertyDefinition(object engine, object name): base(engine){\r\n\r\n   }\r\n\r\n   private object _name;\r\n   public object name {\r\n     get {\r\n       return _name;\r\n     }\r\n   }\r\n\r\n   public void toString(){\r\n      //let s = this.engine.defaultStartDelimiter;\r\n      //let e = this.engine.defaultEndDelimiter;\r\n      //return `${s}$${this.name}${e}`;\r\n   }\r\n\r\n   public void execute(object global, object objectArray){\r\n      //global[this.name] = true;\r\n      //return '';\r\n   }\r\n\r\n   public void toJavascriptCode(){\r\n      //return `$global.${this.name}=true;`;\r\n   }\r\n\r\n}"
+}

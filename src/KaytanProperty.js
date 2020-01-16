@@ -71,10 +71,10 @@ class KaytanProperty extends KaytanLogicToken{
 
     toJavascriptAccessCode(){
         if (this.isCurrentScope)
-            return `($isObjectOrArray($scope)?${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:$scope=="${this.access}")`;
+            return `($isObjectOrArray($scope.${this.name})?${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
         else if (this.exactLevel){
             let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
-            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access}")`;
+            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access.substring(this.name.length+1)}")`;
         }else if (this.name==this.access)
             return Helper.numberRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
         else if (Helper.numberRegex.test(this.name))
