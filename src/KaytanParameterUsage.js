@@ -15,7 +15,7 @@ class KaytanParameterUsage extends KaytanToken{
         return `${s}@${this.name}${e}`;
     }
 
-    execute(global,objectArray){
+    execute(global,scopes){
         if (!global[parameterUsageHolder]) 
             global[parameterUsageHolder]=[];
         global[parameterUsageHolder].push(this.name);

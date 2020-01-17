@@ -2,15 +2,15 @@ const KaytanLogicToken=require('./KaytanLogicToken');
 const KaytanExpression=require('./KaytanExpression');
 const Helper=require('./Helper');
 
-class KaytanOperator extends KaytanExpression{
+class KaytanBinaryExpression extends KaytanExpression{
     constructor(engine,left,operator,right){        
         if (!(left instanceof KaytanLogicToken))
             throw new TypeError('Left operand must be a KaytanLogicToken'); 
         if (!(right instanceof KaytanLogicToken))
             throw new TypeError('Right operand must be a KaytanLogicToken'); 
         super(engine);
-        if (this.constructor===KaytanOperator)
-            throw new TypeError('Abstract class "KaytanOperator" cannot be instantiated directly.'); 
+        if (this.constructor===KaytanBinaryExpression)
+            throw new TypeError('Abstract class "KaytanBinaryExpression" cannot be instantiated directly.'); 
         Object.defineProperties(this,{
             left:{ value:left, writable:false },
             operator:{ value:operator, writable:false },
@@ -22,10 +22,10 @@ class KaytanOperator extends KaytanExpression{
         let left=this.left.toString();
         let right=this.right.toString();
 
-        if (Helper.checkRegexForExpressionToString.test(left))
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
             left="("+left+")";
 
-        if (Helper.checkRegexForExpressionToString.test(right))
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(right))
             right="("+right+")";
 
         return left+this.operator+right;
@@ -41,15 +41,15 @@ class KaytanOperator extends KaytanExpression{
         let left=this.left.toJavascriptCheckCode();
         let right=this.right.toJavascriptCheckCode();
 
-        if (Helper.checkRegexForExpressionToString.test(left))
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
             left="("+left+")";
 
-        if (Helper.checkRegexForExpressionToString.test(right))
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(right))
             right="("+right+")";
 
-        return left+this.operator.repeat(2)+right;
+        return left+this.jsoperator+right;
     }
 
 }
 
-module.exports=KaytanOperator;
+module.exports=KaytanBinaryExpression;

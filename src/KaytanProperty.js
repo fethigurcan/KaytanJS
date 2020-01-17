@@ -51,8 +51,8 @@ class KaytanProperty extends KaytanLogicToken{
         return this.name;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return Helper.getPropertyValue(this.access,objectArray,this.index+partialIndexAddition,this.exactLevel); 
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        return Helper.getPropertyValue(this.access,scopes,this.index+partialIndexAddition,this.exactLevel); 
     }
 
     toJavascriptDefinitionsCode(){
@@ -79,20 +79,20 @@ class KaytanProperty extends KaytanLogicToken{
         else
             retVal=`_${this.access}`;
 
-        return Helper.replaceAccessToArray(retVal);
+        return Helper.arrayAccessReplace(retVal);
 
         /*if (this.isCurrentScope)
-            //return `$getValue($scope${Helper.replaceAccessToArray("."+this.name)})`;
-            return `($isObjectOrArray($scope${Helper.replaceAccessToArray("."+this.name)})?${'$scope'+(Helper.replaceAccessToArray('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
+            //return `$getValue($scope${Helper.arrayAccessReplace("."+this.name)})`;
+            return `($isObjectOrArray($scope${Helper.arrayAccessReplace("."+this.name)})?${'$scope'+(Helper.arrayAccessReplace('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.arrayAccessReplace('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
         else if (this.exactLevel){
             let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
-            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access.substring(this.name.length+1)}")`;
+            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.arrayAccessReplace('.'+this.access))}:${parentAccess}=="${this.access.substring(this.name.length+1)}")`;
         }else if (this.name==this.access)
-            return Helper.numberRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
-        else if (Helper.numberRegex.test(this.name))
-            return `($isObjectOrArray($scope[${this.name}])?$scope[${this.name}]${Helper.replaceAccessToArray(this.access.substring(this.name.length))}:$scope[${this.name}]=="${this.access.substring(this.name.length+1)}")`;
+            return Helper.arrayIndexRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
+        else if (Helper.arrayIndexRegex.test(this.name))
+            return `($isObjectOrArray($scope[${this.name}])?$scope[${this.name}]${Helper.arrayAccessReplace(this.access.substring(this.name.length))}:$scope[${this.name}]=="${this.access.substring(this.name.length+1)}")`;
         else
-            return `($isObjectOrArray(_${this.name})?_${Helper.replaceAccessToArray(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
+            return `($isObjectOrArray(_${this.name})?_${Helper.arrayAccessReplace(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
             */
     }
 }

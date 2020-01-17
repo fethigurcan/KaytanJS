@@ -1,13 +1,11 @@
-const commandRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
-const systemCommandRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
-const commandNameRegex=new RegExp("^"+systemCommandRegexBaseStr+"$|^\\$"+commandRegexBaseStr+"$|^(\\.)*"+commandRegexBaseStr+"(\\."+commandRegexBaseStr+")*$");
-const simpleCommandNameRegex=new RegExp("^"+commandRegexBaseStr+"$");
-const commandPrefixToken=/^[[(\{'"`&\\]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
-const logicCommandPrefixToken=/^[?^]$/; //?=if, ^=not if 
-const numberRegex=/^[0-9]+$/;
-const replaceAccessToArray=v=>v.replace(/\.[0-9]+/g,m=>"["+m.substring(1)+"]");
-const partialsHolder="$partials";
-const checkRegexForExpressionToString=/[&|]/;
+const identifierRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
+const systemIdentifierRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
+const identifierRegex=new RegExp("^"+systemIdentifierRegexBaseStr+"$|^\\$"+identifierRegexBaseStr+"$|^(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*$");
+const simpleIdentifierRegex=new RegExp("^"+identifierRegexBaseStr+"$");
+const arrayIndexRegex=/^[0-9]+$/;
+const arrayAccessReplace=v=>v.replace(/\.[0-9]+/g,m=>"["+m.substring(1)+"]");
+const partialsHolderName="$partials";
+const expressionToStringParanthesisCheckerRegex=/[&|]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
 
@@ -30,11 +28,12 @@ const backslashEscapeMap={
     "\\":"\\\\"
 };
 
+const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const _escape={
     undefined: v=>v.replace(/[&<>"'\/]/g, m=>htmlEscapeMap[m]),
     "&": v=>v,
     "\\": v=>v.replace(/["'`\t\r\n\\]/g, m=>backslashEscapeMap[m]),
-    "\"": v=>v.replace(/"/g,'""'),
+    '"': v=>v.replace(/"/g,'""'),
     "'": v=>v.replace(/'/g,"''"),
     "`": v=>v.replace(/`/g,'``'),
     "[": v=>v.replace(/]/g,']]'),
@@ -43,7 +42,7 @@ const _escape={
 };
 const escape=(v,e)=>v!=null?_escape[e](v.toString()):""
 
-const systemFn={
+const systemIdentifierFn={
     first:(i,l)=>i===0?true:false,
     last:(i,l)=>i==l-1?true:false,
     intermediate:(i,l)=>i>0 && i<l-1?true:false,
@@ -92,34 +91,34 @@ const getScopeInfo=function(property,scopeInfo){
     };
 }
 
-const getPropertyValue=function(property,objectArray,index,exactLevel){
+const getPropertyValue=function(property,scopes,index,exactLevel){
     if (property=='.')
-        return objectArray[objectArray.length-1];
+        return scopes[scopes.length-1];
 
     let childIndex=property.indexOf('.');
     let _property=childIndex<0?property:property.substring(0,childIndex);
 
     let retVal;
     if (exactLevel){
-        retVal=objectArray[index][_property];
+        retVal=scopes[index][_property];
     }else 
-        retVal=findPropertyValue(_property,objectArray,index);
+        retVal=findPropertyValue(_property,scopes,index);
 
     if (childIndex<0)
         return retVal;
     else
         if (retVal!=null)
-            return getPropertyValue(property.substring(childIndex+1),[...objectArray,retVal],objectArray.length,true);
+            return getPropertyValue(property.substring(childIndex+1),[...scopes,retVal],scopes.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };
 
-const findPropertyValue=function(property,objectArray,index){
+const findPropertyValue=function(property,scopes,index){
     for (let i=index;i>-1;i--){
-        let p=objectArray[i][property];
+        let p=scopes[i][property];
         if (p!=null){
              //if a property found but references to the current scope, stop searching upward to prevent cycle
-            if (i<objectArray.length && (p==objectArray[i] || (Array.isArray(p) && p.indexOf(objectArray[i])>-1 ))){
+            if (i<scopes.length && (p==scopes[i] || (Array.isArray(p) && p.indexOf(scopes[i])>-1 ))){
                 return;
             }else
                 return p;
@@ -128,18 +127,17 @@ const findPropertyValue=function(property,objectArray,index){
 };
 
 module.exports={
-    commandNameRegex:commandNameRegex,
-    simpleCommandNameRegex:simpleCommandNameRegex,
-    commandPrefixToken:commandPrefixToken,
-    logicCommandPrefixToken:logicCommandPrefixToken,
+    identifierRegex:identifierRegex,
+    simpleIdentifierRegex:simpleIdentifierRegex,
+    escapePrefixRegex:escapePrefixRegex,
     escape:escape,
-    partialsHolder:partialsHolder,
-    checkRegexForExpressionToString:checkRegexForExpressionToString,
+    partialsHolderName:partialsHolderName,
+    expressionToStringParanthesisCheckerRegex:expressionToStringParanthesisCheckerRegex,
     getPropertyValue:getPropertyValue,
     findPropertyValue:findPropertyValue,
     getScopeInfo:getScopeInfo,
-    systemFn:systemFn,
+    systemIdentifierFn:systemIdentifierFn,
     formatJavascript:formatJavascript,
-    numberRegex:numberRegex,
-    replaceAccessToArray:replaceAccessToArray
+    arrayIndexRegex:arrayIndexRegex,
+    arrayAccessReplace:arrayAccessReplace
 };

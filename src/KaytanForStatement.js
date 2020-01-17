@@ -55,25 +55,25 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         return retVal;
     }
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        let obj=this.for.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
-        let l=objectArray.length;
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        let obj=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+        let l=scopes.length;
 
-        if (objectArray[l-1]==obj)
+        if (scopes[l-1]==obj)
             return ''; //prevents self recursion
 
         if (Array.isArray(obj) && obj.length){
-            let childObjectArray=[...objectArray,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
+            let childscopes=[...scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
             let s="";
             for (let i=0;i<obj.length;i++){
-                childObjectArray[l]=obj[i]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(global,childObjectArray,i,obj.length,i,partialIndexAddition);
+                childscopes[l]=obj[i]; //son öğe ile scope'u belirle.
+                s+=this.loop.execute(global,childscopes,i,obj.length,i,partialIndexAddition);
             }
             return s;
         }else if (obj)
-            return this.loop.execute(global,[...objectArray,obj],0,1,0,partialIndexAddition);
+            return this.loop.execute(global,[...scopes,obj],0,1,0,partialIndexAddition);
         else if (this.else)
-            return this.else.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
+            return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         else
             return '';
     }

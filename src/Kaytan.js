@@ -57,7 +57,7 @@ class Kaytan{
             let fn=`let $fn=function($oo){
    ${options.optimizeddebugger?"debugger;":""}
    let $r='';
-   let $global={ $partials:{}, $parameterUsage:{} };
+   let $global={ ${Helper.partialsHolderName}:{}, $parameterUsage:{} };
    let $o=$oo;
    let $scope=$o[$o.length-1];
    let $check=v=>v!=null&&v!==false;
@@ -67,7 +67,7 @@ ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
 };$fn;`;
             //delete this.varcounter;
             let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference
-            let $systemFn=Helper.systemFn; //used inside fn, keep reference
+            let $systemIdentifierFn=Helper.systemIdentifierFn; //used inside fn, keep reference
             let $escape=Helper.escape; //used inside fn, keep reference
             fn=eval(fn);            
             Object.defineProperties(this,{

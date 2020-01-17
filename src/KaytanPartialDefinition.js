@@ -1,5 +1,5 @@
 const KaytanToken=require('./KaytanToken');
-const partialsHolder=require('./Helper').partialsHolder;
+const partialsHolderName=require('./Helper').partialsHolderName;
 const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanPartialDefinition extends KaytanToken{
@@ -20,15 +20,15 @@ class KaytanPartialDefinition extends KaytanToken{
     }
 
     toJavascriptCode(){
-        return `$global.${partialsHolder}.${this.name}=function($scope,$o,$pia,$i,$l) {
+        return `$global.${partialsHolderName}.${this.name}=function($scope,$o,$pia,$i,$l) {
 ${formatJavascript(this.token.toJavascriptCode(),1)}
 }`;
     }
 
-    execute(global,objectArray){
-        if (!global[partialsHolder]) 
-            global[partialsHolder]={};
-        global[partialsHolder][this.name]=this.token;
+    execute(global,scopes){
+        if (!global[partialsHolderName]) 
+            global[partialsHolderName]={};
+        global[partialsHolderName][this.name]=this.token;
         return '';
     }
 }

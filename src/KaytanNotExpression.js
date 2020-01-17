@@ -1,39 +1,22 @@
 const KaytanLogicToken=require('./KaytanLogicToken');
-const KaytanExpression=require('./KaytanExpression');
+const KaytanUnaryExpression=require('./KaytanUnaryExpression');
 const Helper=require('./Helper');
 
-class KaytanNotExpression extends KaytanExpression{
-    constructor(engine,expression){
-        if (!(expression instanceof KaytanLogicToken))
-            throw new TypeError('Expression must be a KaytanLogicToken'); 
-        super(engine);
-        Object.defineProperties(this,{
-            expression:{ value:expression, writable:false }
-        });
+class KaytanNotExpression extends KaytanUnaryExpression{
+    constructor(engine,argument){
+        super(engine,argument,"!");
     }
 
-    toString(){
-        let expression=this.expression.toString();
-        if (Helper.checkRegexForExpressionToString.test(expression))
-            expression="("+expression+")";
-
-        return "!"+expression;
-    }
-
-    executeLogic(objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return !this.expression.executeLogic(objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
-    }
-
-    toJavascriptDefinitionsCode(){
-        return this.expression.toJavascriptDefinitionsCode();
+    executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        return !this.argument.executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 
     toJavascriptCheckCode(){
-        let expression=this.expression.toJavascriptCheckCode();
-        if (Helper.checkRegexForExpressionToString.test(expression))
-            expression="("+expression+")";
+        let argument=this.argument.toJavascriptCheckCode();
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(argument))
+            argument="("+argument+")";
 
-        return "!"+expression;
+        return "!"+argument;
     }
 }
 

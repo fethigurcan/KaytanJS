@@ -11,8 +11,8 @@ class KaytanThisProperty extends KaytanProperty{
 
     }
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return objectArray[objectArray.length-1];
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        return scopes[scopes.length-1];
     }
 
     toJavascriptDefinitionsCode(){

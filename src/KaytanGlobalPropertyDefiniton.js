@@ -14,7 +14,7 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
         return `${s}$${this.name}${e}`;
     }
 
-    execute(global,objectArray){
+    execute(global,scopes){
         global[this.name]=true;
         return '';
     }

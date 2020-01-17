@@ -20,21 +20,21 @@ var KaytanPartial=require('./KaytanPartial');
 var KaytanPartialDefinition=require('./KaytanPartialDefinition');
 
 //expressions
-var KaytanAndOperator=require('./KaytanAndOperator');
-var KaytanOrOperator=require('./KaytanOrOperator');
+var KaytanAndExpression=require('./KaytanAndExpression');
+var KaytanOrExpression=require('./KaytanOrExpression');
 var KaytanNotExpression=require('./KaytanNotExpression');
 
 //statements
 var KaytanIfStatement=require('./KaytanIfStatement');
 var KaytanNotIfStatement=require('./KaytanNotIfStatement');
 var KaytanForStatement=require('./KaytanForStatement');
-var KaytanKeyForStatement=require('./KaytanKeyForStatement');
+var KaytanForDictionaryStatement=require('./KaytanForDictionaryStatement');
 
 var Helpers=require('./Helper');
 
 //treat as member function of Kaytan
 function parseProperty(propertyName,errorIndex,scopeInfo){
-    if (Helpers.commandNameRegex.test(propertyName)){
+    if (Helpers.identifierRegex.test(propertyName)){
         if (propertyName[0]=='~')
             return new KaytanGlobalProperty(this,propertyName.substring(1));
         else if (propertyName[0]=='$')
@@ -59,19 +59,19 @@ function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel)
                 let r=parseExpression.call(this,expression,templateIndex,scopeInfo,i+1,level,stopAtLevel);
                 level=r.level;
                 if (buffer){
-                    if (Helpers.commandNameRegex.test(buffer)){
+                    if (Helpers.identifierRegex.test(buffer)){
                         if (expression[i]=='&')
-                            retVal.push(new KaytanAndOperator(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
+                            retVal.push(new KaytanAndExpression(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
                         else
-                            retVal.push(new KaytanOrOperator(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
+                            retVal.push(new KaytanOrExpression(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
                     }else
                     throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
                     buffer='';
                 }else if(retVal.length==1){
                     if (expression[i]=='&')
-                        retVal=[new KaytanAndOperator(this,retVal[0],r.data)];
+                        retVal=[new KaytanAndExpression(this,retVal[0],r.data)];
                     else
-                        retVal=[new KaytanOrOperator(this,retVal[0],r.data)];
+                        retVal=[new KaytanOrExpression(this,retVal[0],r.data)];
                 }else
                     throw new KaytanSyntaxError('Excepted lefthand operand',templateIndex+i,this.template);
                 i=r.i;
@@ -104,7 +104,7 @@ function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel)
     }
 
     if (buffer){
-        if (Helpers.commandNameRegex.test(buffer))
+        if (Helpers.identifierRegex.test(buffer))
             retVal.push(parseProperty.call(this,buffer,templateIndex+i,scopeInfo));
         else
             throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
@@ -216,7 +216,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             if (command[0]=='#')
                                 retVal.push(new KaytanForStatement(this,block.for,block.loop,block.else));
                             else 
-                                retVal.push(new KaytanKeyForStatement(this,block.for,block.loop,block.else));
+                                retVal.push(new KaytanForDictionaryStatement(this,block.for,block.loop,block.else));
                             i=r.i;
                         }else
                             throw new KaytanSyntaxError('Empty variable',i,this.template);
@@ -240,7 +240,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                     }else if (command[0]=="&"){
                         let command1=command.substring(1).trim();
                         let command2,escapeFnName;
-                        if (Helpers.commandPrefixToken.test(command1[0])){
+                        if (Helpers.escapePrefixRegex.test(command1[0])){
                             command2=command1.substring(1);
                             escapeFnName=command1[0];
                         }else{
@@ -250,7 +250,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
                     }else if (command[0]=='~' || command[0]=='@'){
                         let command1=command.substring(1).trim();
-                        if (Helpers.simpleCommandNameRegex.test(command1)){
+                        if (Helpers.simpleIdentifierRegex.test(command1)){
                             if (command[0]=='~')
                                 retVal.push(new KaytanGlobalPropertyDefiniton(this,command1));
                             else   
@@ -285,7 +285,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         command=command.substring(1).trim();
                         let r=parseTemplate.call(this,[{ defined:{} }],delimiterStart,delimiterEnd,i+1,command); //[{ defined:{} }] means independent scopeInfo for every partial definition
                         if (command){
-                            if (Helpers.simpleCommandNameRegex.test(command)){
+                            if (Helpers.simpleIdentifierRegex.test(command)){
                                 if (r.data.else)
                                     throw new KaytanSyntaxError('Invalid else statement in partial block',i,this.template);
                                 let tokenList=new KaytanTokenList(this,r.data);
@@ -297,7 +297,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         throw new KaytanSyntaxError('Empty variable',i,this.template);
                     }else if (command[0]=='>'){
                         let command1=command.substring(1).trim();
-                        if (Helpers.simpleCommandNameRegex.test(command1)){
+                        if (Helpers.simpleIdentifierRegex.test(command1)){
                             retVal.push(new KaytanPartial(this,command1,scopeInfo.length-1));
                         }else
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);

@@ -7,7 +7,7 @@ const Helper=require('./Helper');
 class KaytanSystemProperty extends KaytanProperty{
     constructor(engine,name){
         super(engine,name,false);
-        let fn=Helper.systemFn[this.name];
+        let fn=Helper.systemIdentifierFn[this.name];
         if (fn){
           Object.defineProperties(this,{
             fn:{ value:fn, writable:false }
@@ -17,7 +17,7 @@ class KaytanSystemProperty extends KaytanProperty{
 
     }
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
       return this.fn(parentIndex,parentLength,parentKey);
     }
 
@@ -32,7 +32,7 @@ class KaytanSystemProperty extends KaytanProperty{
 }
 
     toJavascriptAccessCode(){
-        return `$systemFn["${this.name}"]($i,$l,$k)`;
+        return `$systemIdentifierFn["${this.name}"]($i,$l,$k)`;
     }
 }
 

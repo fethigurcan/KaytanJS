@@ -28,11 +28,11 @@ ${formatJavascript(this.else.toJavascriptCode(),2)}
     }
 
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        if (!this.if.executeLogic(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0))
-            return this.then.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        if (!this.if.executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0))
+            return this.then.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         else if (this.else)
-            return this.else.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
+            return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         else
             return '';
     }

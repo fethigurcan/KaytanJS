@@ -5,7 +5,7 @@ class KaytanGlobalProperty extends KaytanProperty{
         super(engine,name,false);
     }
 
-    execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+    execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         return global[this.name];
     }
 
