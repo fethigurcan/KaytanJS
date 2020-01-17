@@ -101,11 +101,7 @@ const getPropertyValue=function(property,objectArray,index,exactLevel){
 
     let retVal;
     if (exactLevel){
-        let parent=objectArray[index];
-        if (typeof(parent)=="object" || Array.isArray(parent))
-            retVal=parent[_property];
-        else
-            retVal=parent==_property; //string or number values returns the equality to the property
+        retVal=objectArray[index][_property];
     }else 
         retVal=findPropertyValue(_property,objectArray,index);
 
