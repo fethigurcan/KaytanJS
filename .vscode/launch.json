@@ -16,6 +16,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Bin",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/bin/kaytan.js",
+            "args": ["test.kaytan","test.json"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Run Tests",
             "skipFiles": [
                 "<node_internals>/**"

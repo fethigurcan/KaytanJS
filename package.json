@@ -12,6 +12,9 @@
     "babel": "rm -rf babelsrc && babel src --out-dir babelsrc --presets=@babel/env && webpack --config webpack.config.babel.js",
     "build": "webpack --config webpack.config.js"
   },
+  "bin":{ 
+    "kaytan":"bin/kaytan.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fethigurcan/KaytanJS.git"
