@@ -30,7 +30,7 @@ const backslashEscapeMap={
     "\\":"\\\\"
 };
 
-const escape={
+const _escape={
     undefined: v=>v.replace(/[&<>"'\/]/g, m=>htmlEscapeMap[m]),
     "&": v=>v,
     "\\": v=>v.replace(/["'`\t\r\n\\]/g, m=>backslashEscapeMap[m]),
@@ -41,6 +41,7 @@ const escape={
     "(": v=>v.replace(/\)/g,'\\)'),
     "{": v=>v.replace(/}/g,'\\}')
 };
+const escape=(v,e)=>v!=null?_escape[e](v.toString()):""
 
 const systemFn={
     first:(i,l)=>i===0?true:false,
