@@ -1,6 +1,6 @@
 const KaytanLogicToken=require('./KaytanLogicToken');
-const KaytanRuntimeError=require('./KaytanRuntimeError');
 const Helper=require('./Helper');
+const indexWithPia=v=> v?'$pia+'+v:'$pia';
 
 class KaytanProperty extends KaytanLogicToken{
     constructor(engine,name,scopeInfo){
@@ -56,10 +56,10 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     toJavascriptDefinitionsCode(){
-        if (this.exactLevel || this.allreadyDefined || (this.name==this.access && Helper.numberRegex.test(this.access)))
+        if (this.exactLevel || this.allreadyDefined)
             return '';
         else
-            return `let _${this.name}=$findPropertyValue("${this.name}",$o,${this.index?`$pia+${this.index}`:'$pia'});
+            return `let _${this.name}=$findPropertyValue("${this.name}",$o,${indexWithPia(this.index)});
 `;
     }
 
@@ -70,8 +70,20 @@ class KaytanProperty extends KaytanLogicToken{
     }
 
     toJavascriptAccessCode(){
+        let retVal;
+
         if (this.isCurrentScope)
-            return `($isObjectOrArray($scope.${this.name})?${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
+            retVal=`$scope.${this.access}`;
+        else if (this.exactLevel)
+            retVal=`$o[${indexWithPia(this.index)}].${this.access}`;
+        else
+            retVal=`_${this.access}`;
+
+        return Helper.replaceAccessToArray(retVal);
+
+        /*if (this.isCurrentScope)
+            //return `$getValue($scope${Helper.replaceAccessToArray("."+this.name)})`;
+            return `($isObjectOrArray($scope${Helper.replaceAccessToArray("."+this.name)})?${'$scope'+(Helper.replaceAccessToArray('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
         else if (this.exactLevel){
             let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
             return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.replaceAccessToArray('.'+this.access))}:${parentAccess}=="${this.access.substring(this.name.length+1)}")`;
@@ -81,6 +93,7 @@ class KaytanProperty extends KaytanLogicToken{
             return `($isObjectOrArray($scope[${this.name}])?$scope[${this.name}]${Helper.replaceAccessToArray(this.access.substring(this.name.length))}:$scope[${this.name}]=="${this.access.substring(this.name.length+1)}")`;
         else
             return `($isObjectOrArray(_${this.name})?_${Helper.replaceAccessToArray(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
+            */
     }
 }
 

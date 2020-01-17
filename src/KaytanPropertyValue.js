@@ -1,6 +1,7 @@
 const KaytanToken=require('./KaytanToken');
 const KaytanProperty=require('./KaytanProperty');
 const Helper=require('./Helper');
+const _escapeJavascriptParameter=e=>e?`"${Helper.escape(e,"\\")}"`:"undefined";
 
 class KaytanPropertyValue extends KaytanToken{
     constructor(engine,property,scopeInfo,escape){
@@ -24,19 +25,13 @@ class KaytanPropertyValue extends KaytanToken{
     toJavascriptCode(){
         let retVal=`${this.property.toJavascriptDefinitionsCode()}`;
         let access=this.property.toJavascriptAccessCode();
-        if (this.escape=="&")
-            retVal+=`$r+=${access}!=null?${access}.toString():"";`;
-        else
-            retVal+=`$r+=${access}!=null?$escape[${this.escape?`"${Helper.escape["\\"](this.escape)}"`:undefined}](${access}.toString()):"";`;
+        retVal+=`$r+=$escape(${access},${_escapeJavascriptParameter(this.escape)})`;
         return retVal;
     }
 
     execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let obj=this.property.execute(global,objectArray,parentIndex,parentLength,parentKey,partialIndexAddition);
-        if (obj!=null)
-            return Helper.escape[this.escape](obj.toString());
-        else
-            return '';
+        return Helper.escape(obj,this.escape);
     }
 
 }
