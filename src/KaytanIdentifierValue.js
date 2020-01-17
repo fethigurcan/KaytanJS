@@ -1,12 +1,12 @@
 const KaytanToken=require('./KaytanToken');
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 const Helper=require('./Helper');
 const _escapeJavascriptParameter=e=>e?`"${Helper.escape(e,"\\")}"`:"undefined";
 
-class KaytanPropertyValue extends KaytanToken{
+class KaytanIdentifierValue extends KaytanToken{
     constructor(engine,property,scopeInfo,escape){
-        if (!(property instanceof KaytanProperty))
-            throw new TypeError('property must be a KaytanProperty'); 
+        if (!(property instanceof KaytanIdentifier))
+            throw new TypeError('property must be a KaytanIdentifier'); 
 
         super(engine);
 
@@ -36,4 +36,4 @@ class KaytanPropertyValue extends KaytanToken{
 
 }
 
-module.exports=KaytanPropertyValue;
+module.exports=KaytanIdentifierValue;

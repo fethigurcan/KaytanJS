@@ -5,7 +5,7 @@
     "children": [
       {
         "type": "class",
-        "name": "KaytanGlobalPropertyDefinition",
+        "name": "KaytanGlobalIdentifierDefinition",
         "extends": "KaytanToken",
         "constructors": [
           {
@@ -64,5 +64,5 @@
       }
     ]
   },
-  "expected": "\r\nClass KaytanGlobalPropertyDefinition : KaytanToken\r\n{\r\n   public KaytanGlobalPropertyDefinition(object engine, object name){\r\n      //  super(engine);\r\n      //  Object.defineProperties(this, {\r\n      //    name: {\r\n      //      value: name,\r\n      //      writable: false\r\n      //    }\r\n      //  });\r\n   }\r\n\r\n   private object _name;\r\n   public object name {\r\n     get {\r\n       return _name;\r\n     }\r\n   }\r\n\r\n   public object comments { get; set; }\r\n\r\n\r\n   public  toString(){\r\n      //  let s = this.engine.defaultStartDelimiter;\r\n      //  let e = this.engine.defaultEndDelimiter;\r\n      //  return `${s}$${this.name}${e}`;\r\n   }\r\n\r\n   public  execute(object global, object scopes){\r\n      //  global[this.name] = true;\r\n      //  return '';\r\n   }\r\n\r\n   public  toJavascriptCode(){\r\n      //  return `$global.${this.name}=true;`;\r\n   }\r\n\r\n}\r\n"
+  "expected": "\r\nClass KaytanGlobalIdentifierDefinition : KaytanToken\r\n{\r\n   public KaytanGlobalIdentifierDefinition(object engine, object name){\r\n      //  super(engine);\r\n      //  Object.defineProperties(this, {\r\n      //    name: {\r\n      //      value: name,\r\n      //      writable: false\r\n      //    }\r\n      //  });\r\n   }\r\n\r\n   private object _name;\r\n   public object name {\r\n     get {\r\n       return _name;\r\n     }\r\n   }\r\n\r\n   public object comments { get; set; }\r\n\r\n\r\n   public  toString(){\r\n      //  let s = this.engine.defaultStartDelimiter;\r\n      //  let e = this.engine.defaultEndDelimiter;\r\n      //  return `${s}$${this.name}${e}`;\r\n   }\r\n\r\n   public  execute(object global, object scopes){\r\n      //  global[this.name] = true;\r\n      //  return '';\r\n   }\r\n\r\n   public  toJavascriptCode(){\r\n      //  return `$global.${this.name}=true;`;\r\n   }\r\n\r\n}\r\n"
 }

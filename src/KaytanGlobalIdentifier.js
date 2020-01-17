@@ -1,6 +1,6 @@
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 
-class KaytanGlobalProperty extends KaytanProperty{
+class KaytanGlobalIdentifier extends KaytanIdentifier{
     constructor(engine,name){
         super(engine,name,false);
     }
@@ -18,4 +18,4 @@ class KaytanGlobalProperty extends KaytanProperty{
     }
 }
 
-module.exports=KaytanGlobalProperty;
+module.exports=KaytanGlobalIdentifier;

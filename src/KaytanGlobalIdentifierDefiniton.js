@@ -1,6 +1,6 @@
 const KaytanToken=require('./KaytanToken');
 
-class KaytanGlobalPropertyDefinition extends KaytanToken{
+class KaytanGlobalIdentifierDefinition extends KaytanToken{
     constructor(engine,name){
         super(engine);
         Object.defineProperties(this,{
@@ -24,4 +24,4 @@ class KaytanGlobalPropertyDefinition extends KaytanToken{
     }
 }
 
-module.exports=KaytanGlobalPropertyDefinition;
+module.exports=KaytanGlobalIdentifierDefinition;

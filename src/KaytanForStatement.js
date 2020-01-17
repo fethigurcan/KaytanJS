@@ -1,12 +1,12 @@
 const KaytanToken=require('./KaytanToken');
 const KaytanStatement=require('./KaytanStatement');
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanForStatement extends KaytanStatement{
     constructor(engine,_for,_loop,_else){        
-        if (!(_for instanceof KaytanProperty))
-            throw new TypeError('for statement must be a KaytanProperty'); 
+        if (!(_for instanceof KaytanIdentifier))
+            throw new TypeError('for statement must be a KaytanIdentifier'); 
         if (!(_loop instanceof KaytanToken))
             throw new TypeError('loop statement must be a KaytanToken'); 
         if (_else && !(_else instanceof KaytanToken))

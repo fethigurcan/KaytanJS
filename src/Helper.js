@@ -119,6 +119,7 @@ const findPropertyValue=function(property,scopes,index){
         if (p!=null){
              //if a property found but references to the current scope, stop searching upward to prevent cycle
             if (i<scopes.length && (p==scopes[i] || (Array.isArray(p) && p.indexOf(scopes[i])>-1 ))){
+                debugger;
                 return;
             }else
                 return p;

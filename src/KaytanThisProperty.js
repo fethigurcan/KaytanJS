@@ -1,6 +1,6 @@
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 
-class KaytanThisProperty extends KaytanProperty{
+class KaytanThisProperty extends KaytanIdentifier{
     constructor(engine,scopeInfo){
         super(engine,'.',scopeInfo);
         Object.defineProperties(this,{

@@ -3,16 +3,16 @@ var KaytanSyntaxError=require('./KaytanSyntaxError');
 var KaytanBugError=require('./KaytanBugError');
 
 //properties
-var KaytanProperty=require('./KaytanProperty');
-var KaytanGlobalProperty=require('./KaytanGlobalProperty');
-var KaytanSystemProperty=require('./KaytanSystemProperty');
+var KaytanIdentifier=require('./KaytanIdentifier');
+var KaytanGlobalIdentifier=require('./KaytanGlobalIdentifier');
+var KaytanSystemIdentifier=require('./KaytanSystemIdentifier');
 var KaytanThisProperty=require('./KaytanThisProperty');
 
 //basics
 var KaytanStringToken=require('./KaytanStringToken');
-var KaytanPropertyValue=require('./KaytanPropertyValue');
+var KaytanIdentifierValue=require('./KaytanIdentifierValue');
 var KaytanTokenList=require('./KaytanTokenList');
-var KaytanGlobalPropertyDefiniton=require('./KaytanGlobalPropertyDefiniton');
+var KaytanGlobalIdentifierDefiniton=require('./KaytanGlobalIdentifierDefiniton');
 var KaytanParameterUsage=require('./KaytanParameterUsage');
 
 //partials
@@ -36,11 +36,11 @@ var Helpers=require('./Helper');
 function parseProperty(propertyName,errorIndex,scopeInfo){
     if (Helpers.identifierRegex.test(propertyName)){
         if (propertyName[0]=='~')
-            return new KaytanGlobalProperty(this,propertyName.substring(1));
+            return new KaytanGlobalIdentifier(this,propertyName.substring(1));
         else if (propertyName[0]=='$')
-            return new KaytanSystemProperty(this,propertyName.substring(1));
+            return new KaytanSystemIdentifier(this,propertyName.substring(1));
         else
-            return new KaytanProperty(this,propertyName,scopeInfo);
+            return new KaytanIdentifier(this,propertyName,scopeInfo);
     }else
         throw new KaytanSyntaxError('Invalid property:'+propertyName,errorIndex,this.template);
 }
@@ -247,12 +247,12 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             command2=command1;
                             escapeFnName="&";
                         }
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
+                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
                     }else if (command[0]=='~' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helpers.simpleIdentifierRegex.test(command1)){
                             if (command[0]=='~')
-                                retVal.push(new KaytanGlobalPropertyDefiniton(this,command1));
+                                retVal.push(new KaytanGlobalIdentifierDefiniton(this,command1));
                             else   
                                 retVal.push(new KaytanParameterUsage(this,command1));
                         }else
@@ -261,9 +261,9 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         if (command[command.length-1]!='}') //this happens when with default delimiter and/or any delimiter that ends with }
                             i++;
                         let command1=command.substring(1).trim().replace(/}$/,'').trim();
-                        retVal.push(new KaytanPropertyValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,"&"));
+                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,"&"));
                     }else if (command.trim()=='.'){ //DİKKAT: ilk karakter değil tümü=.
-                        retVal.push(new KaytanPropertyValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
+                        retVal.push(new KaytanIdentifierValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
                     }else if (command[0]=='!'){ 
                         //ignore comments
                     }else if (command[0]=='='){
@@ -303,7 +303,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
                     }else{
                         let property=parseProperty.call(this,command.trim(),i,scopeInfo);
-                        retVal.push(new KaytanPropertyValue(this,property,scopeInfo));
+                        retVal.push(new KaytanIdentifierValue(this,property,scopeInfo));
                     }
                     j=retVal.length;
                     buffer=null;

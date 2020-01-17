@@ -1,10 +1,10 @@
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 const KaytanBugError=require('./KaytanBugError');
 const Helper=require('./Helper');
 
 
 
-class KaytanSystemProperty extends KaytanProperty{
+class KaytanSystemIdentifier extends KaytanIdentifier{
     constructor(engine,name){
         super(engine,name,false);
         let fn=Helper.systemIdentifierFn[this.name];
@@ -36,4 +36,4 @@ class KaytanSystemProperty extends KaytanProperty{
     }
 }
 
-module.exports=KaytanSystemProperty;
+module.exports=KaytanSystemIdentifier;

@@ -1,6 +1,6 @@
 const KaytanToken=require('./KaytanToken');
 const KaytanForStatement=require('./KaytanForStatement');
-const KaytanProperty=require('./KaytanProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
 const formatJavascript=require('./Helper').formatJavascript;
 
 class KaytanForDictionaryStatement extends KaytanForStatement{

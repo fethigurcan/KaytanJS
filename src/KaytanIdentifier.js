@@ -2,7 +2,7 @@ const KaytanLogicToken=require('./KaytanLogicToken');
 const Helper=require('./Helper');
 const indexWithPia=v=> v?'$pia+'+v:'$pia';
 
-class KaytanProperty extends KaytanLogicToken{
+class KaytanIdentifier extends KaytanLogicToken{
     constructor(engine,name,scopeInfo){
         super(engine);
         if (scopeInfo!==false && name!="."){ //system and global constructors dont need
@@ -97,4 +97,4 @@ class KaytanProperty extends KaytanLogicToken{
     }
 }
 
-module.exports=KaytanProperty;
+module.exports=KaytanIdentifier;
