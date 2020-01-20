@@ -100,6 +100,7 @@ const getPropertyValue=function(property,scopes,index,exactLevel){
 
     let retVal={};
     if (exactLevel){
+        retVal.scopes=scopes.slice(0,index+1);
         retVal.data=scopes[index][_property];
     }else 
         retVal=findPropertyValue(_property,scopes,index);
@@ -108,7 +109,7 @@ const getPropertyValue=function(property,scopes,index,exactLevel){
         return retVal;
     else
         if (retVal.data!=null)
-            return getPropertyValue(property.substring(childIndex+1),[...scopes,retVal.data],scopes.length,true);
+            return getPropertyValue(property.substring(childIndex+1),[...retVal.scopes,retVal.data],retVal.scopes.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };
@@ -122,7 +123,7 @@ const findPropertyValue=function(property,scopes,index){
                 debugger;
                 return {};
             }else
-                return { data:p };
+                return { data:p,scopes:scopes.slice(0,i+1) };
         }
     }
     return {};
