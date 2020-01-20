@@ -15,7 +15,7 @@ if(!process.argv[2]){
         if (process.argv[3])
             inputFile=path.resolve(process.argv[3]);
         else
-            inputFile=process.stdin;
+            inputFile=process.stdin.fd;
 
         let jsonData=fs.readFileSync(inputFile,{ encoding:'utf8' });
         let data=JSON.parse(jsonData);
