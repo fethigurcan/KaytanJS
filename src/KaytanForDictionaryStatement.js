@@ -50,7 +50,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         let obj=r.data;
         let l=r.scopes.length;
 
-        if (scopes[l-1]==obj)
+        if (scopes[scopes.length-1]==obj)
             return ''; //prevents self recursion
 
         let keys;
