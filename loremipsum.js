@@ -1,6 +1,6 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{[a}}true{{^#last}}, {{/}}{{/}}"
+dd=new Kaytan("{{[a}}true{{^$last}}, {{/}}{{/}}"
         ,{ optimized:true,defaultStartDelimiter:'{{',defaultEndDelimiter:'}}' });
 console.log(dd);
 
