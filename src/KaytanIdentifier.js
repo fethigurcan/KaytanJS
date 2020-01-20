@@ -38,6 +38,7 @@ class KaytanIdentifier extends KaytanLogicToken{
                 exactLevel:{ value:scopeResult.exactLevel, writable:false },
                 isCurrentScope:{ value:scopeResult.isCurrentScope, writable:false },
                 index:{ value:scopeResult.index, writable:false },
+                accessIndex:{ value:scopeResult.accessIndex, writable:false },
                 allreadyDefined:{ value:allreadyDefined, writable:true } //other property values can change this state during parse
             });
         }else{

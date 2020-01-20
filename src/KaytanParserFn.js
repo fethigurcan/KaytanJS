@@ -172,13 +172,15 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         else
                             throw new KaytanSyntaxError('Unexpected /',i,this.template);
                     }else if (command[0]=="?" || command[0]=="^"){
-                        this._temporaryBlockFlag=2;
                         let command1=command.substring(1).trim();
+                        this._temporaryBlockFlag=1;
+                        let _if=parseExpression.call(this,command1,i-command.length,scopeInfo).data;
+                        this._temporaryBlockFlag=2;
                         let r=parseTemplate.call(this,scopeInfo,delimiterStart,delimiterEnd,i+1,command1);
                         if (command1){
                             this._temporaryBlockFlag=1;
                             let block={ 
-                                if:parseExpression.call(this,command1,i-command.length,scopeInfo).data,
+                                if:_if,
                                 then:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };
@@ -197,13 +199,16 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         
                         delete this._temporaryBlockFlag;
                     }else if (command[0]=='#' || command[0]=="["){
-                        this._temporaryBlockFlag=2;
                         let command1=command.substring(1).trim();
-                        let r=parseTemplate.call(this,[...scopeInfo,{ defined:{} }],delimiterStart,delimiterEnd,i+1,command1);
+                        this._temporaryBlockFlag=1;
+                        let _for=parseProperty.call(this,command1,i,scopeInfo,null);
+                        this._temporaryBlockFlag=2;
+                        let newScopeInfos=(new Array(_for.accessIndex+1)).fill(function(){ return { defined:{}}; }());
+                        let r=parseTemplate.call(this,[...scopeInfo,...newScopeInfos],delimiterStart,delimiterEnd,i+1,command1);
                         if (command1){
                             this._temporaryBlockFlag=1;
                             let block={ 
-                                for:parseProperty.call(this,command1,i,scopeInfo,null),
+                                for:_for,
                                 loop:r.data.length==1?r.data[0]:new KaytanTokenList(this,r.data),
                                 else:r.data.else
                             };

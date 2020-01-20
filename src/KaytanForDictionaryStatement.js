@@ -48,14 +48,14 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         let obj=r.data;
-        let l=scopes.length;
+        let l=r.scopes.length;
 
         if (scopes[l-1]==obj)
             return ''; //prevents self recursion
 
         let keys;
         if (typeof(obj)=="object" && (obj && (keys=Object.keys(obj)) && keys.length)){
-            let childscopes=[...scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
+            let childscopes=[...r.scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
             let s="";
             for (let i=0;i<keys.length;i++){
                 childscopes[l]=obj[keys[i]]; //son öğe ile scope'u belirle.

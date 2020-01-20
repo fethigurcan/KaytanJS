@@ -67,6 +67,7 @@ const getScopeInfo=function(property,scopeInfo){
         _property=_property.substring(1);
     }
     let retVal;
+    let dotMatches=_property.match(/\./g);
     let _childIndex=_property.indexOf('.');
     let __property;
     if (_childIndex<0){
@@ -87,13 +88,14 @@ const getScopeInfo=function(property,scopeInfo){
         exactLevel:exactLevel,
         isCurrentScope:exactLevel&&(i==scopeInfo.length-1),
         name:__property,
-        access:_property
+        access:_property,
+        accessIndex:dotMatches?dotMatches.length:0
     };
 }
 
 const getPropertyValue=function(property,scopes,index,exactLevel){
     if (property=='.')
-        return { data:scopes[scopes.length-1] };
+        return { data:scopes[scopes.length-1],scopes:scopes.slice(0,scopes.length-1) };
 
     let childIndex=property.indexOf('.');
     let _property=childIndex<0?property:property.substring(0,childIndex);
@@ -121,12 +123,12 @@ const findPropertyValue=function(property,scopes,index){
              //if a property found but references to the current scope, stop searching upward to prevent cycle
             if (i<scopes.length && (p==scopes[i] || (Array.isArray(p) && p.indexOf(scopes[i])>-1 ))){
                 debugger;
-                return {};
+                return { scopes:scopes.slice(0,i+1) };
             }else
                 return { data:p,scopes:scopes.slice(0,i+1) };
         }
     }
-    return {};
+    return { scopes:scopes };
 };
 
 module.exports={

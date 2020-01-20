@@ -58,13 +58,13 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         let obj=r.data;
-        let l=scopes.length;
+        let l=r.scopes.length;
 
         if (scopes[l-1]==obj)
             return ''; //prevents self recursion
 
         if (Array.isArray(obj) && obj.length){
-            let childscopes=[...scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
+            let childscopes=[...r.scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
             let s="";
             for (let i=0;i<obj.length;i++){
                 childscopes[l]=obj[i]; //son öğe ile scope'u belirle.
@@ -72,7 +72,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
             }
             return s;
         }else if (obj)
-            return this.loop.execute(global,[...scopes,obj],0,1,0,partialIndexAddition);
+            return this.loop.execute(global,[...r.scopes,obj],0,1,0,partialIndexAddition);
         else if (this.else)
             return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         else
