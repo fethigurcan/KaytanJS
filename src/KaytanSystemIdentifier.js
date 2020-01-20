@@ -18,7 +18,7 @@ class KaytanSystemIdentifier extends KaytanIdentifier{
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-      return this.fn(parentIndex,parentLength,parentKey);
+      return { data:this.fn(parentIndex,parentLength,parentKey) };
     }
 
     toString(){

@@ -93,22 +93,22 @@ const getScopeInfo=function(property,scopeInfo){
 
 const getPropertyValue=function(property,scopes,index,exactLevel){
     if (property=='.')
-        return scopes[scopes.length-1];
+        return { data:scopes[scopes.length-1] };
 
     let childIndex=property.indexOf('.');
     let _property=childIndex<0?property:property.substring(0,childIndex);
 
-    let retVal;
+    let retVal={};
     if (exactLevel){
-        retVal=scopes[index][_property];
+        retVal.data=scopes[index][_property];
     }else 
         retVal=findPropertyValue(_property,scopes,index);
 
     if (childIndex<0)
         return retVal;
     else
-        if (retVal!=null)
-            return getPropertyValue(property.substring(childIndex+1),[...scopes,retVal],scopes.length,true);
+        if (retVal.data!=null)
+            return getPropertyValue(property.substring(childIndex+1),[...scopes,retVal.data],scopes.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };
@@ -120,11 +120,12 @@ const findPropertyValue=function(property,scopes,index){
              //if a property found but references to the current scope, stop searching upward to prevent cycle
             if (i<scopes.length && (p==scopes[i] || (Array.isArray(p) && p.indexOf(scopes[i])>-1 ))){
                 debugger;
-                return;
+                return {};
             }else
-                return p;
+                return { data:p };
         }
     }
+    return {};
 };
 
 module.exports={

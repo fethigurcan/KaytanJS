@@ -9,7 +9,7 @@ class KaytanLogicToken extends KaytanToken{
 
     executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        return r!=null && r!==false;
+        return r.data!=null && r.data!==false;
         /*let retVal=this.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         if (typeof(retVal)=="boolean")
             return retVal;

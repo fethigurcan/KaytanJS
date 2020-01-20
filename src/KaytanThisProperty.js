@@ -12,7 +12,7 @@ class KaytanThisProperty extends KaytanIdentifier{
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return scopes[scopes.length-1];
+        return { data:scopes[scopes.length-1] };
     }
 
     toJavascriptDefinitionsCode(){

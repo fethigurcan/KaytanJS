@@ -59,7 +59,7 @@ class KaytanIdentifier extends KaytanLogicToken{
         if (this.exactLevel || this.allreadyDefined)
             return '';
         else
-            return `let _${this.name}=$findPropertyValue("${this.name}",$o,${indexWithPia(this.index)});
+            return `let _${this.name}=$findPropertyValue("${this.name}",$o,${indexWithPia(this.index)}).data;
 `;
     }
 

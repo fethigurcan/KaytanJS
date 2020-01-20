@@ -56,7 +56,8 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        let obj=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+        let r=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+        let obj=r.data;
         let l=scopes.length;
 
         if (scopes[l-1]==obj)

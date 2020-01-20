@@ -30,7 +30,8 @@ class KaytanIdentifierValue extends KaytanToken{
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        let obj=this.property.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+        let r=this.property.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+        let obj=r.data;
         return Helper.escape(obj,this.escape);
     }
 
