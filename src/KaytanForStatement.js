@@ -36,8 +36,8 @@ ${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}let $arr${no}=${thi
       let $_pia=$pia;
       if (Array.isArray($arr${no}) || ($arr${no}!=null && $arr${no}!==false && ($arr${no}=[$arr${no}]))){
         let $l=$arr${no}.length;
-        let $o=[...$_o${no},null]; //TODO: single object scope is duplicated. fix it!
-        let $pia=$l>1?$_pia+1:$_pia;
+        let $o=[...$_o${no},null]; //TODO: single object scope is duplicated.it seems harmless currently. but fix it!
+        let $pia=$l>1?$_pia+1:$_pia; //TODO: +1 is not always true if the parent scopes more than one scopes added.
          
         for(let $i=0;$i<$arr${no}.length;$i++){
            let $k=$i;
