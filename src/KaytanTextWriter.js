@@ -1,15 +1,9 @@
 class KaytanTextWriter{
     constructor(){
-        this._output='';
-    }
-
-    write(str){
-        this._output+=str; 
-    }
-
-    toString(){
-        return this._output;
+        if (this.constructor===KaytanTextWriter)
+            throw new TypeError('Abstract class "KaytanTextWriter" cannot be instantiated directly.');
     }
 }
+
 
 module.exports=KaytanTextWriter;

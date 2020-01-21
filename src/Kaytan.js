@@ -1,6 +1,7 @@
 var parseTemplate=require('./KaytanParserFn');
 var KaytanTokenList=require('./KaytanTokenList');
 var KaytanTextWriter=require('./KaytanTextWriter');
+var KaytanDefaultTextWriter=require('./KaytanDefaultTextWriter');
 var Helper=require('./Helper');
 
 //for improve performance on execution (less conditions will be used in execute functions)
@@ -36,8 +37,9 @@ function _executeCompiledCode(values,writer){
         throw new TypeError('writer must be a KaytanTextWriter');
 
     let data=prepareData(values);
-    this.output=writer||new KaytanTextWriter();
+    this.output=writer||new KaytanDefaultTextWriter();
     this.fn([data!=null?data:{}]);
+    this.output.close();
 
     if (!writer)
         return this.output.toString();
@@ -48,8 +50,9 @@ function _executeClassic(values,writer){
         throw new TypeError('writer must be a KaytanTextWriter');
 
         let data=prepareData(values);
-    this.output=writer||new KaytanTextWriter();
+    this.output=writer||new KaytanDefaultTextWriter();
     this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
+    this.output.close();
 
     if (!writer)
         return this.output.toString();

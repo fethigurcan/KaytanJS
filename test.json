@@ -1,3 +1,64 @@
 {
-    "MyName": "<span id=\"x\" class='bold'>`fethi`</span>\r\n\tgurcan"
-}
+    "type": "program",
+    "children": [
+      {
+        "type": "class",
+        "name": "KaytanGlobalIdentifierDefinition",
+        "extends": "KaytanToken",
+        "constructors": [
+          {
+            "type": "constructor",
+            "static": false,
+            "parameters": [
+              "engine",
+              "name"
+            ],
+            "name": "constructor",
+            "children": [],
+            "code": "      //  super(engine);\n      //  Object.defineProperties(this, {\n      //    name: {\n      //      value: name,\n      //      writable: false\n      //    }\n      //  });"
+          }
+        ],
+        "properties": [
+          {
+            "type": "property",
+            "name": "name",
+            "writable": false
+          },
+          {
+            "type": "property",
+            "name": "comments",
+            "writable": true
+          }
+        ],
+        "methods": [
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [],
+            "name": "toString",
+            "children": [],
+            "code": "      //  let s = this.engine.defaultStartDelimiter;\n      //  let e = this.engine.defaultEndDelimiter;\n      //  return `${s}$${this.name}${e}`;"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [
+              "global",
+              "scopes"
+            ],
+            "name": "execute",
+            "children": [],
+            "code": "      //  global[this.name] = true;\n      //  return '';"
+          },
+          {
+            "type": "method",
+            "static": false,
+            "parameters": [],
+            "name": "toJavascriptCode",
+            "children": [],
+            "code": "      //  return `$global.${this.name}=true;`;"
+          }
+        ]
+      }
+    ]
+  }
