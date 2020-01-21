@@ -15,12 +15,12 @@ class KaytanStringToken extends KaytanToken{
     }
 
     toJavascriptCode(){
-        let retVal=`$r+="${Helper.escape(this.value,"\\")}";`;
+        let retVal=`$output.write("${Helper.escape(this.value,"\\")}");`;
         return retVal;
     }    
 
     execute(global,scopes){
-        return this.value;
+        this.engine.output.write(this.value);
     }
 
 }

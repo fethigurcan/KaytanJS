@@ -51,21 +51,17 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         let l=r.scopes.length;
 
         if (scopes[scopes.length-1]==obj)
-            return ''; //prevents self recursion
+            return; //prevents self recursion
 
         let keys;
         if (typeof(obj)=="object" && (obj && (keys=Object.keys(obj)) && keys.length)){
             let childscopes=[...r.scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
-            let s="";
             for (let i=0;i<keys.length;i++){
                 childscopes[l]=obj[keys[i]]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(global,childscopes,i,keys.length,keys[i],partialIndexAddition);
+                this.loop.execute(global,childscopes,i,keys.length,keys[i],partialIndexAddition);
             }
-            return s;
         }else if (this.else)
-            return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        else
-            return '';
+            this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 
 }

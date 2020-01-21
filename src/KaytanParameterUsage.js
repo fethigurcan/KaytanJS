@@ -19,7 +19,6 @@ class KaytanParameterUsage extends KaytanToken{
         if (!global[parameterUsageHolder]) 
             global[parameterUsageHolder]=[];
         global[parameterUsageHolder].push(this.name);
-        return '';
     }
 
     toJavascriptCode(){

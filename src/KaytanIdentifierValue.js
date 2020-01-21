@@ -25,14 +25,14 @@ class KaytanIdentifierValue extends KaytanToken{
     toJavascriptCode(){
         let retVal=`${this.property.toJavascriptDefinitionsCode()}`;
         let access=this.property.toJavascriptAccessCode();
-        retVal+=`$r+=$escape(${access}${this.escape?','+_escapeJavascriptParameter(this.escape):''})`;
+        retVal+=`$output.write($escape(${access}${this.escape?','+_escapeJavascriptParameter(this.escape):''}))`;
         return retVal;
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.property.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         let obj=r.value;
-        return Helper.escape(obj,this.escape);
+        this.engine.output.write(Helper.escape(obj,this.escape));
     }
 
 }

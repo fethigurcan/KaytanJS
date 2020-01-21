@@ -16,7 +16,6 @@ class KaytanGlobalIdentifierDefinition extends KaytanToken{
 
     execute(global,scopes){
         global[this.name]=true;
-        return '';
     }
 
     toJavascriptCode(){

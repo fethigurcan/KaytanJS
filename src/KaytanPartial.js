@@ -25,9 +25,7 @@ class KaytanPartial extends KaytanToken{
         let rootObject=global[partialsHolderName];
         let partial=rootObject && rootObject[this.name];
         if (partial)
-            return partial.execute(global,scopes,parentIndex,parentLength,parentKey,scopes.length-1);
-        else
-            return "";
+            partial.execute(global,scopes,parentIndex,parentLength,parentKey,scopes.length-1);
     }
 
 }

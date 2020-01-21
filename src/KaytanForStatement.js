@@ -64,22 +64,18 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         let l=r.scopes.length;
 
         if (scopes[scopes.length-1]==obj)
-            return ''; //prevents self recursion
+            return; //prevents self recursion
 
         if (Array.isArray(obj) && obj.length){
             let childscopes=[...r.scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
-            let s="";
             for (let i=0;i<obj.length;i++){
                 childscopes[l]=obj[i]; //son öğe ile scope'u belirle.
-                s+=this.loop.execute(global,childscopes,i,obj.length,i,partialIndexAddition);
+                this.loop.execute(global,childscopes,i,obj.length,i,partialIndexAddition);
             }
-            return s;
         }else if (obj)
-            return this.loop.execute(global,[...r.scopes,obj],0,1,0,partialIndexAddition);
+            this.loop.execute(global,[...r.scopes,obj],0,1,0,partialIndexAddition);
         else if (this.else)
-            return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        else
-            return '';
+            this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 
 }

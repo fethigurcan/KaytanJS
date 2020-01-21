@@ -51,10 +51,8 @@ class KaytanTokenList extends KaytanToken{
     }     
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        let s='';
         for(let token of this) 
-            s+=token.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        return s;
+            token.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 }
 

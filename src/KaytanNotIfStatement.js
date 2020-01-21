@@ -30,11 +30,9 @@ ${formatJavascript(this.else.toJavascriptCode(),2)}
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         if (!this.if.executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0))
-            return this.then.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+            this.then.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
         else if (this.else)
-            return this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        else
-            return '';
+            this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 
 }

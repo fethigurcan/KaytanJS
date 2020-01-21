@@ -1,5 +1,6 @@
 var parseTemplate=require('./KaytanParserFn');
 var KaytanTokenList=require('./KaytanTokenList');
+var KaytanTextWriter=require('./KaytanTextWriter');
 var Helper=require('./Helper');
 
 //for improve performance on execution (less conditions will be used in execute functions)
@@ -32,12 +33,16 @@ function prepareData(data){
 
 function _executeCompiledCode(values){
     let data=prepareData(values);
-    return this.fn([data!=null?data:{}]);
+    this.output=new KaytanTextWriter();
+    this.fn([data!=null?data:{}]);
+    return this.output.toString();
 }
 
 function _executeClassic(values){
     let data=prepareData(values);
-    return this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
+    this.output=new KaytanTextWriter();
+    this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
+    return this.output.toString();
 }
 
 class Kaytan{
@@ -56,14 +61,13 @@ class Kaytan{
             this.varcounter=0;
             let fn=`let $fn=function($oo){
    ${options.optimizeddebugger?"debugger;":""}
-   let $r='';
+   let $output=this.output;
    let $global={ ${Helper.partialsHolderName}:{}, $parameterUsage:{} };
    let $o=$oo;
    let $scope=$o[$o.length-1];
    let $check=v=>v!=null&&v!==false;
    let $pia=0,$i,$l,$k;
 ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
-   return $r;
 };$fn;`;
             //delete this.varcounter;
             let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference

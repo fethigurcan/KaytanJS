@@ -29,7 +29,6 @@ ${formatJavascript(this.token.toJavascriptCode(),1)}
         if (!global[partialsHolderName]) 
             global[partialsHolderName]={};
         global[partialsHolderName][this.name]=this.token;
-        return '';
     }
 }
 
