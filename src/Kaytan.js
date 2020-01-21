@@ -31,18 +31,28 @@ function prepareData(data){
         return data;
 }
 
-function _executeCompiledCode(values){
+function _executeCompiledCode(values,writer){
+    if (writer && !(writer instanceof KaytanTextWriter))
+        throw new TypeError('writer must be a KaytanTextWriter');
+
     let data=prepareData(values);
-    this.output=new KaytanTextWriter();
+    this.output=writer||new KaytanTextWriter();
     this.fn([data!=null?data:{}]);
-    return this.output.toString();
+
+    if (!writer)
+        return this.output.toString();
 }
 
-function _executeClassic(values){
-    let data=prepareData(values);
-    this.output=new KaytanTextWriter();
+function _executeClassic(values,writer){
+    if (writer && !(writer instanceof KaytanTextWriter))
+        throw new TypeError('writer must be a KaytanTextWriter');
+
+        let data=prepareData(values);
+    this.output=writer||new KaytanTextWriter();
     this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
-    return this.output.toString();
+
+    if (!writer)
+        return this.output.toString();
 }
 
 class Kaytan{
