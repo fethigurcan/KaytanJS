@@ -95,7 +95,7 @@ const getScopeInfo=function(property,scopeInfo){
 
 const getPropertyValue=function(property,scopes,index,exactLevel){
     if (property=='.')
-        return { data:scopes[scopes.length-1],scopes:scopes.slice(0,scopes.length-1) };
+        return { value:scopes[scopes.length-1],scopes:scopes.slice(0,scopes.length-1) };
 
     let childIndex=property.indexOf('.');
     let _property=childIndex<0?property:property.substring(0,childIndex);
@@ -103,15 +103,15 @@ const getPropertyValue=function(property,scopes,index,exactLevel){
     let retVal={};
     if (exactLevel){
         retVal.scopes=scopes.slice(0,index+1);
-        retVal.data=scopes[index][_property];
+        retVal.value=scopes[index][_property];
     }else 
         retVal=findPropertyValue(_property,scopes,index);
 
     if (childIndex<0)
         return retVal;
     else
-        if (retVal.data!=null)
-            return getPropertyValue(property.substring(childIndex+1),[...retVal.scopes,retVal.data],retVal.scopes.length,true);
+        if (retVal.value!=null)
+            return getPropertyValue(property.substring(childIndex+1),[...retVal.scopes,retVal.value],retVal.scopes.length,true);
         else
             throw new KaytanRuntimeError('object expected '+property);
 };
@@ -125,11 +125,24 @@ const findPropertyValue=function(property,scopes,index){
                 debugger;
                 return { scopes:scopes.slice(0,i+1) };
             }else
-                return { data:p,scopes:scopes.slice(0,i+1) };
+                return { value:p,scopes:scopes.slice(0,i+1) };
         }
     }
     return { scopes:scopes };
 };
+
+const accessToScopeArray=function(str){
+    let i=str.indexOf(".");
+    
+    if (i<0)
+        return [str];
+
+    let retVal=[str.substring(0,i)];
+    while ((i=str.indexOf(".",i+1))>-1)
+        retVal.push(str.substring(0,i));
+
+    return retVal;
+}
 
 module.exports={
     identifierRegex:identifierRegex,
@@ -144,5 +157,6 @@ module.exports={
     systemIdentifierFn:systemIdentifierFn,
     formatJavascript:formatJavascript,
     arrayIndexRegex:arrayIndexRegex,
-    arrayAccessReplace:arrayAccessReplace
+    arrayAccessReplace:arrayAccessReplace,
+    accessToScopeArray:accessToScopeArray
 };

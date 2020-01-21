@@ -59,9 +59,19 @@ class KaytanIdentifier extends KaytanLogicToken{
     toJavascriptDefinitionsCode(){
         if (this.exactLevel || this.allreadyDefined)
             return '';
-        else
-            return `let _${this.name}=$findPropertyValue("${this.name}",$o,${indexWithPia(this.index)}).data;
+        else{
+            return `let __${this.name}=$findPropertyValue("${this.name}",$o,${indexWithPia(this.index)});
+let _${this.name}=__${this.name}.value;
 `;
+        }
+    }
+
+    toJavascriptScopesCode(){
+        if (this.exactLevel){
+            return `[...$o,${this.toJavascriptAccessCode()}]`;
+        }else{
+            return `[...__${this.name}.scopes,_${Helper.arrayAccessReplace(Helper.accessToScopeArray(this.access).join(',_'))}]`;
+        }
     }
 
     toJavascriptCheckCode()
@@ -81,20 +91,6 @@ class KaytanIdentifier extends KaytanLogicToken{
             retVal=`_${this.access}`;
 
         return Helper.arrayAccessReplace(retVal);
-
-        /*if (this.isCurrentScope)
-            //return `$getValue($scope${Helper.arrayAccessReplace("."+this.name)})`;
-            return `($isObjectOrArray($scope${Helper.arrayAccessReplace("."+this.name)})?${'$scope'+(Helper.arrayAccessReplace('.'+this.access))}:${'$scope'+(this.name=='.'?'':Helper.arrayAccessReplace('.'+this.name))}=="${this.access.substring(this.name.length+1)}")`;
-        else if (this.exactLevel){
-            let parentAccess=`$o[${this.index?`$pia+${this.index}`:'$pia'}]`;
-            return `($isObjectOrArray(${parentAccess})?${parentAccess+(this.name=='.'?'':Helper.arrayAccessReplace('.'+this.access))}:${parentAccess}=="${this.access.substring(this.name.length+1)}")`;
-        }else if (this.name==this.access)
-            return Helper.arrayIndexRegex.test(this.access)?`$scope[${this.access}]`:"_"+this.access; //array access only in the scope
-        else if (Helper.arrayIndexRegex.test(this.name))
-            return `($isObjectOrArray($scope[${this.name}])?$scope[${this.name}]${Helper.arrayAccessReplace(this.access.substring(this.name.length))}:$scope[${this.name}]=="${this.access.substring(this.name.length+1)}")`;
-        else
-            return `($isObjectOrArray(_${this.name})?_${Helper.arrayAccessReplace(this.access)}:_${this.name}=="${this.access.substring(this.name.length+1)}")`;
-            */
     }
 }
 

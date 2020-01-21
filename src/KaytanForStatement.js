@@ -32,16 +32,19 @@ class KaytanForStatement extends KaytanStatement{
         let retVal=`//{
 ${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}let $arr${no}=${this.for.toJavascriptAccessCode()};
    if ($o[$o.length-1]!=$arr${no}){
-      let $_o${no}=$o;
+      let $_o${no}=${this.for.toJavascriptScopesCode()};
+      let $_pia=$pia;
       if (Array.isArray($arr${no}) || ($arr${no}!=null && $arr${no}!==false && ($arr${no}=[$arr${no}]))){
-         let $l=$arr${no}.length;
-         let $o=[...$_o${no},null];
-         for(let $i=0;$i<$arr${no}.length;$i++){
-            let $k=$i;
-            let $scope=$arr${no}[$i];
-            $o[$o.length-1]=$scope;
+        let $l=$arr${no}.length;
+        let $o=[...$_o${no},null]; //TODO: single object scope is duplicated. fix it!
+        let $pia=$l>1?$_pia+1:$_pia;
+         
+        for(let $i=0;$i<$arr${no}.length;$i++){
+           let $k=$i;
+           let $scope=$arr${no}[$i];
+           $o[$o.length-1]=$scope;
 ${formatJavascript(this.loop.toJavascriptCode(),4)}
-         }
+        }
       }`;
         if (this.else)
             retVal+=`else{
@@ -57,7 +60,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        let obj=r.data;
+        let obj=r.value;
         let l=r.scopes.length;
 
         if (scopes[scopes.length-1]==obj)

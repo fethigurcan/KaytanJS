@@ -6,7 +6,7 @@ class KaytanGlobalIdentifier extends KaytanIdentifier{
     }
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return { data:global[this.name] };
+        return { value:global[this.name] };
     }
 
     toJavascriptDefinitionsCode(){

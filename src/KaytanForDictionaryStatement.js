@@ -21,7 +21,7 @@ class KaytanForDictionaryStatement extends KaytanForStatement{
         let retVal=`//{
 ${formatJavascript(this.for.toJavascriptDefinitionsCode(),1)}let $obj${no}=${this.for.toJavascriptAccessCode()};
    if ($o[$o.length-1]!=$obj${no}){
-      let $_o${no}=$o;
+      let $_o${no}=${this.for.toJavascriptScopesCode()};
       let $keys;
       if (typeof($obj${no})=="object" && ($obj${no} && ($keys=Object.keys($obj${no})) && $keys.length)){
          let $l=$keys.length;
@@ -47,7 +47,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
 
     execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.for.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        let obj=r.data;
+        let obj=r.value;
         let l=r.scopes.length;
 
         if (scopes[scopes.length-1]==obj)
