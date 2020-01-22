@@ -36,11 +36,11 @@ const KaytanNotIfStatement=require('./KaytanNotIfStatement');
 const KaytanForStatement=require('./KaytanForStatement');
 const KaytanForDictionaryStatement=require('./KaytanForDictionaryStatement');
 
-const Helpers=require('./Helper');
+const Helper=require('./Helper');
 
 //treat as member function of Kaytan
 function parseProperty(propertyName,errorIndex,scopeInfo){
-    if (Helpers.identifierRegex.test(propertyName)){
+    if (Helper.identifierRegex.test(propertyName)){
         if (propertyName[0]=='~')
             return new KaytanGlobalIdentifier(this,propertyName.substring(1));
         else if (propertyName[0]=='$')
@@ -49,6 +49,45 @@ function parseProperty(propertyName,errorIndex,scopeInfo){
             return new KaytanIdentifier(this,propertyName,scopeInfo);
     }else
         throw new KaytanSyntaxError('Invalid property:'+propertyName,errorIndex,this.template);
+}
+
+function parseLiteral(expression,templateIndex,i){
+    let buffer='';
+    let mode;
+    for (i=i||0;i<expression.length;i++){
+        if (!mode){
+            if (Helper.digitRegex.test(expression[i])||expression[i]=="."){
+                mode=1;
+                buffer+=expression[i];
+            }else if (expression[i]=='"'){
+                mode='"'; 
+                //dont add first quote to buffer
+            }else if (expression[i]=="'"){
+                mode="'";
+                //dont add first quote to buffer
+            }else
+                throw new KaytanSyntaxError('Invalid literal:'+buffer,templateIndex+i,this.template);
+        }else if (mode==1){ //number literal
+            if (Helper.digitRegex.test(expression[i]))
+                buffer+=expression[i];
+            else if (expression[i]=="." && buffer.indexOf(".")<0)
+                buffer+=expression[i];
+            else if (buffer!=".")
+                return { literal:new KaytanNumberLiteral(this,buffer), i:i};
+            else
+                throw new KaytanSyntaxError('Invalid number:'+buffer,templateIndex+i,this.template);            
+        }else { //if (mode='"' || mode=="'")
+            if (expression[i]!=mode)
+                if (buffer && buffer[buffer.length-1]=="\\" && (buffer.length==1 || buffer[buffer.length-2]!="\\"))
+                    buffer[buffer.length-1]=expression[i];
+                else
+                    buffer+=expression[i];
+            else if (buffer && buffer[buffer.length-1]=="\\" && (buffer.length==1 || buffer[buffer.length-2]!="\\"))
+                buffer+=mode;
+            else
+                return { literal:new KaytanStringLiteral(this,buffer), i:i};
+        }
+    }
 }
 
 //treat as member function of Kaytan
@@ -65,19 +104,50 @@ function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel)
                 let r=parseExpression.call(this,expression,templateIndex,scopeInfo,i+1,level,stopAtLevel);
                 level=r.level;
                 if (buffer){
-                    if (Helpers.identifierRegex.test(buffer)){
+                    if (Helper.identifierRegex.test(buffer)){
                         if (expression[i]=='&')
                             retVal.push(new KaytanAndExpression(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
-                        else
+                        else if (expression[i]=='|')
                             retVal.push(new KaytanOrExpression(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.data));
+                        else
+                            throw new KaytanBugError('Unknown operator:'+expression[i],templateIndex+i,this.template);
                     }else
-                    throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
+                        throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
                     buffer='';
                 }else if(retVal.length==1){
                     if (expression[i]=='&')
                         retVal=[new KaytanAndExpression(this,retVal[0],r.data)];
-                    else
+                    else if (expression[i]=='|')
                         retVal=[new KaytanOrExpression(this,retVal[0],r.data)];
+                    else
+                        throw new KaytanBugError('Unknown operator:'+expression[i],templateIndex+i,this.template);
+                }else
+                    throw new KaytanSyntaxError('Excepted lefthand operand',templateIndex+i,this.template);
+                i=r.i;
+            }
+        }else if (expression[i]=='='){
+            if (level==stopAtLevel){
+                i--;
+                break;
+            }else{
+                let r=parseLiteral.call(this,expression,templateIndex,i+1);
+                if (!r)
+                    throw new KaytanSyntaxError('Number or String literal expected:'+buffer,templateIndex+i,this.template);
+
+                if (buffer){
+                    if (Helper.identifierRegex.test(buffer)){
+                        if (expression[i]=='=')
+                            retVal.push(new KaytanEqualityExpression(this,parseProperty.call(this,buffer,templateIndex+i,scopeInfo),r.literal));
+                        else
+                            throw new KaytanBugError('Unknown operator:'+expression[i],templateIndex+i,this.template);
+                    }else
+                        throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
+                    buffer='';
+                }else if(retVal.length==1){
+                    if (expression[i]=='=')
+                        retVal=[new KaytanEqualityExpression(this,retVal[0],r.literal)];
+                    else
+                        throw new KaytanBugError('Unknown operator:'+expression[i],templateIndex+i,this.template);
                 }else
                     throw new KaytanSyntaxError('Excepted lefthand operand',templateIndex+i,this.template);
                 i=r.i;
@@ -110,7 +180,7 @@ function parseExpression(expression,templateIndex,scopeInfo,i,level,stopAtLevel)
     }
 
     if (buffer){
-        if (Helpers.identifierRegex.test(buffer))
+        if (Helper.identifierRegex.test(buffer))
             retVal.push(parseProperty.call(this,buffer,templateIndex+i,scopeInfo));
         else
             throw new KaytanSyntaxError('Invalid expression:'+buffer,templateIndex+i,this.template);
@@ -251,7 +321,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                     }else if (command[0]=="&"){
                         let command1=command.substring(1).trim();
                         let command2,escapeFnName;
-                        if (Helpers.escapePrefixRegex.test(command1[0])){
+                        if (Helper.escapePrefixRegex.test(command1[0])){
                             command2=command1.substring(1);
                             escapeFnName=command1[0];
                         }else{
@@ -261,7 +331,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
                     }else if (command[0]=='~' || command[0]=='@'){
                         let command1=command.substring(1).trim();
-                        if (Helpers.simpleIdentifierRegex.test(command1)){
+                        if (Helper.simpleIdentifierRegex.test(command1)){
                             if (command[0]=='~')
                                 retVal.push(new KaytanGlobalIdentifierDefiniton(this,command1));
                             else   
@@ -296,7 +366,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         command=command.substring(1).trim();
                         let r=parseTemplate.call(this,[{ defined:{} }],delimiterStart,delimiterEnd,i+1,command); //[{ defined:{} }] means independent scopeInfo for every partial definition
                         if (command){
-                            if (Helpers.simpleIdentifierRegex.test(command)){
+                            if (Helper.simpleIdentifierRegex.test(command)){
                                 if (r.data.else)
                                     throw new KaytanSyntaxError('Invalid else statement in partial block',i,this.template);
                                 let tokenList=new KaytanTokenList(this,r.data);
@@ -308,7 +378,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         throw new KaytanSyntaxError('Empty variable',i,this.template);
                     }else if (command[0]=='>'){
                         let command1=command.substring(1).trim();
-                        if (Helpers.simpleIdentifierRegex.test(command1)){
+                        if (Helper.simpleIdentifierRegex.test(command1)){
                             retVal.push(new KaytanPartial(this,command1,scopeInfo.length-1));
                         }else
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);

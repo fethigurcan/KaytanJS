@@ -6,8 +6,6 @@ class KaytanBinaryExpression extends KaytanExpression{
     constructor(engine,left,operator,right){        
         if (!(left instanceof KaytanLogicToken))
             throw new TypeError('Left operand must be a KaytanLogicToken'); 
-        if (!(right instanceof KaytanLogicToken))
-            throw new TypeError('Right operand must be a KaytanLogicToken'); 
         super(engine);
         if (this.constructor===KaytanBinaryExpression)
             throw new TypeError('Abstract class "KaytanBinaryExpression" cannot be instantiated directly.'); 

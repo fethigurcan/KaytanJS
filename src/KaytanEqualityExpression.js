@@ -11,8 +11,8 @@ class KaytanEqualityExpression extends KaytanBinaryExpression{
         });        
     }
 
-    executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return this.left.executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0)
+    executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        return this.left.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0).value
             == this.right.value; 
     }
 }

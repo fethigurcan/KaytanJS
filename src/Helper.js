@@ -9,6 +9,10 @@ const expressionToStringParanthesisCheckerRegex=/[&|]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
 
+const stringLiteralRegex=/^""$|^''$|^"(\\"|((?!").))*(\\\\"|((?!\\).)")$|^'(\\'|((?!').))*(\\\\'|((?!\\).)')$/;
+const numberLiteralRegex=/^[0-9]+(\.[0-9]*)?$|^\.[0-9]+$/;
+const digitRegex=/^[0-9]$/;
+
 const htmlEscapeMap={
     "&":"&amp;",
     "<":"&lt;",
@@ -158,5 +162,8 @@ module.exports={
     formatJavascript:formatJavascript,
     arrayIndexRegex:arrayIndexRegex,
     arrayAccessReplace:arrayAccessReplace,
-    accessToScopeArray:accessToScopeArray
+    accessToScopeArray:accessToScopeArray,
+    stringLiteralRegex:stringLiteralRegex,
+    numberLiteralRegex:numberLiteralRegex,
+    digitRegex:digitRegex
 };
