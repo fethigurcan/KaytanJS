@@ -1,5 +1,5 @@
 {
-  "name": "KaytanJS",
+  "name": "kaytan",
   "version": "1.0.0",
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
