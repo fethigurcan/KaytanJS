@@ -1,4 +1,3 @@
-const KaytanLogicToken=require('./KaytanLogicToken');
 const KaytanBinaryExpression=require('./KaytanBinaryExpression');
 
 class KaytanAndExpression extends KaytanBinaryExpression{

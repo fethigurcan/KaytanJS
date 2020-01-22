@@ -3,7 +3,7 @@ const fs=require('fs');
 const path=require('path');
 const modulePath=process.mainModule.path;
 const Kaytan=require(path.resolve(process.mainModule.path+'/../index.js'));
-const KaytanNodeStreamTextWriter=require(path.resolve(process.mainModule.path+'/../src/KaytanNodeStreamTextWriter.js'));
+
 if(!process.argv[2]){
     console.error("ERROR: expected template file to process");
 }else{
@@ -22,7 +22,7 @@ if(!process.argv[2]){
         let jsonData=fs.readFileSync(inputFile,fileOptions);
         let data=JSON.parse(jsonData);
 
-        kaytan.execute(data,new KaytanNodeStreamTextWriter(process.stdout));
+        kaytan.execute(data,new Kaytan.KaytanNodeStreamTextWriter(process.stdout));
     }catch(e){
         console.error(e.message);
     }

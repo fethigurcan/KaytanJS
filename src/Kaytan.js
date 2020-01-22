@@ -1,8 +1,10 @@
-var parseTemplate=require('./KaytanParserFn');
-var KaytanTokenList=require('./KaytanTokenList');
-var KaytanTextWriter=require('./KaytanTextWriter');
-var KaytanDefaultTextWriter=require('./KaytanDefaultTextWriter');
-var Helper=require('./Helper');
+const parseTemplate=require('./KaytanParserFn');
+const KaytanTokenList=require('./KaytanTokenList');
+const KaytanTextWriter=require('./KaytanTextWriter');
+const KaytanDefaultTextWriter=require('./KaytanDefaultTextWriter');
+const KaytanWritableStreamTextWriter=require('./KaytanWritableStreamTextWriter');
+const KaytanNodeStreamTextWriter=require('./KaytanNodeStreamTextWriter');
+const Helper=require('./Helper');
 
 //for improve performance on execution (less conditions will be used in execute functions)
 function prepareData(data){
@@ -102,5 +104,10 @@ ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
         });
     }
 }
+
+Kaytan.KaytanTextWriter=KaytanTextWriter;
+Kaytan.KaytanDefaultTextWriter=KaytanDefaultTextWriter;
+Kaytan.KaytanWritableStreamTextWriter=KaytanWritableStreamTextWriter;
+Kaytan.KaytanNodeStreamTextWriter=KaytanNodeStreamTextWriter;
 
 module.exports=Kaytan; 
