@@ -6,8 +6,8 @@ class KaytanNotExpression extends KaytanUnaryExpression{
         super(engine,argument,"!");
     }
 
-    executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return !this.argument.executeLogic(scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
+    executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
+        return !this.argument.executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
     }
 
     toJavascriptCheckCode(){
