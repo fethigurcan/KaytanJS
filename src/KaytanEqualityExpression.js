@@ -12,8 +12,11 @@ class KaytanEqualityExpression extends KaytanBinaryExpression{
     }
 
     executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
-        return this.left.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0).value
-            == this.right.value; 
+        let left=this.left.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0);
+        if (left!=null)
+            return left.value == this.right.value;
+        else
+            return false; 
     }
 }
 
