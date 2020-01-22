@@ -68,6 +68,9 @@ const app = express()
             table { width:100%; }
             textarea { width:100%; resize:vertical;font-family:monospace; }
             pre:empty:before { content: '(Empty)'; }
+            pre {  }
+            .singlecell { width:50% !important; }
+            .prediv { overflow-x:scroll; max-width:1000px }
             #expectedlabel { color:red; }
           </style>
         </head>
@@ -176,21 +179,21 @@ const app = express()
                 <input type="submit" id="submit" accesskey="s" value="Save As Test Case">
                 <input type="checkbox" id="optimized"> Optimized <input type="checkbox" id="optimizeddebugger"> Optimized Debugger 
               </td></tr>
-              <tr><td width="50%" valign="top">
+              <tr><td class="singlecell" valign="top">
                 Template:
                 <div><textarea id="template" name="template" rows="10" onchange="userchange()">Hello {{who}}!</textarea></div>
               </td>
-              <td width="50%" valign="top">
+              <td class="singlecell" valign="top">
                 JSON Data:
                 <div><textarea id="data" name="data" rows="10" onchange="userchange()">{ "who":"World" }</textarea></div>
               </td></tr>
-              <tr><td valign="top">
+              <tr><td class="singlecell" valign="top">
                 Output:
-                <div><pre id="output"></pre><input type="hidden" id="output-hidden" name="output" required/></div>
+                <div class="prediv"><pre id="output"></pre><input type="hidden" id="output-hidden" name="output" required/></div>
               </td>
-              <td style="display:none" valign="top">
+              <td class="singlecell" style="display:none" valign="top">
                 <span id="expectedlabel">Expected:</span>
-                <div><pre id="expected"></pre></div>
+                <div class="prediv"><pre id="expected"></pre></div>
               </td></tr>
               </table>
             </form>
