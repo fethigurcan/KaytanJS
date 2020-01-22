@@ -6,7 +6,6 @@ class KaytanNumberLiteral extends KaytanLiteral{
             value=0
         else if (typeof(value)!="number"){
             value=value.toString();
-            try[]
             if (value.indexOf(".")<0)
                 value=Number.parseInt(value);
             else
@@ -14,7 +13,7 @@ class KaytanNumberLiteral extends KaytanLiteral{
         }
         if (Number.isNaN(value))
             throw new TypeError("value must be a number");
-            
+
         super(engine,value);
     }
 }

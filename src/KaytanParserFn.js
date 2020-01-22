@@ -1,36 +1,42 @@
 //errors
-var KaytanSyntaxError=require('./KaytanSyntaxError');
-var KaytanBugError=require('./KaytanBugError');
+const KaytanSyntaxError=require('./KaytanSyntaxError');
+const KaytanBugError=require('./KaytanBugError');
 
 //properties
-var KaytanIdentifier=require('./KaytanIdentifier');
-var KaytanGlobalIdentifier=require('./KaytanGlobalIdentifier');
-var KaytanSystemIdentifier=require('./KaytanSystemIdentifier');
-var KaytanThisProperty=require('./KaytanThisProperty');
+const KaytanIdentifier=require('./KaytanIdentifier');
+const KaytanGlobalIdentifier=require('./KaytanGlobalIdentifier');
+const KaytanSystemIdentifier=require('./KaytanSystemIdentifier');
+const KaytanThisProperty=require('./KaytanThisProperty');
 
 //basics
-var KaytanStringToken=require('./KaytanStringToken');
-var KaytanIdentifierValue=require('./KaytanIdentifierValue');
-var KaytanTokenList=require('./KaytanTokenList');
-var KaytanGlobalIdentifierDefiniton=require('./KaytanGlobalIdentifierDefiniton');
-var KaytanParameterUsage=require('./KaytanParameterUsage');
+const KaytanStringToken=require('./KaytanStringToken');
+const KaytanIdentifierValue=require('./KaytanIdentifierValue');
+const KaytanTokenList=require('./KaytanTokenList');
+const KaytanGlobalIdentifierDefiniton=require('./KaytanGlobalIdentifierDefiniton');
+const KaytanParameterUsage=require('./KaytanParameterUsage');
 
 //partials
-var KaytanPartial=require('./KaytanPartial');
-var KaytanPartialDefinition=require('./KaytanPartialDefinition');
+const KaytanPartial=require('./KaytanPartial');
+const KaytanPartialDefinition=require('./KaytanPartialDefinition');
 
 //expressions
-var KaytanAndExpression=require('./KaytanAndExpression');
-var KaytanOrExpression=require('./KaytanOrExpression');
-var KaytanNotExpression=require('./KaytanNotExpression');
+const KaytanAndExpression=require('./KaytanAndExpression');
+const KaytanOrExpression=require('./KaytanOrExpression');
+const KaytanNotExpression=require('./KaytanNotExpression');
+const KaytanEqualityExpression=require('./KaytanEqualityExpression');
+
+//literals
+const KaytanStringLiteral=require('./KaytanStringLiteral');
+const KaytanNumberLiteral=require('./KaytanNumberLiteral');
+
 
 //statements
-var KaytanIfStatement=require('./KaytanIfStatement');
-var KaytanNotIfStatement=require('./KaytanNotIfStatement');
-var KaytanForStatement=require('./KaytanForStatement');
-var KaytanForDictionaryStatement=require('./KaytanForDictionaryStatement');
+const KaytanIfStatement=require('./KaytanIfStatement');
+const KaytanNotIfStatement=require('./KaytanNotIfStatement');
+const KaytanForStatement=require('./KaytanForStatement');
+const KaytanForDictionaryStatement=require('./KaytanForDictionaryStatement');
 
-var Helpers=require('./Helper');
+const Helpers=require('./Helper');
 
 //treat as member function of Kaytan
 function parseProperty(propertyName,errorIndex,scopeInfo){
