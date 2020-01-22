@@ -10,6 +10,10 @@ class KaytanLiteral extends KaytanToken{
             value:{ value:value, writable:false }
         });
     }
+
+    toString(){
+        return this.value.toString();
+    }
 }
 
 module.exports=KaytanLiteral;

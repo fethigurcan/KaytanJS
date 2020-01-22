@@ -16,6 +16,10 @@ class KaytanNumberLiteral extends KaytanLiteral{
 
         super(engine,value);
     }
+
+    toJavascriptCode(){
+        return this.value.toString();
+    }
 }
 
 module.exports=KaytanNumberLiteral;

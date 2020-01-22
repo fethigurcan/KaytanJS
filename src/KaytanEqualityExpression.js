@@ -1,5 +1,6 @@
 const KaytanBinaryExpression=require('./KaytanBinaryExpression');
 const KaytanLiteral=require('./KaytanLiteral');
+const Helper=require("./Helper");
 
 class KaytanEqualityExpression extends KaytanBinaryExpression{
     constructor(engine,left,right){
@@ -18,6 +19,31 @@ class KaytanEqualityExpression extends KaytanBinaryExpression{
         else
             return false; 
     }
+
+    toString(){
+        let left=this.left.toString();
+        let right=this.right.toString();
+
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
+            left="("+left+")";
+
+        return left+this.operator+right;
+    }
+
+    toJavascriptDefinitionsCode(){
+        let l=this.left.toJavascriptDefinitionsCode();
+        return l;
+    }
+
+    toJavascriptCheckCode(){
+        let left=this.left.toJavascriptAccessCode();
+        let right=this.right.toJavascriptCode();
+
+        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
+            left="("+left+")";
+
+        return left+this.jsoperator+right;
+    }    
 }
 
 module.exports=KaytanEqualityExpression;

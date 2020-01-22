@@ -5,7 +5,7 @@ const simpleIdentifierRegex=new RegExp("^"+identifierRegexBaseStr+"$");
 const arrayIndexRegex=/^[0-9]+$/;
 const arrayAccessReplace=v=>v.replace(/\.[0-9]+/g,m=>"["+m.substring(1)+"]");
 const partialsHolderName="$partials";
-const expressionToStringParanthesisCheckerRegex=/[&|]/;
+const expressionToStringParanthesisCheckerRegex=/[&|=]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
 
