@@ -41,22 +41,22 @@ const Helper=require('./Helper');
 const delimiterChangeAllowedRegexBaseStr="((?![a-zA-Z0-9_ &|=()]).)+";
 const delimiterChangeAllowedRegex=new RegExp(`=(${delimiterChangeAllowedRegexBaseStr} ${delimiterChangeAllowedRegexBaseStr})=`);
 
-const delimiterRegexes={
+/*const delimiterRegexes={
     "{{ }}":{
         token:/{{({(((?!}}}).)+)})}}|{{(((?!}}).)+)}}/g,
         errorCheck:/{{(((?!}}).)*)$/,
         delimiterChange:/{{=(.+ .+)=}}/
     }
-}
+}*/
 
 function getDelimiterRegexes(start,end){
-    let r=delimiterRegexes[start+' '+end];
+    /*let r=delimiterRegexes[start+' '+end];
     if (r){
         r.token.lastIndex=0;
         r.errorCheck.lastIndex=0;
         r.delimiterChange.lastIndex=0;
         return r;
-    }
+    }*/
 
     let s=Helper.escape(start,"\\");
     let e=Helper.escape(end,"\\");
@@ -65,7 +65,7 @@ function getDelimiterRegexes(start,end){
         errorCheck:new RegExp(`${s}(((?!${e}).)*)$`),
         delimiterChange:new RegExp(`${s}=(.+ .+)=${s}`)
     };
-    delimiterRegexes[start+' '+end]=r;
+    //delimiterRegexes[start+' '+end]=r;
     return r;
 }
 
@@ -160,12 +160,14 @@ tokenFactory={
         if (!delimiterChangeAllowedRegex.test(command))
             throw new KaytanSyntaxError("Delimiter change format wrong",index+command.length,this.template);
 
+        let lastIndex=index+command.length+_.startDelimiter.length+_.endDelimiter.length;
+
         let newDelimiters=command.substring(1,command.length-1).split(" ");
 
         _.startDelimiter=newDelimiters[0];
         _.endDelimiter=newDelimiters[1];
-    
         _.delimiterRegex=getDelimiterRegexes(_.startDelimiter,_.endDelimiter);
+        _.delimiterRegex.token.lastIndex=lastIndex; //continue from the latest position
     }    
 }
 
