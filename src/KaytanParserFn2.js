@@ -41,6 +41,7 @@ const Helper=require('./Helper');
 const delimiterChangeAllowedRegexBaseStr="((?![a-zA-Z0-9_ &|=()]).)+";
 const delimiterChangeAllowedRegex=new RegExp(`=(${delimiterChangeAllowedRegexBaseStr} ${delimiterChangeAllowedRegexBaseStr})=`);
 
+
 function getDelimiterRegexes(start,end){
     let s=Helper.escape(start,"\\");
     let e=Helper.escape(end,"\\");
@@ -53,6 +54,7 @@ function getDelimiterRegexes(start,end){
 
 //treat as member function
 function parseExpression(expression,errorIndex){
+    const expressionRegex=new RegExp(`([()])|(&|\\||=)|(\\!)|([a-zA-Z0-9_]+)|( +)`,'g');
     return parseIdentifier.call(this,expression,errorIndex); //TODO: implement the parser
 }
 

@@ -1,5 +1,6 @@
 const identifierRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
 const systemIdentifierRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
+const identifierRegexStr=systemIdentifierRegexBaseStr+"|\\$"+identifierRegexBaseStr+"|(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*";
 const identifierRegex=new RegExp("^"+systemIdentifierRegexBaseStr+"$|^\\$"+identifierRegexBaseStr+"$|^(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*$");
 const simpleIdentifierRegex=new RegExp("^"+identifierRegexBaseStr+"$");
 const arrayIndexRegex=/^[0-9]+$/;
@@ -9,8 +10,9 @@ const expressionToStringParanthesisCheckerRegex=/[&|=]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
 
-const stringLiteralRegex=/^""$|^''$|^"(\\"|((?!").))*(\\\\"|((?!\\).)")$|^'(\\'|((?!').))*(\\\\'|((?!\\).)')$/;
-const numberLiteralRegex=/^[0-9]+(\.[0-9]*)?$|^\.[0-9]+$/;
+const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).)\")|'(\\\\'|((?!').))*(\\\\\\\\'|((?!\\\\).)')";
+const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
+const expressionRegexStr="([()])|(&|\\||=)|(\\!)|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
 const digitRegex=/^[0-9]$/;
 
 const htmlEscapeMap={
@@ -163,7 +165,6 @@ module.exports={
     arrayIndexRegex:arrayIndexRegex,
     arrayAccessReplace:arrayAccessReplace,
     accessToScopeArray:accessToScopeArray,
-    stringLiteralRegex:stringLiteralRegex,
-    numberLiteralRegex:numberLiteralRegex,
-    digitRegex:digitRegex
+    digitRegex:digitRegex,
+    expressionRegexStr:expressionRegexStr
 };
