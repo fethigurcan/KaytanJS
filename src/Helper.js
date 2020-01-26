@@ -12,7 +12,18 @@ const KaytanSyntaxError=require('./KaytanSyntaxError');
 
 const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).)\")|'(\\\\'|((?!').))*(\\\\\\\\'|((?!\\\\).)')";
 const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
-const expressionRegexStr="([()])|(&|\\||=)|(\\!)|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
+const binaryOperatorRegexStr="&|\\||=";
+const unaryOperatorRegexStr="\\!";
+const expressionRegexStr="([()])|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
+const expressionTypeByRegexGroup={
+    Paranthesis:1,
+    BinaryOperator:2,
+    UnaryOperator:3,
+    Identifier:4,
+    StringLiteral:8,
+    NumberLiteral:10,
+    Space:12
+}
 const digitRegex=/^[0-9]$/;
 
 const htmlEscapeMap={
@@ -166,5 +177,6 @@ module.exports={
     arrayAccessReplace:arrayAccessReplace,
     accessToScopeArray:accessToScopeArray,
     digitRegex:digitRegex,
-    expressionRegexStr:expressionRegexStr
+    expressionRegexStr:expressionRegexStr,
+    expressionTypeByRegexGroup:expressionTypeByRegexGroup
 };
