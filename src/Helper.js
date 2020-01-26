@@ -14,12 +14,13 @@ const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).
 const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
 const binaryOperatorRegexStr="&|\\||=";
 const unaryOperatorRegexStr="\\!";
-const expressionRegexStr="([()])|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
+const expressionRegexStr="(\()|(\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
 const expressionTypeByRegexGroup={
-    Paranthesis:1,
-    BinaryOperator:2,
-    UnaryOperator:3,
-    Identifier:4,
+    ParanthesisOpen:1,
+    ParanthesisClose:2,
+    BinaryOperator:3,
+    UnaryOperator:4,
+    Identifier:5,
     StringLiteral:8,
     NumberLiteral:10,
     Space:12
