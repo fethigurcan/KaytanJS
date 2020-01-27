@@ -1,5 +1,5 @@
 {
-  "template": "{{< node}}{{! kaytan can define partials with this notation }}\r\n<li>\r\n  {{contents}}\r\n  <ul>\r\n    {{#children}}\r\n    {{> node}}\r\n    {{/children}}\r\n  </ul>\r\n</li>\r\n{{/node}}\r\n<html>\r\n  <body>\r\n    <ul>\r\n      {{#top_nodes}}\r\n      {{> node}}\r\n      {{/top_nodes}}\r\n    </ul>\r\n  </body>\r\n</html>",
+  "template": "{{< node}}{{! kaytan can define partials with this notation }}\r\n<li>{{contents}}<ul>{{#children}}{{> node}}{{/children}}</ul></li>\r\n{{/node}}\r\n<html>\r\n  <body>\r\n    <ul>\r\n  {{#top_nodes}}\r\n      {{> node}}\r\n  {{/top_nodes}}\r\n    </ul>\r\n  </body>\r\n</html>",
   "data": {
     "top_nodes": [
       {
@@ -32,5 +32,5 @@
       }
     ]
   },
-  "expected": "<html>\r\n  <body>\r\n    <ul>\r\n      \r\n      \r\n<li>\r\n  1\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  2\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  3\r\n  <ul>\r\n    \r\n  </ul>\r\n</li>\r\n    \r\n  </ul>\r\n</li>\r\n    \r\n    \r\n<li>\r\n  4\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  5\r\n  <ul>\r\n    \r\n    \r\n<li>\r\n  6\r\n  <ul>\r\n    \r\n  </ul>\r\n</li>\r\n    \r\n  </ul>\r\n</li>\r\n    \r\n  </ul>\r\n</li>\r\n    \r\n  </ul>\r\n</li>\r\n      \r\n    </ul>\r\n  </body>\r\n</html>"
+  "expected": "<html>\r\n  <body>\r\n    <ul>\r\n        <li>1<ul><li>2<ul><li>3<ul></ul></li>\r\n</ul></li>\r\n<li>4<ul><li>5<ul><li>6<ul></ul></li>\r\n</ul></li>\r\n</ul></li>\r\n</ul></li>\r\n\r\n  \r\n    </ul>\r\n  </body>\r\n</html>"
 }

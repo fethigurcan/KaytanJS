@@ -1,5 +1,5 @@
 {
-  "template": "{{<simple}}Hello {{name}}\r\nYou have just won ${{value}}!\r\n{{#in_ca}}\r\nWell, ${{ taxed_value }}, after taxes.\r\n{{/in_ca}}{{/simple}}<h1>{{greeting}}</h1>\r\n{{>simple}}\r\n\r\n<h3>{{farewell}}</h3>",
+  "template": "{{<simple}}Hello {{name}}\r\nYou have just won ${{value}}!\r\n{{#in_ca}}\r\nWell, ${{ taxed_value }}, after taxes.\r\n{{/in_ca}}{{/simple}}\r\n<h1>{{greeting}}</h1>\r\n{{>simple}}\r\n<h3>{{farewell}}</h3>",
   "data": {
     "name": "Bob",
     "value": 100,
@@ -8,5 +8,5 @@
     "greeting": "Welcome",
     "farewell": "Fair enough, right?"
   },
-  "expected": "<h1>Welcome</h1>Hello Bob\r\nYou have just won $100!\r\n<h3>Fair enough, right?</h3>"
+  "expected": "<h1>Welcome</h1>\r\nHello Bob\r\nYou have just won $100!\r\n\r\n<h3>Fair enough, right?</h3>"
 }

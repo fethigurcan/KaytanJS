@@ -12,5 +12,5 @@
     "love": "love sea",
     "notinmorr": "nothing more baby!"
   },
-  "expected": "Hi there Fethi.  Your home directory is c:\\izmir.\r\nYour friend is named Süleyman\r\n  \r\n   \r\n   Booooo.  Booo\r\n   \r\n   nothing more baby!\r\n   partial2 exists! so what about the poor partial1?\r\nlove sea\r\n"
+  "expected": "Hi there Fethi.  Your home directory is c:\\izmir.\r\n\r\nYour friend is named Süleyman\r\n  \r\n      Booooo.  Booo\r\n   \r\n   nothing more baby!\r\n   \r\n\r\npartial2 exists! so what about the poor partial1?\r\n\r\nlove sea\r\n"
 }

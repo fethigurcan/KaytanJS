@@ -1,5 +1,5 @@
 {
-  "template": "<h1>{{header}}</h1>\r\n{{#list}}\r\n  <ul>\r\n  {{#item}}\r\n    {{#current}}\r\n      <li><strong>{{name}}</strong></li>\r\n    {{/current}}\r\n    <li><a href=\"{{url}}\">{{name}}</a></li>\r\n  {{/item}}\r\n  </ul>\r\n{{/list}}\r\n\r\n{{^list}}\r\n  <p>The list is empty.</p>\r\n{{/list}}",
+  "template": "<h1>{{header}}</h1>\r\n{{#list}}\r\n<ul>\r\n{{#item}}\r\n{{#current}}\r\n    <li><strong>{{name}}</strong></li>\r\n{{/current}}\r\n    <li><a href=\"{{url}}\">{{name}}</a></li>\r\n{{/item}}\r\n</ul>\r\n{{/list}}\r\n\r\n{{^list}}\r\n<p>The list is empty.</p>\r\n{{/list}}",
   "data": {
     "header": "Colors",
     "list": [
@@ -27,5 +27,5 @@
     ],
     "empty": []
   },
-  "expected": "<h1>Colors</h1>  <ul>\r\n  \r\n    \r\n      <li><strong>red</strong></li>\r\n    \r\n    <li><a href=\"#Red\">red</a></li>\r\n  \r\n  </ul>  <ul>\r\n  \r\n    \r\n    <li><a href=\"#Green\">green</a></li>\r\n  \r\n  </ul>  <ul>\r\n  \r\n    \r\n    <li><a href=\"#Blue\">blue</a></li>\r\n  \r\n  </ul>"
+  "expected": "<h1>Colors</h1>\r\n<ul>\r\n    <li><strong>red</strong></li>\r\n    <li><a href=\"#Red\">red</a></li>\r\n\r\n</ul>\r\n<ul>\r\n    <li><a href=\"#Green\">green</a></li>\r\n\r\n</ul>\r\n<ul>\r\n    <li><a href=\"#Blue\">blue</a></li>\r\n\r\n</ul>\r\n\r\n\r\n"
 }
