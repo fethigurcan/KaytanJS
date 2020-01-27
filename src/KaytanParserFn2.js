@@ -46,7 +46,7 @@ function getDelimiterRegexes(start,end){
     let s=Helper.escape(start,"\\");
     let e=Helper.escape(end,"\\");
     let r={
-        token:new RegExp(`${s}({(((?!}${e}).)+)})${e}|${s}(((?!${e}).)+)${e}`,'g'),
+        token:new RegExp(`((\\r\\n|\\r|\\n) *)?(${s}({(((?!}${e}).)+)})${e}|${s}(((?!${e}).)+)${e})( *(\\r\\n|\\r|\\n))?`,'g'),
         errorCheck:new RegExp(`${s}(((?!${e}).)*)$`),
     };
     return r;
@@ -194,7 +194,7 @@ const tokenFactory={
         if (!delimiterChangeAllowedRegex.test(command))
             throw new KaytanSyntaxError("Delimiter change format wrong",index+command.length,this.template);
 
-        let lastIndex=index+command.length+_.startDelimiter.length+_.endDelimiter.length;
+        let lastIndex=_.delimiterRegex.token.lastIndex; //index+command.length+_.startDelimiter.length+_.endDelimiter.length;
 
         let newDelimiters=command.substring(1,command.length-1).split(" ");
 
@@ -223,19 +223,45 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
         let lastIndex=0;
         let token;
         while((token=_.delimiterRegex.token.exec(this.template))){
-            if (token.index>lastIndex)
-                _.block.ast.push(new KaytanStringToken(this,this.template.substring(lastIndex,token.index)));
+            let curIndex=token.index;
+            if (curIndex>lastIndex){
+                let strTokenData=this.template.substring(lastIndex,curIndex);
+                _.block.ast.push(new KaytanStringToken(this,strTokenData));
+            }
 
             let tokenCommand;
-            if(token[1] && token[1][0]=="{" && token[1][token[1].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
-                tokenCommand="&"+token[2];  //see regex for why 2
+            if(token[4] && token[4][0]=="{" && token[4][token[4].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
+                tokenCommand="&"+token[5];  //see regex for why 5
             else
-                tokenCommand=token[4]; //see regex for why 4
+                tokenCommand=token[7]; //see regex for why 7
 
             let tokenFn=tokenFactory[tokenCommand[0]]||tokenFactory[undefined];
             tokenFn.call(this,tokenCommand,token.index);                    
-
             lastIndex=_.delimiterRegex.token.lastIndex;
+
+            if (token[9] && !token[1]){
+                //let foundFlag=false;
+                //for (let j=_.blockArr.length-1;j>-1;j--){
+                    let b=_.block;
+                    for (let i=b.ast.length-1;i>-1;i--){
+                        let t=b.ast[i];
+                        if (t instanceof KaytanStringToken){
+                            //let lastChar=t.value[t.value.length-1];
+                            //if (lastChar!='\r' && lastChar!='\n'){
+                                b.ast.push(new KaytanStringToken(this,token[9]));
+                            //}
+                            //foundFlag=true;             
+                            break;
+                        }else if (t instanceof KaytanIdentifierValue){
+                            b.ast.push(new KaytanStringToken(this,token[9]));
+                            //foundFlag=true;
+                            break;
+                        }    
+                    }
+                   // if (foundFlag)
+                   //     break;
+                //}
+            }
         }
 
         if (lastIndex<this.template.length){            

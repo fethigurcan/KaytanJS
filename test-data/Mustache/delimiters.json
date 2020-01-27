@@ -1,5 +1,5 @@
 {
-  "template": "{{=<% %>=}}\r\n* <% start %>\r\n<%=< >=%><! Different than mustache, kaytan templates does not accept pipe delimiters >\r\n<# middle >\r\n* < item >\r\n\r\n</ middle >\r\n<={{ }}=>\r\n* {{ final }}",
+  "template": "{{=<% %>=}}\r\n* <% start %>\r\n<%=< >=%><! Different than mustache, kaytan templates does not accept pipe delimiters >\r\n<# middle >\r\n  * < item >\r\n</ middle >\r\n<={{ }}=>\r\n* {{ final }}",
   "data": {
     "start": "It worked the first time.",
     "middle": [
@@ -12,5 +12,5 @@
     ],
     "final": "Then, surprisingly, it worked the final time."
   },
-  "expected": "\r\n* It worked the first time.\r\n* And it worked the second time.\r\n* As well as the third.\r\n\r\n* Then, surprisingly, it worked the final time."
+  "expected": "* It worked the first time.\r\n  * And it worked the second time.\r\n  * As well as the third.\r\n* Then, surprisingly, it worked the final time."
 }
