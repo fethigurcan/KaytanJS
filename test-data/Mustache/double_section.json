@@ -1,8 +1,8 @@
 {
-  "template": "{{#t}}\r\n* first\r\n{{/t}}\r\n\r\n* {{two}}\r\n\r\n{{#t}}\r\n* third\r\n{{/t}}",
+  "template": "{{#t}}\r\n* first\r\n{{/t}}\r\n* {{two}}\r\n{{#t}}\r\n* third\r\n{{/t}}",
   "data": {
     "t": true,
     "two": "second"
   },
-  "expected": "\r\n* first\r\n* second\r\n* third\r\n"
+  "expected": "* first\r\n* second\r\n* third\r\n"
 }

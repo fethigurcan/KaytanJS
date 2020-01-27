@@ -46,7 +46,7 @@ function getDelimiterRegexes(start,end){
     let s=Helper.escape(start,"\\");
     let e=Helper.escape(end,"\\");
     let r={
-        token:new RegExp(`((\\r\\n|\\r|\\n) *)?(${s}({(((?!}${e}).)+)})${e}|${s}(((?!${e}).)+)${e})( *(\\r\\n|\\r|\\n))?`,'g'),
+        token:new RegExp(`(${s}({(((?!}${e}).)+)})${e}|${s}(((?!${e}).)+)${e})( *(\\r\\n|\\r|\\n))?`,'g'),
         errorCheck:new RegExp(`${s}(((?!${e}).)*)$`),
     };
     return r;
@@ -230,30 +230,30 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
             }
 
             let tokenCommand;
-            if(token[4] && token[4][0]=="{" && token[4][token[4].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
-                tokenCommand="&"+token[5];  //see regex for why 5
+            if(token[2] && token[2][0]=="{" && token[2][token[2].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
+                tokenCommand="&"+token[3];  //see regex for why 5
             else
-                tokenCommand=token[7]; //see regex for why 7
+                tokenCommand=token[5]; //see regex for why 7
 
             let tokenFn=tokenFactory[tokenCommand[0]]||tokenFactory[undefined];
             tokenFn.call(this,tokenCommand,token.index);                    
             lastIndex=_.delimiterRegex.token.lastIndex;
 
-            if (token[9] && !token[1]){
+            if (token[7]){
                 //let foundFlag=false;
                 //for (let j=_.blockArr.length-1;j>-1;j--){
                     let b=_.block;
                     for (let i=b.ast.length-1;i>-1;i--){
                         let t=b.ast[i];
                         if (t instanceof KaytanStringToken){
-                            //let lastChar=t.value[t.value.length-1];
-                            //if (lastChar!='\r' && lastChar!='\n'){
-                                b.ast.push(new KaytanStringToken(this,token[9]));
-                            //}
+                            let lastStr=t.value.replace(/^ +/,"");
+                            if (lastStr!="\r\n" && lastStr!='\r' && lastStr!='\n'){
+                                b.ast.push(new KaytanStringToken(this,token[7]));
+                            }
                             //foundFlag=true;             
                             break;
                         }else if (t instanceof KaytanIdentifierValue){
-                            b.ast.push(new KaytanStringToken(this,token[9]));
+                            b.ast.push(new KaytanStringToken(this,token[7]));
                             //foundFlag=true;
                             break;
                         }    
