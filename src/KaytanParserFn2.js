@@ -231,15 +231,15 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
 
             let tokenCommand;
             if(token[2] && token[2][0]=="{" && token[2][token[2].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
-                tokenCommand="&"+token[3];  //see regex for why 5
+                tokenCommand="&"+token[3];  //see regex for why 3=inside triple tag 
             else
-                tokenCommand=token[5]; //see regex for why 7
+                tokenCommand=token[5]; //see regex for why 5=inside stadard tag
 
             let tokenFn=tokenFactory[tokenCommand[0]]||tokenFactory[undefined];
             tokenFn.call(this,tokenCommand,token.index);                    
             lastIndex=_.delimiterRegex.token.lastIndex;
 
-            if (token[7]){
+            if (token[7]){ //see regex for why 7=white space and end line at the end of the tag 
                 let b=_.block;
                 for (let i=b.ast.length-1;i>-1;i--){
                     let t=b.ast[i];
