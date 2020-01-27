@@ -240,27 +240,20 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
             lastIndex=_.delimiterRegex.token.lastIndex;
 
             if (token[7]){
-                //let foundFlag=false;
-                //for (let j=_.blockArr.length-1;j>-1;j--){
-                    let b=_.block;
-                    for (let i=b.ast.length-1;i>-1;i--){
-                        let t=b.ast[i];
-                        if (t instanceof KaytanStringToken){
-                            let lastStr=t.value.replace(/^ +/,"");
-                            if (lastStr!="\r\n" && lastStr!='\r' && lastStr!='\n'){
-                                b.ast.push(new KaytanStringToken(this,token[7]));
-                            }
-                            //foundFlag=true;             
-                            break;
-                        }else if (t instanceof KaytanIdentifierValue){
+                let b=_.block;
+                for (let i=b.ast.length-1;i>-1;i--){
+                    let t=b.ast[i];
+                    if (t instanceof KaytanStringToken){
+                        let lastStr=t.value.replace(/^ +/,"");
+                        if (lastStr!="\r\n" && lastStr!='\r' && lastStr!='\n'){
                             b.ast.push(new KaytanStringToken(this,token[7]));
-                            //foundFlag=true;
-                            break;
-                        }    
-                    }
-                   // if (foundFlag)
-                   //     break;
-                //}
+                        }
+                        break;
+                    }else if (t instanceof KaytanIdentifierValue){
+                        b.ast.push(new KaytanStringToken(this,token[7]));
+                        break;
+                    }    
+                }
             }
         }
 
