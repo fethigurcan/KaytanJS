@@ -20,12 +20,17 @@ const KaytanPartial=require('./KaytanPartial');
 const KaytanPartialDefinition=require('./KaytanPartialDefinition');
 
 //expressions
+const KaytanLogicToken=require('./KaytanLogicToken');
+const KaytanBinaryExpression=require('./KaytanBinaryExpression');
+const KaytanCompareExpression=require('./KaytanCompareExpression');
+const KaytanUnaryExpression=require('./KaytanUnaryExpression');
 const KaytanAndExpression=require('./KaytanAndExpression');
 const KaytanOrExpression=require('./KaytanOrExpression');
 const KaytanNotExpression=require('./KaytanNotExpression');
 const KaytanEqualityExpression=require('./KaytanEqualityExpression');
 
 //literals
+const KaytanLiteral=require('./KaytanLiteral');
 const KaytanStringLiteral=require('./KaytanStringLiteral');
 const KaytanNumberLiteral=require('./KaytanNumberLiteral');
 
@@ -52,10 +57,102 @@ function getDelimiterRegexes(start,end){
     return r;
 }
 
+const operatorToExpressionClass={
+    "&":KaytanAndExpression,
+    "|":KaytanOrExpression,
+    "!":KaytanNotExpression,
+    "=":KaytanEqualityExpression
+}
+
+function _parseExpressionRecursive(expression,errorIndex,curIndex){
+    let _=this._parserRuntime;
+    let lastIndex=curIndex;
+    let token;
+    let r=[];
+
+    while((token=_.expressionRegex.exec(expression))){ 
+        
+        if (lastIndex!=token.index) //all characters must be recognized by the expressionRegex including spaces
+            new KaytanSyntaxError('Invalid expression',errorIndex+token.index,this.template);        
+
+        if (token[1]) //open paranthesis
+            r.push(_parseExpressionRecursive.call(this,expression,errorIndex+lastIndex,lastIndex));
+        else if (token[2]) //close paranthesis
+            break;
+        else if (token[3]){ //operator
+            if (r.length){
+                let left=r.pop();
+                let right=_parseExpressionRecursive.call(this,expression,errorIndex+lastIndex,lastIndex);
+                let expressionClass=operatorToExpressionClass[token[3]];
+                if (expressionClass.__proto__==KaytanBinaryExpression){
+                    if (left && left instanceof KaytanLogicToken){
+                        if (right && right instanceof KaytanLogicToken){
+                            r.push(new expressionClass(this,left,right));
+                        }else
+                            throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.template);
+                    }else
+                        throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.template);
+                }else if (expressionClass.__proto__==KaytanCompareExpression){
+                    if (left && left instanceof KaytanIdentifier){
+                        if (right && right instanceof KaytanLiteral){
+                            r.push(new expressionClass(this,left,right));
+                        }else if (right && right instanceof KaytanIdentifier &&  Helper.numberLiteralRegex(right.access)){
+                            right=new KaytanNumberLiteral(this,right.access);
+                            r.push(new expressionClass(this,left,right));
+                        }else
+                            throw new KaytanSyntaxError("Expected righthand literal",errorIndex+token.index,this.template);
+                    }else
+                        throw new KaytanSyntaxError("Expected lefthand identifier",errorIndex+token.index,this.template);
+                }else
+                    throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.template);
+            }else
+                throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.template);
+        }else if (token[4]){ //unary operator
+            let operand=_parseExpressionRecursive.call(this,expression,errorIndex+lastIndex,lastIndex);
+            let expressionClass=operatorToExpressionClass[token[4]];
+            if (expressionClass.__proto__==KaytanUnaryExpression){
+                if (operand && operand instanceof KaytanLogicToken){
+                    r.push(new expressionClass(this,operand));
+                }else
+                    throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.template);
+            }else
+                throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.template);
+        }else if (token[5]){ //identifier
+            let identifier=parseIdentifier.call(this,token[5],errorIndex+token.index);
+            r.push(identifier);
+        }else if (token[12]){ //string literal
+            let stringLiteral=new KaytanStringLiteral(this,token[12].substring(1,token[12].length-1).replace(/\\./g,v=>v.substring(1)));
+            r.push(stringLiteral);
+        }
+
+        lastIndex=_.expressionRegex.lastIndex;
+
+        if (lastIndex==expression.length)
+            break;
+    }
+
+    if (!r.length)
+        throw new KaytanSyntaxError("Empty expression block",errorIndex+lastIndex,this.template);
+
+    if (r.length!=1)
+        throw new KaytanBugError("Expression array must be ended with just 1 item",errorIndex+lastIndex,this.template);
+
+    return r[0];
+}
+
 //treat as member function
 function parseExpression(expression,errorIndex){
-    const expressionRegex=new RegExp(`([()])|(&|\\||=)|(\\!)|([a-zA-Z0-9_]+)|( +)`,'g');
-    return parseIdentifier.call(this,expression,errorIndex); //TODO: implement the parser
+    if (expression){
+        let _=this._parserRuntime;
+    
+        if (!_.expressionRegex)
+            _.expressionRegex=new RegExp(Helper.expressionRegexStr,'g'); //use it under _parserRuntime, because it is resuable
+        _.expressionRegex.lastIndex=0; //we use it stateful, so thats why it is recreated in each parser instance (consider parallel usages)
+    
+        return _parseExpressionRecursive.call(this,expression,errorIndex,0);
+
+    }else
+        new KaytanSyntaxError('Empty expression',errorIndex,this.template);
 }
 
 function checkSimpleIdentifierName(identifierName,errorIndex){
@@ -84,6 +181,7 @@ function parseIdentifier(propertyName,errorIndex){
 function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=true,scopeType=0){ //0=current scope, 1=calculate scope from condition, 2=independent root scope
     let _=this._parserRuntime;
     let conditionName=command.substring(1).trim();
+    this._temporaryBlockFlag=1; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
     let condition=conditionParserFn.call(this,conditionName,index);
     let block={ tokenType:tokenType, name:conditionName,condition:condition,alternateAllowed:alternateAllowed,default:[] };
     block.ast=block.default;
@@ -99,6 +197,7 @@ function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=tr
         block.scopeInfo=_.block.scopeInfo;
     _.blockArr.push(block);
     _.block=block;
+    this._temporaryBlockFlag=2; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
 }
 
 //treat as member functions
@@ -157,22 +256,24 @@ const tokenFactory={
     "^":function (command,index){ openBlock.call(this,parseExpression,KaytanNotIfStatement,command,index,true,0) },
     "<":function (command,index){ openBlock.call(this,checkSimpleIdentifierName,KaytanPartialDefinition,command,index,false,2) },
     ":":function(command,index){
+        this._temporaryBlockFlag=3; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
         let conditionName=command.substring(1).trim();
         if (_.block.alternateAllowed){
             if (conditionName && conditionName!=_.block.name)
-                throw new KaytanSyntaxError("else statement's name must be matched with the block or keep it empty",index,this.template);    
+                throw new KaytanSyntaxError("Expected {{:${blockName}}}} or {{:}}",index,this.template);    
             _.block.alternate=[];
             _.block.ast=_.block.alternate;
         }else
-            throw new KaytanSyntaxError("else statement is not allowed",index,this.template);
+            throw new KaytanSyntaxError("Unexpected {{:}}",index,this.template);
     },
     "/":function(command,index){
+        delete this._temporaryBlockFlag; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
         let conditionName=command.substring(1).trim();
         
         if (conditionName && conditionName!=_.block.name)
-            throw new KaytanSyntaxError("end statement's name must be matched with the block or keep it empty",index,this.template);
+            throw new KaytanSyntaxError("Expected {{/${blockName}}}} or {{/}}",index,this.template);
 
         delete _.block.ast;
         
@@ -261,7 +362,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
             let endOfTemplate=this.template.substring(lastIndex,this.template.length);
 
             if (_.delimiterRegex.errorCheck.test(endOfTemplate))
-                throw new KaytanSyntaxError("missing delimiter close at the end of the template",this.template.length,this.template);
+                throw new KaytanSyntaxError("Missing delimiter close at the end of the template",this.template.length,this.template);
 
             _.block.ast.push(new KaytanStringToken(this,endOfTemplate));
         }

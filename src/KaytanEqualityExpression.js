@@ -1,11 +1,9 @@
-const KaytanBinaryExpression=require('./KaytanBinaryExpression');
+const KaytanCompareExpression=require('./KaytanCompareExpression');
 const KaytanLiteral=require('./KaytanLiteral');
 const Helper=require("./Helper");
 
-class KaytanEqualityExpression extends KaytanBinaryExpression{
+class KaytanEqualityExpression extends KaytanCompareExpression{
     constructor(engine,left,right){
-        if (!(right instanceof KaytanLiteral))
-            throw new TypeError('Right operand must be a KaytanLiteral'); 
         super(engine,left,'=',right);
         Object.defineProperties(this,{
             jsoperator:{ value:"==", writable:false }
@@ -19,31 +17,6 @@ class KaytanEqualityExpression extends KaytanBinaryExpression{
         else
             return false; 
     }
-
-    toString(){
-        let left=this.left.toString();
-        let right=this.right.toString();
-
-        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
-            left="("+left+")";
-
-        return left+this.operator+right;
-    }
-
-    toJavascriptDefinitionsCode(){
-        let l=this.left.toJavascriptDefinitionsCode();
-        return l;
-    }
-
-    toJavascriptCheckCode(){
-        let left=this.left.toJavascriptAccessCode();
-        let right=this.right.toJavascriptCode();
-
-        if (Helper.expressionToStringParanthesisCheckerRegex.test(left))
-            left="("+left+")";
-
-        return left+this.jsoperator+right;
-    }    
 }
 
 module.exports=KaytanEqualityExpression;

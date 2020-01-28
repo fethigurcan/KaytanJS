@@ -14,18 +14,10 @@ const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).
 const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
 const binaryOperatorRegexStr="&|\\||=";
 const unaryOperatorRegexStr="\\!";
-const expressionRegexStr="(\()|(\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|("+numberLiteralRegexStr+")|( +)";
-const expressionTypeByRegexGroup={
-    ParanthesisOpen:1,
-    ParanthesisClose:2,
-    BinaryOperator:3,
-    UnaryOperator:4,
-    Identifier:5,
-    StringLiteral:8,
-    NumberLiteral:10,
-    Space:12
-}
+const expressionRegexStr="(\\()|(\\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|( +)";
+
 const digitRegex=/^[0-9]$/;
+const numberLiteralRegex=new RegExp(numberLiteralRegexStr);
 
 const htmlEscapeMap={
     "&":"&amp;",
@@ -179,5 +171,5 @@ module.exports={
     accessToScopeArray:accessToScopeArray,
     digitRegex:digitRegex,
     expressionRegexStr:expressionRegexStr,
-    expressionTypeByRegexGroup:expressionTypeByRegexGroup
+    numberLiteralRegex:numberLiteralRegex
 };
