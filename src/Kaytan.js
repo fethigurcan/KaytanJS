@@ -54,7 +54,7 @@ class Kaytan{
    let $pia=0,$i,$l,$k;
 ${Helper.formatJavascript(ast.toJavascriptCode(),1)}
 };$fn;`;
-            //delete this.varcounter;
+            delete this.varcounter;
             let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference
             let $systemIdentifierFn=Helper.systemIdentifierFn; //used inside fn, keep reference
             let $escape=Helper.escape; //used inside fn, keep reference
