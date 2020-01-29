@@ -1,0 +1,18 @@
+{
+  "template": "* {{person.hometown.city}}, {{person.hometown.state}}\r\n* {{#person}}{{hometown.city}}, {{hometown.state}}{{/person}}\r\n* {{#person}}{{#hometown}}{{city}}, {{state}}{{/hometown}}{{/person}}",
+  "data": {
+    "person": {
+      "name": {
+        "first": "Chris",
+        "last": "Firescythe"
+      },
+      "age": 24,
+      "hometown": {
+        "city": "Cincinnati",
+        "state": "OH"
+      }
+    },
+    "normal": "Normal"
+  },
+  "expected": "* Cincinnati, OH\r\n* Cincinnati, OH\r\n* Cincinnati, OH"
+}
