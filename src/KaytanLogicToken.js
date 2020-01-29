@@ -1,4 +1,5 @@
 const KaytanToken=require('./KaytanToken');
+const Helper=require('./Helper');
 
 class KaytanLogicToken extends KaytanToken{
     constructor(engine){
@@ -9,7 +10,7 @@ class KaytanLogicToken extends KaytanToken{
 
     executeLogic(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition=0){
         let r=this.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
-        return r.value!=null && r.value!==false && r.value!=="" && (!Array.isArray(r.value) || r.value.length>0);
+        return Helper.checkValue(r.value);
     }
 }
 

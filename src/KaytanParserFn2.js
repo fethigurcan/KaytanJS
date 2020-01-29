@@ -183,7 +183,7 @@ function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=tr
     let conditionName=command.substring(1).trim();
     this._temporaryBlockFlag=1; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
     let condition=conditionParserFn.call(this,conditionName,index);
-    let block={ tokenType:tokenType, name:conditionName,condition:condition,alternateAllowed:alternateAllowed,default:[],scopeType:scopeType };
+    let block={ tokenType:tokenType, name:conditionName,condition:condition,alternateAllowed:alternateAllowed,default:[] };
     block.ast=block.default;
     if (scopeType==1){ //1=create a scope from the condition (condition must be a KaytanIdentifier)
         if (!condition instanceof KaytanIdentifier)
@@ -191,10 +191,11 @@ function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=tr
         
         condition.endScopeInfo.lastScope.push(_.currentScope);
         _.currentScope=condition.endScopeInfo;
-        debugger;
     }else if (scopeType==2){ //2=use independent scope
         _.currentScope={ parent:null,name:conditionName, index:0, children:{},lastScope:[_.currentScope] };
-    } //else //0=do not change the scope
+    }else{ //0=do not change the scope (mark to return itself after the end of block)
+        _.currentScope.lastScope.push(_.currentScope);
+    }
 
     _.blockArr.push(block);
     _.block=block;
@@ -259,8 +260,6 @@ const tokenFactory={
     ":":function(command,index){
         this._temporaryBlockFlag=3; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
-        if (_.block.scopeType && _.currentScope.lastScope.length)
-            _.currentScope=_.currentScope.lastScope.pop();
         
         let conditionName=command.substring(1).trim();
         if (_.block.alternateAllowed){
@@ -274,7 +273,7 @@ const tokenFactory={
     "/":function(command,index){
         delete this._temporaryBlockFlag; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
-        if (_.block.scopeType && _.currentScope.lastScope.length)
+        if (_.currentScope.lastScope.length)
             _.currentScope=_.currentScope.lastScope.pop();
 
         let conditionName=command.substring(1).trim();

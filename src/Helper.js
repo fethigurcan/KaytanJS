@@ -19,6 +19,9 @@ const expressionRegexStr="(\\()|(\\))|("+binaryOperatorRegexStr+")|("+unaryOpera
 const digitRegex=/^[0-9]$/;
 const numberLiteralRegex=new RegExp(numberLiteralRegexStr);
 
+const checkValue=v=>v!=null && v!==false && v!=="" && (!Array.isArray(v) || v.length>0); 
+
+
 const htmlEscapeMap={
     "&":"&amp;",
     "<":"&lt;",
@@ -172,5 +175,6 @@ module.exports={
     accessToScopeArray:accessToScopeArray,
     digitRegex:digitRegex,
     expressionRegexStr:expressionRegexStr,
-    numberLiteralRegex:numberLiteralRegex
+    numberLiteralRegex:numberLiteralRegex,
+    checkValue:checkValue
 };

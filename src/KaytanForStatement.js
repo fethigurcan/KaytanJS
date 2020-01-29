@@ -66,7 +66,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
         if (scopes[scopes.length-1]==obj)
             return; //prevents self recursion
 
-        if (Array.isArray(obj) && obj.length){
+        if (Array.isArray(obj)){
             let childscopes=[...r.scopes,null]; //son null oge her bir item ile değiştirilerek çalıştırılacak
             for (let i=0;i<obj.length;i++){
                 childscopes[l]=obj[i]; //son öğe ile scope'u belirle.

@@ -51,7 +51,6 @@ class Kaytan{
    let $global={ ${Helper.partialsHolderName}:{}, $parameterUsage:{} };
    let $o=$oo;
    let $scope=$o[$o.length-1];
-   let $check=v=>v!=null && v!==false && v!=="" && (!Array.isArray(v) || v.length>0);
    let $pia=0,$i,$l,$k;
 ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
 };$fn;`;
@@ -59,6 +58,7 @@ ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
             let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference
             let $systemIdentifierFn=Helper.systemIdentifierFn; //used inside fn, keep reference
             let $escape=Helper.escape; //used inside fn, keep reference
+            let $check=Helper.checkValue; //used inside fn, keep reference
             fn=eval(fn);            
             Object.defineProperties(this,{
                 fn:{ value:fn, writable:false },
