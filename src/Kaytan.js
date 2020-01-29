@@ -52,7 +52,7 @@ class Kaytan{
    let $o=$oo;
    let $scope=$o[$o.length-1];
    let $pia=0,$i,$l,$k;
-${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
+${Helper.formatJavascript(ast.toJavascriptCode(),1)}
 };$fn;`;
             //delete this.varcounter;
             let $findPropertyValue=Helper.findPropertyValue; //used inside fn, keep reference
