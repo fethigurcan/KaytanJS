@@ -10,10 +10,12 @@ class KaytanIdentifier extends KaytanLogicToken{
             let _name=name;
             let startScopeInfo=scopeInfo;
             let exactScope=false;
+            let isCurrentScope=false;
             while(_name[0]=='.'){
-                if (!exactScope)
+                if (!exactScope){
                     exactScope=true;
-                else
+                    isCurrentScope=_name[1]!='.';
+                }else
                     startScopeInfo=startScopeInfo.parent;
                 if (!startScopeInfo)
                     throw new KaytanSyntaxError('object tree mismatch for property '+name);
@@ -31,7 +33,7 @@ class KaytanIdentifier extends KaytanLogicToken{
                     _scopeInfo={ parent:endScopeInfo,name:__name, index:endScopeInfo.index+1, children:{},lastScope:[] };
                     endScopeInfo.children[__name]=_scopeInfo;
                 }else
-                    allreadyDefined=true;
+                    allreadyDefined=!_scopeInfo.exact;
                 
                 _scopeInfo.exact=_scopeInfo.exact||exactScope;
                 endScopeInfo=_scopeInfo;
@@ -41,7 +43,7 @@ class KaytanIdentifier extends KaytanLogicToken{
                 name:{ value:_names[0], writable:false },
                 access:{ value:_name, writable:false },
                 exactLevel:{ value:exactScope, writable:false },
-                isCurrentScope:{ value:exactScope&&(scopeInfo==startScopeInfo), writable:false },
+                isCurrentScope:{ value:isCurrentScope, writable:false },
                 index:{ value:startScopeInfo.index, writable:false },
                 accessIndex:{ value:endScopeInfo.index, writable:false },
                 allreadyDefined:{ value:allreadyDefined, writable:true }, //other property values can change this state during parse
