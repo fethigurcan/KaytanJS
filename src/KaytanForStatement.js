@@ -1,7 +1,8 @@
 const KaytanToken=require('./KaytanToken');
 const KaytanStatement=require('./KaytanStatement');
 const KaytanIdentifier=require('./KaytanIdentifier');
-const formatJavascript=require('./Helper').formatJavascript;
+const Helper=require('./Helper');
+const formatJavascript=Helper.formatJavascript;
 
 class KaytanForStatement extends KaytanStatement{
     constructor(engine,_for,_loop,_else){        
@@ -72,7 +73,7 @@ ${formatJavascript(this.else.toJavascriptCode(),3)}
                 childscopes[l]=obj[i]; //son öğe ile scope'u belirle.
                 this.loop.execute(global,childscopes,i,obj.length,i,partialIndexAddition);
             }
-        }else if (obj)
+        }else if (Helper.checkValue(obj))
             this.loop.execute(global,[...r.scopes,obj],0,1,0,partialIndexAddition);
         else if (this.else)
             this.else.execute(global,scopes,parentIndex,parentLength,parentKey,partialIndexAddition);
