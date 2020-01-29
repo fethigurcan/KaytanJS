@@ -328,7 +328,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             command2=command1;
                             escapeFnName="&";
                         }
-                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command2,i,scopeInfo),scopeInfo,escapeFnName));
+                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command2,i,scopeInfo),escapeFnName));
                     }else if (command[0]=='~' || command[0]=='@'){
                         let command1=command.substring(1).trim();
                         if (Helper.simpleIdentifierRegex.test(command1)){
@@ -342,9 +342,9 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                         if (command[command.length-1]!='}') //this happens when with default delimiter and/or any delimiter that ends with }
                             i++;
                         let command1=command.substring(1).trim().replace(/}$/,'').trim();
-                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command1,i,scopeInfo),scopeInfo,"&"));
+                        retVal.push(new KaytanIdentifierValue(this,parseProperty.call(this,command1,i,scopeInfo),"&"));
                     }else if (command.trim()=='.'){ //DİKKAT: ilk karakter değil tümü=.
-                        retVal.push(new KaytanIdentifierValue(this,new KaytanThisProperty(this,scopeInfo),scopeInfo));
+                        retVal.push(new KaytanIdentifierValue(this,new KaytanThisProperty(this,scopeInfo)));
                     }else if (command[0]=='!'){ 
                         //ignore comments
                     }else if (command[0]=='='){
@@ -384,7 +384,7 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
                             throw new KaytanSyntaxError('Invalid partial name:'+command,i,this.template);
                     }else{
                         let property=parseProperty.call(this,command.trim(),i,scopeInfo);
-                        retVal.push(new KaytanIdentifierValue(this,property,scopeInfo));
+                        retVal.push(new KaytanIdentifierValue(this,property));
                     }
                     j=retVal.length;
                     buffer=null;

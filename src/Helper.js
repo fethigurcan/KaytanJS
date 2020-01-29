@@ -128,6 +128,7 @@ const getPropertyValue=function(property,scopes,index,exactLevel){
 
 const findPropertyValue=function(property,scopes,index){
     for (let i=index;i>-1;i--){
+    //for (let i=scopes.length-1;i>-1;i--){        
         let p=scopes[i][property];
         if (p!=null){
              //if a property found but references to the current scope, stop searching upward to prevent cycle

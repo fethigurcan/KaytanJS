@@ -4,7 +4,7 @@ const Helper=require('./Helper');
 const _escapeJavascriptParameter=e=>e?`"${Helper.escape(e,"\\")}"`:"undefined";
 
 class KaytanIdentifierValue extends KaytanToken{
-    constructor(engine,property,scopeInfo,escape){
+    constructor(engine,property,escape){
         if (!(property instanceof KaytanIdentifier))
             throw new TypeError('property must be a KaytanIdentifier'); 
 

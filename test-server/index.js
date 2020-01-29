@@ -92,13 +92,14 @@ const app = express()
 
               try{
                 let data=JSON.parse(datael.value);
-                let kaytan=new Kaytan(template.value,{ optimized:optimizedel.checked,optimizeddebugger:optimizeddebuggerel.checked });
+                kaytan=new Kaytan(template.value,{ optimized:optimizedel.checked,optimizeddebugger:optimizeddebuggerel.checked });
                 let output=kaytan.execute(data).replace(/\\r\\n/g,"\\n");
                 outputhiddenel.value=output;
                 outputel.innerText=_escape(output);
               }catch(e){
                 outputhiddenel.value=JSON.stringify({ error:e.name,message:e.message });
                 outputel.innerText=_escape(e.message);
+                throw e;
               }
               document.getElementById('expectedlabel').style.color=outputhiddenel.value==expectedhiddenel.value?'green':null;
             }

@@ -1,9 +1,9 @@
 Kaytan=require('.');
 
-dd=new Kaytan("{{[a}}true{{^$last}}, {{/}}{{/}}"
+dd=new Kaytan("{{?abc&b&c=\"deneme\"}}{{abc}}{{/}} {{{deneme}}}true"
         ,{ optimized:true,defaultStartDelimiter:'{{',defaultEndDelimiter:'}}' });
 console.log(dd);
 
 console.log(dd.ast.toString());
-console.log(dd.execute({ a:{ "TableName":"Empl\"oyees {aka} Friends",aaa:"ee",ebele:{} }}));
+console.log(dd.execute({ abc:"selam",b:true,c:"deneme" }));
 console.log('end');

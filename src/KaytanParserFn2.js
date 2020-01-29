@@ -163,7 +163,7 @@ function checkSimpleIdentifierName(identifierName,errorIndex){
 function parseIdentifier(propertyName,errorIndex){
     let _=this._parserRuntime;
     if (propertyName==".")
-        return new KaytanThisProperty(this,propertyName,_.block.scopeInfo);
+        return new KaytanThisProperty(this,_.currentScope);
 
     if (Helper.identifierRegex.test(propertyName)){
         if (propertyName[0]=='~')
@@ -171,7 +171,7 @@ function parseIdentifier(propertyName,errorIndex){
         else if (propertyName[0]=='$')
             return new KaytanSystemIdentifier(this,propertyName.substring(1));
         else
-            return new KaytanIdentifier(this,propertyName,_.block.scopeInfo);
+            return new KaytanIdentifier(this,propertyName,_.currentScope);
     }else
         throw new KaytanSyntaxError('Invalid identifier:'+propertyName,errorIndex,this.template);
 }
@@ -183,18 +183,19 @@ function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=tr
     let conditionName=command.substring(1).trim();
     this._temporaryBlockFlag=1; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
     let condition=conditionParserFn.call(this,conditionName,index);
-    let block={ tokenType:tokenType, name:conditionName,condition:condition,alternateAllowed:alternateAllowed,default:[] };
+    let block={ tokenType:tokenType, name:conditionName,condition:condition,alternateAllowed:alternateAllowed,default:[],scopeType:scopeType };
     block.ast=block.default;
     if (scopeType==1){ //1=create a scope from the condition (condition must be a KaytanIdentifier)
         if (!condition instanceof KaytanIdentifier)
             throw new KaytanBugError("scopeType 1 is only used in a identifier condition type statements",index,this.template);
         
-        let newScopeInfos=(new Array(condition.accessIndex+1)).fill(function(){ return { defined:{}}; }());
-        block.scopeInfo=[..._.block.scopeInfo,...newScopeInfos];
+        condition.endScopeInfo.lastScope.push(_.currentScope);
+        _.currentScope=condition.endScopeInfo;
+        debugger;
     }else if (scopeType==2){ //2=use independent scope
-        block.scopeInfo=[{ defined:{} }];
-    }else //0=do not change the cope
-        block.scopeInfo=_.block.scopeInfo;
+        _.currentScope={ parent:null,name:conditionName, index:0, children:{},lastScope:[_.currentScope] };
+    } //else //0=do not change the scope
+
     _.blockArr.push(block);
     _.block=block;
     this._temporaryBlockFlag=2; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
@@ -207,7 +208,7 @@ const tokenFactory={
     undefined:function(command,index){ //write value with default escape {{...}}
         let _=this._parserRuntime;
         let property=parseIdentifier.call(this,command.trim(),index);
-        _.block.ast.push(new KaytanIdentifierValue(this,property,_.block.scopeInfo));
+        _.block.ast.push(new KaytanIdentifierValue(this,property));
     },
     "&":function(command,index){ //write value with no escape or selected escape {{&...}} or {{&["'[(\ etc.]...}} or {{{...}}}=={{&...}} (see parseTemplate for last case)
         let _=this._parserRuntime;
@@ -222,7 +223,7 @@ const tokenFactory={
         }
 
         let property=parseIdentifier.call(this,identifierName,index);
-        _.block.ast.push(new KaytanIdentifierValue(this,property,_.block.scopeInfo,escapeFnName));
+        _.block.ast.push(new KaytanIdentifierValue(this,property,escapeFnName));
     },
     "@":function(command,index){ //report a parameter usage {{@...}}
         let _=this._parserRuntime;
@@ -244,7 +245,7 @@ const tokenFactory={
         let _=this._parserRuntime;
         let partialName=command.substring(1).trim();
         if (Helper.simpleIdentifierRegex.test(partialName)){
-            _.block.ast.push(new KaytanPartial(this,partialName,_.block.scopeInfo.length-1));
+            _.block.ast.push(new KaytanPartial(this,partialName,_.currentScope.index));
         }else
             throw new KaytanSyntaxError('Invalid partial name:'+partialName,index,this.template);        
     },
@@ -258,6 +259,9 @@ const tokenFactory={
     ":":function(command,index){
         this._temporaryBlockFlag=3; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
+        if (_.block.scopeType && _.currentScope.lastScope.length)
+            _.currentScope=_.currentScope.lastScope.pop();
+        
         let conditionName=command.substring(1).trim();
         if (_.block.alternateAllowed){
             if (conditionName && conditionName!=_.block.name)
@@ -270,8 +274,10 @@ const tokenFactory={
     "/":function(command,index){
         delete this._temporaryBlockFlag; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
         let _=this._parserRuntime;
+        if (_.block.scopeType && _.currentScope.lastScope.length)
+            _.currentScope=_.currentScope.lastScope.pop();
+
         let conditionName=command.substring(1).trim();
-        
         if (conditionName && conditionName!=_.block.name)
             throw new KaytanSyntaxError("Expected {{/${blockName}}}} or {{/}}",index,this.template);
 
@@ -308,16 +314,18 @@ const tokenFactory={
 
 
 //treat as member function of Kaytan
-function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter="}}"){
+function parseTemplate(defaultStartDelimiter="{{",defaultEndDelimiter="}}"){
 
     this._parserRuntime={
         delimiterRegex:getDelimiterRegexes(defaultStartDelimiter,defaultEndDelimiter),
         startDelimiter:defaultStartDelimiter,
         endDelimiter:defaultEndDelimiter,
-        block:{ ast:[],scopeInfo:[{ defined:{} }] }
+        rootScope:{ parent:null,name:"#root", index:0, children:{},lastScope:[] },
+        block:{ ast:[] }
     }
-    this._parserRuntime.blockArr=[this._parserRuntime.block]; //it is the root block
     let _=this._parserRuntime;
+    _.currentScope=_.rootScope;
+    _.blockArr=[_.block]; //it is the root block
 
     if (this.template){
 
@@ -373,10 +381,24 @@ function parseTemplate(scopeInfo,defaultStartDelimiter="{{",defaultEndDelimiter=
 
     let ast=_.block.ast;
     
+    function scopeInfoFn(rr){
+        let retVal={};
+        let flag=false;
+        for (let r in rr.children) {
+            flag=true;
+            retVal[r]=scopeInfoFn(rr.children[r]);
+        }
+        if (flag)
+            return retVal;
+        else
+            return rr.exact;
+    }
+
+    let scopeInfo=scopeInfoFn(this._parserRuntime.rootScope);    
     delete this._parserRuntime;
 
     //return new KaytanTokenList(this,ast);
-    return { data:ast };
+    return { data:ast, scopeInfo:scopeInfo };
 };
 
 module.exports=parseTemplate;

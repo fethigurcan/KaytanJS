@@ -1,4 +1,4 @@
-const parseTemplate=require('./KaytanParserFn');
+const parseTemplate=require('./KaytanParserFn2');
 const KaytanTokenList=require('./KaytanTokenList');
 const KaytanTextWriter=require('./KaytanTextWriter');
 const KaytanDefaultTextWriter=require('./KaytanDefaultTextWriter');
@@ -6,41 +6,12 @@ const KaytanWritableStreamTextWriter=require('./KaytanWritableStreamTextWriter')
 const KaytanNodeStreamTextWriter=require('./KaytanNodeStreamTextWriter');
 const Helper=require('./Helper');
 
-//for improve performance on execution (less conditions will be used in execute functions)
-function prepareData(data){
-    if (Array.isArray(data)){
-        if (data.length){
-            if (data.length==1)
-                return prepareData(data[0]);
-            else
-                return data.map(i=>prepareData(i));
-        }else
-            return null;
-    }
-    else if (typeof(data)=="object" && data){
-        let keys=Object.keys(data);
-        if (!keys)
-            return null;
-        else{
-            let retVal={};
-            for(let key of keys)
-                retVal[key]=prepareData(data[key]);
-            return retVal;
-        }
-    }
-    else if (typeof(data)=="string")
-        return data?data:null;
-    else
-        return data;
-}
-
 function _executeCompiledCode(values,writer){
     if (writer && !(writer instanceof KaytanTextWriter))
         throw new TypeError('writer must be a KaytanTextWriter');
 
-    let data=prepareData(values);
     this.output=writer||new KaytanDefaultTextWriter();
-    this.fn([data!=null?data:{}]);
+    this.fn([values!=null?values:{}]);
     this.output.close();
 
     if (!writer)
@@ -51,9 +22,8 @@ function _executeClassic(values,writer){
     if (writer && !(writer instanceof KaytanTextWriter))
         throw new TypeError('writer must be a KaytanTextWriter');
 
-        let data=prepareData(values);
     this.output=writer||new KaytanDefaultTextWriter();
-    this.ast.execute({},[data!=null?data:{}]); //empty object is the global variable holder for define command
+    this.ast.execute({},[values!=null?values:{}]); //empty object is the global variable holder for define command
     this.output.close();
 
     if (!writer)
@@ -68,7 +38,8 @@ class Kaytan{
             defaultEndDelimiter:{ value:(options && options.defaultEndDelimiter)||"}}", writable:false, enumerable:true }
         });
         
-        let ast=parseTemplate.call(this,[{ defined:{} }],this.defaultStartDelimiter,this.defaultEndDelimiter).data;
+        let parserResult=parseTemplate.call(this,this.defaultStartDelimiter,this.defaultEndDelimiter);
+        let ast=parserResult.data;
         let tokenList=new KaytanTokenList(this,ast);
         ast=tokenList.length==1?tokenList[0]:tokenList;
 
@@ -80,7 +51,7 @@ class Kaytan{
    let $global={ ${Helper.partialsHolderName}:{}, $parameterUsage:{} };
    let $o=$oo;
    let $scope=$o[$o.length-1];
-   let $check=v=>v!=null&&v!==false;
+   let $check=v=>v!=null && v!==false && v!=="" && (!Array.isArray(v) || v.length>0);
    let $pia=0,$i,$l,$k;
 ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
 };$fn;`;
@@ -100,7 +71,8 @@ ${Helper.formatJavascript(ast.toJavascriptCode([{ defined:{} }]),1)}
         }
 
         Object.defineProperties(this,{
-            ast:{ value:ast, writable:false, enumerable:true }
+            ast:{ value:ast, writable:false, enumerable:true },
+            scopeInfo: { value:parserResult.scopeInfo,writable:false,enumerable:true }
         });
     }
 }
