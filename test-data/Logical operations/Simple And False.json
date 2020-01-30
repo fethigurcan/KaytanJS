@@ -1,0 +1,12 @@
+{
+  "template": "{{?a&c}}true{{:}}false{{/}} ",
+  "data": {
+    "a": true,
+    "b": true,
+    "c": false,
+    "d": "yes",
+    "e": "no",
+    "f": 3
+  },
+  "expected": "false "
+}

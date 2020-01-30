@@ -36,10 +36,25 @@ const backslashEscapeMap={
     "'":"\\'",
     "`":"\\`",
     "\t":"\\t",    
+    "\v":"\\v",    
+    "\b":"\\b",    
+    "\f":"\\f",    
+    "\0":"\\0",    
     "\r":"\\r",    
     "\n":"\\n",    
     "\\":"\\\\"
 };
+
+const backslashUnescapeMap={
+    "\\t":"\t",    
+    "\\v":"\v",    
+    "\\b":"\b",    
+    "\\f":"\f",    
+    "\\0":"\0",    
+    "\\r":"\r",    
+    "\\n":"\n",    
+};
+
 
 const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const _escape={
@@ -176,5 +191,6 @@ module.exports={
     digitRegex:digitRegex,
     expressionRegexStr:expressionRegexStr,
     numberLiteralRegex:numberLiteralRegex,
-    checkValue:checkValue
+    checkValue:checkValue,
+    backslashUnescapeMap:backslashUnescapeMap
 };

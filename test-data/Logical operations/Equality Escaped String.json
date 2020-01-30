@@ -1,0 +1,13 @@
+{
+  "template": "{{?g=\"\\\"Hello World\\\" \\r\\n\\t\\'\\b\\f\\0\\v\"}}true{{:}}false{{/}} ",
+  "data": {
+    "a": true,
+    "b": true,
+    "c": false,
+    "d": "yes",
+    "e": "no",
+    "f": 3,
+    "g": "\"Hello World\" \r\n\t'\b\f\u0000\u000b"
+  },
+  "expected": "true "
+}

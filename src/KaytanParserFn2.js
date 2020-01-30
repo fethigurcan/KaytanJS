@@ -121,7 +121,7 @@ function _parseExpressionRecursive(expression,errorIndex,curIndex){
             let identifier=parseIdentifier.call(this,token[5],errorIndex+token.index);
             r.push(identifier);
         }else if (token[12]){ //string literal
-            let stringLiteral=new KaytanStringLiteral(this,token[12].substring(1,token[12].length-1).replace(/\\./g,v=>v.substring(1)));
+            let stringLiteral=new KaytanStringLiteral(this,token[12].substring(1,token[12].length-1).replace(/\\./g,v=>Helper.backslashUnescapeMap[v]||v.substring(1)));
             r.push(stringLiteral);
         }
 
