@@ -1,5 +1,5 @@
 {
-  "name": "kaytan",
+  "name": "@fethigurcan/kaytan",
   "version": "0.7.0",
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
