@@ -1,23 +1,8 @@
-const identifierRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
-const systemIdentifierRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
-const identifierRegexStr=systemIdentifierRegexBaseStr+"|\\$"+identifierRegexBaseStr+"|(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*";
-const identifierRegex=new RegExp("^"+systemIdentifierRegexBaseStr+"$|^\\$"+identifierRegexBaseStr+"$|^(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*$");
-const simpleIdentifierRegex=new RegExp("^"+identifierRegexBaseStr+"$");
-const arrayIndexRegex=/^[0-9]+$/;
 const arrayAccessReplace=v=>v.replace(/\.[0-9]+/g,m=>"["+m.substring(1)+"]");
 const partialsHolderName="$partials";
 const expressionToStringParanthesisCheckerRegex=/[&|=]/;
 const KaytanRuntimeError=require('./KaytanRuntimeError');
 const KaytanSyntaxError=require('./KaytanSyntaxError');
-
-const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).)\")|'(\\\\'|((?!').))*(\\\\\\\\'|((?!\\\\).)')";
-const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
-const binaryOperatorRegexStr="&|\\||=";
-const unaryOperatorRegexStr="\\!";
-const expressionRegexStr="(\\()|(\\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|( +)";
-
-const digitRegex=/^[0-9]$/;
-const numberLiteralRegex=new RegExp(numberLiteralRegexStr);
 
 const checkValue=v=>v!=null && v!==false && v!=="" && (!Array.isArray(v) || v.length>0); 
 
@@ -45,18 +30,6 @@ const backslashEscapeMap={
     "\\":"\\\\"
 };
 
-const backslashUnescapeMap={
-    "\\t":"\t",    
-    "\\v":"\v",    
-    "\\b":"\b",    
-    "\\f":"\f",    
-    "\\0":"\0",    
-    "\\r":"\r",    
-    "\\n":"\n",    
-};
-
-
-const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
 const _escape={
     undefined: v=>v.replace(/[&<>"'\/]/g, m=>htmlEscapeMap[m]),
     "&": v=>v,
@@ -174,9 +147,6 @@ const accessToScopeArray=function(str){
 }
 
 module.exports={
-    identifierRegex:identifierRegex,
-    simpleIdentifierRegex:simpleIdentifierRegex,
-    escapePrefixRegex:escapePrefixRegex,
     escape:escape,
     partialsHolderName:partialsHolderName,
     expressionToStringParanthesisCheckerRegex:expressionToStringParanthesisCheckerRegex,
@@ -185,12 +155,7 @@ module.exports={
     getScopeInfo:getScopeInfo,
     systemIdentifierFn:systemIdentifierFn,
     formatJavascript:formatJavascript,
-    arrayIndexRegex:arrayIndexRegex,
     arrayAccessReplace:arrayAccessReplace,
     accessToScopeArray:accessToScopeArray,
-    digitRegex:digitRegex,
-    expressionRegexStr:expressionRegexStr,
-    numberLiteralRegex:numberLiteralRegex,
-    checkValue:checkValue,
-    backslashUnescapeMap:backslashUnescapeMap
+    checkValue:checkValue
 };

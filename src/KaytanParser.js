@@ -46,6 +46,30 @@ const Helper=require('./Helper');
 const delimiterChangeAllowedRegexBaseStr="((?![a-zA-Z0-9_ &|=()]).)+";
 const delimiterChangeAllowedRegex=new RegExp(`=(${delimiterChangeAllowedRegexBaseStr} ${delimiterChangeAllowedRegexBaseStr})=`);
 
+const identifierRegexBaseStr="([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+)";
+const systemIdentifierRegexBaseStr="\\$(first|last|odd|even|intermediate|index|key)";
+const identifierRegexStr=systemIdentifierRegexBaseStr+"|\\$"+identifierRegexBaseStr+"|(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*";
+const identifierRegex=new RegExp("^"+systemIdentifierRegexBaseStr+"$|^\\$"+identifierRegexBaseStr+"$|^(\\.)*"+identifierRegexBaseStr+"(\\."+identifierRegexBaseStr+")*$");
+const simpleIdentifierRegex=new RegExp("^"+identifierRegexBaseStr+"$");
+const stringLiteralRegexStr="\"\"|''|\"(\\\\\"|((?!\").))*(\\\\\\\\\"|((?!\\\\).)\")|'(\\\\'|((?!').))*(\\\\\\\\'|((?!\\\\).)')";
+const numberLiteralRegexStr="[0-9]+(\\.[0-9]*)?|\\.[0-9]+";
+const binaryOperatorRegexStr="&|\\||=";
+const unaryOperatorRegexStr="\\!";
+const expressionRegexStr="(\\()|(\\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|( +)";
+
+const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
+
+const numberLiteralRegex=new RegExp(numberLiteralRegexStr);
+
+const backslashUnescapeMap={
+    "\\t":"\t",    
+    "\\v":"\v",    
+    "\\b":"\b",    
+    "\\f":"\f",    
+    "\\0":"\0",    
+    "\\r":"\r",    
+    "\\n":"\n",    
+};
 
 function getDelimiterRegexes(start,end){
     let s=Helper.escape(start,"\\");
@@ -73,7 +97,7 @@ function _parseExpressionRecursive(expression,errorIndex,curIndex){
     while((token=_.expressionRegex.exec(expression))){ 
         
         if (lastIndex!=token.index) //all characters must be recognized by the expressionRegex including spaces
-            new KaytanSyntaxError('Invalid expression',errorIndex+token.index,this.template);        
+            new KaytanSyntaxError('Invalid expression',errorIndex+token.index,this.engine.template);        
 
         if (token[1]) //open paranthesis
             r.push(_parseExpressionRecursive.call(this,expression,errorIndex+lastIndex,lastIndex));
@@ -89,24 +113,24 @@ function _parseExpressionRecursive(expression,errorIndex,curIndex){
                         if (right && right instanceof KaytanLogicToken){
                             r.push(new expressionClass(this,left,right));
                         }else
-                            throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.template);
+                            throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.engine.template);
                     }else
-                        throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.template);
+                        throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.engine.template);
                 }else if (expressionClass.__proto__==KaytanCompareExpression){
                     if (left && left instanceof KaytanIdentifier){
                         if (right && right instanceof KaytanLiteral){
-                            r.push(new expressionClass(this,left,right));
-                        }else if (right && right instanceof KaytanIdentifier &&  Helper.numberLiteralRegex(right.access)){
-                            right=new KaytanNumberLiteral(this,right.access);
-                            r.push(new expressionClass(this,left,right));
+                            r.push(new expressionClass(this.engine,left,right));
+                        }else if (right && right instanceof KaytanIdentifier &&  numberLiteralRegex.test(right.access)){
+                            right=new KaytanNumberLiteral(this.engine,right.access);
+                            r.push(new expressionClass(this.engine,left,right));
                         }else
-                            throw new KaytanSyntaxError("Expected righthand literal",errorIndex+token.index,this.template);
+                            throw new KaytanSyntaxError("Expected righthand literal",errorIndex+token.index,this.engine.template);
                     }else
-                        throw new KaytanSyntaxError("Expected lefthand identifier",errorIndex+token.index,this.template);
+                        throw new KaytanSyntaxError("Expected lefthand identifier",errorIndex+token.index,this.engine.template);
                 }else
-                    throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.template);
+                    throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.engine.template);
             }else
-                throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.template);
+                throw new KaytanSyntaxError("Expected lefthand operand",errorIndex+token.index,this.engine.template);
         }else if (token[4]){ //unary operator
             let operand=_parseExpressionRecursive.call(this,expression,errorIndex+lastIndex,lastIndex);
             let expressionClass=operatorToExpressionClass[token[4]];
@@ -114,14 +138,14 @@ function _parseExpressionRecursive(expression,errorIndex,curIndex){
                 if (operand && operand instanceof KaytanLogicToken){
                     r.push(new expressionClass(this,operand));
                 }else
-                    throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.template);
+                    throw new KaytanSyntaxError("Expected righthand operand",errorIndex+token.index,this.engine.template);
             }else
-                throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.template);
+                throw new KaytanBugError("Unknown expression class type",errorIndex+token.index,this.engine.template);
         }else if (token[5]){ //identifier
             let identifier=parseIdentifier.call(this,token[5],errorIndex+token.index);
             r.push(identifier);
         }else if (token[12]){ //string literal
-            let stringLiteral=new KaytanStringLiteral(this,token[12].substring(1,token[12].length-1).replace(/\\./g,v=>Helper.backslashUnescapeMap[v]||v.substring(1)));
+            let stringLiteral=new KaytanStringLiteral(this.engine,token[12].substring(1,token[12].length-1).replace(/\\./g,v=>backslashUnescapeMap[v]||v.substring(1)));
             r.push(stringLiteral);
         }
 
@@ -132,10 +156,10 @@ function _parseExpressionRecursive(expression,errorIndex,curIndex){
     }
 
     if (!r.length)
-        throw new KaytanSyntaxError("Empty expression block",errorIndex+lastIndex,this.template);
+        throw new KaytanSyntaxError("Empty expression block",errorIndex+lastIndex,this.engine.template);
 
     if (r.length!=1)
-        throw new KaytanBugError("Expression array must be ended with just 1 item",errorIndex+lastIndex,this.template);
+        throw new KaytanBugError("Expression array must be ended with just 1 item",errorIndex+lastIndex,this.engine.template);
 
     return r[0];
 }
@@ -146,34 +170,34 @@ function parseExpression(expression,errorIndex){
         let _=this._parserRuntime;
     
         if (!_.expressionRegex)
-            _.expressionRegex=new RegExp(Helper.expressionRegexStr,'g'); //use it under _parserRuntime, because it is resuable
+            _.expressionRegex=new RegExp(expressionRegexStr,'g'); //use it under _parserRuntime, because it is resuable
         _.expressionRegex.lastIndex=0; //we use it stateful, so thats why it is recreated in each parser instance (consider parallel usages)
     
         return _parseExpressionRecursive.call(this,expression,errorIndex,0);
 
     }else
-        new KaytanSyntaxError('Empty expression',errorIndex,this.template);
+        new KaytanSyntaxError('Empty expression',errorIndex,this.engine.template);
 }
 
 function checkSimpleIdentifierName(identifierName,errorIndex){
-    if (!Helper.simpleIdentifierRegex.test(identifierName))
-        throw new KaytanSyntaxError('Invalid identifier name:'+identifierName,errorIndex,this.template);
+    if (!simpleIdentifierRegex.test(identifierName))
+        throw new KaytanSyntaxError('Invalid identifier name:'+identifierName,errorIndex,this.engine.template);
 }
 //treat as member function
 function parseIdentifier(propertyName,errorIndex){
     let _=this._parserRuntime;
     if (propertyName==".")
-        return new KaytanThisProperty(this,_.currentScope);
+        return new KaytanThisProperty(this.engine,_.currentScope);
 
-    if (Helper.identifierRegex.test(propertyName)){
+    if (identifierRegex.test(propertyName)){
         if (propertyName[0]=='~')
-            return new KaytanGlobalIdentifier(this,propertyName.substring(1));
+            return new KaytanGlobalIdentifier(this.engine,propertyName.substring(1));
         else if (propertyName[0]=='$')
-            return new KaytanSystemIdentifier(this,propertyName.substring(1));
+            return new KaytanSystemIdentifier(this.engine,propertyName.substring(1));
         else
-            return new KaytanIdentifier(this,propertyName,_.currentScope);
+            return new KaytanIdentifier(this.engine,propertyName,_.currentScope);
     }else
-        throw new KaytanSyntaxError('Invalid identifier:'+propertyName,errorIndex,this.template);
+        throw new KaytanSyntaxError('Invalid identifier:'+propertyName,errorIndex,this.engine.template);
 }
 
 
@@ -187,7 +211,7 @@ function openBlock(conditionParserFn,tokenType,command,index,alternateAllowed=tr
     block.ast=block.default;
     if (scopeType==1){ //1=create a scope from the condition (condition must be a KaytanIdentifier)
         if (!condition instanceof KaytanIdentifier)
-            throw new KaytanBugError("scopeType 1 is only used in a identifier condition type statements",index,this.template);
+            throw new KaytanBugError("scopeType 1 is only used in a identifier condition type statements",index,this.engine.template);
         
         condition.endScopeInfo.lastScope.push(_.currentScope);
         _.currentScope=condition.endScopeInfo;
@@ -209,14 +233,14 @@ const tokenFactory={
     undefined:function(command,index){ //write value with default escape {{...}}
         let _=this._parserRuntime;
         let property=parseIdentifier.call(this,command.trim(),index);
-        _.block.ast.push(new KaytanIdentifierValue(this,property));
+        _.block.ast.push(new KaytanIdentifierValue(this.engine,property));
     },
     "&":function(command,index){ //write value with no escape or selected escape {{&...}} or {{&["'[(\ etc.]...}} or {{{...}}}=={{&...}} (see parseTemplate for last case)
         let _=this._parserRuntime;
         let escapeFnName=command[1];
         let identifierName;
 
-        if (Helper.escapePrefixRegex.test(escapeFnName))
+        if (escapePrefixRegex.test(escapeFnName))
             identifierName=command.substring(2).trim();
         else{
             identifierName=command.substring(1).trim();
@@ -224,31 +248,31 @@ const tokenFactory={
         }
 
         let property=parseIdentifier.call(this,identifierName,index);
-        _.block.ast.push(new KaytanIdentifierValue(this,property,escapeFnName));
+        _.block.ast.push(new KaytanIdentifierValue(this.engine,property,escapeFnName));
     },
     "@":function(command,index){ //report a parameter usage {{@...}}
         let _=this._parserRuntime;
         let identifierName=command.substring(1).trim();
-        if (Helper.simpleIdentifierRegex.test(identifierName)){
-            _.block.ast.push(new KaytanParameterUsage(this,identifierName));
+        if (simpleIdentifierRegex.test(identifierName)){
+            _.block.ast.push(new KaytanParameterUsage(this.engine,identifierName));
         }else
-            throw new KaytanSyntaxError('Invalid parameter usage identifier name:'+identifierName,index,this.template);        
+            throw new KaytanSyntaxError('Invalid parameter usage identifier name:'+identifierName,index,this.engine.template);        
     },
     "~":function(command,index){ //define a global flag to true {{~...}} (TODO: add {{~!...}}) to set flag false again
         let _=this._parserRuntime;
         let identifierName=command.substring(1).trim();
-        if (Helper.simpleIdentifierRegex.test(identifierName)){
-            _.block.ast.push(new KaytanGlobalIdentifierDefiniton(this,identifierName));
+        if (simpleIdentifierRegex.test(identifierName)){
+            _.block.ast.push(new KaytanGlobalIdentifierDefiniton(this.engine,identifierName));
         }else
-            throw new KaytanSyntaxError('Invalid global identifier name:'+identifierName,index,this.template);        
+            throw new KaytanSyntaxError('Invalid global identifier name:'+identifierName,index,this.engine.template);        
     },
     ">":function(command,index){ //partial call {{>...}} (partial must be defined with {{<...}}...{{/}} block token)
         let _=this._parserRuntime;
         let partialName=command.substring(1).trim();
-        if (Helper.simpleIdentifierRegex.test(partialName)){
-            _.block.ast.push(new KaytanPartial(this,partialName,_.currentScope.index));
+        if (simpleIdentifierRegex.test(partialName)){
+            _.block.ast.push(new KaytanPartial(this.engine,partialName,_.currentScope.index));
         }else
-            throw new KaytanSyntaxError('Invalid partial name:'+partialName,index,this.template);        
+            throw new KaytanSyntaxError('Invalid partial name:'+partialName,index,this.engine.template);        
     },
 
     //Block Tokens
@@ -264,11 +288,11 @@ const tokenFactory={
         let conditionName=command.substring(1).trim();
         if (_.block.alternateAllowed){
             if (conditionName && conditionName!=_.block.name)
-                throw new KaytanSyntaxError("Expected {{:${blockName}}}} or {{:}}",index,this.template);    
+                throw new KaytanSyntaxError("Expected {{:${blockName}}}} or {{:}}",index,this.engine.template);    
             _.block.alternate=[];
             _.block.ast=_.block.alternate;
         }else
-            throw new KaytanSyntaxError("Unexpected {{:}}",index,this.template);
+            throw new KaytanSyntaxError("Unexpected {{:}}",index,this.engine.template);
     },
     "/":function(command,index){
         delete this._temporaryBlockFlag; //TODO: do a elegant solution (it helps optimized code to calculate definition of variables. non-optimized engine not affected)
@@ -278,18 +302,18 @@ const tokenFactory={
 
         let conditionName=command.substring(1).trim();
         if (conditionName && conditionName!=_.block.name)
-            throw new KaytanSyntaxError("Expected {{/${blockName}}}} or {{/}}",index,this.template);
+            throw new KaytanSyntaxError("Expected {{/${blockName}}}} or {{/}}",index,this.engine.template);
 
         delete _.block.ast;
         
         _.blockArr.pop();
         let block=_.block;
-        let _default=new KaytanTokenList(this,block.default);
+        let _default=new KaytanTokenList(this.engine,block.default);
         let _alternate;
         if (block.alternate)
-            _alternate=new KaytanTokenList(this,block.alternate);
+            _alternate=new KaytanTokenList(this.engine,block.alternate);
         
-        let token=new block.tokenType(this,block.condition || block.name,_default,_alternate);
+        let token=new block.tokenType(this.engine,block.condition || block.name,_default,_alternate);
         _.block=_.blockArr[_.blockArr.length-1];
         _.block.ast.push(token);
     },
@@ -298,7 +322,7 @@ const tokenFactory={
     "=":function(command,index){ //{{=... ...=}}
         let _=this._parserRuntime;
         if (!delimiterChangeAllowedRegex.test(command))
-            throw new KaytanSyntaxError("Delimiter change format wrong",index+command.length,this.template);
+            throw new KaytanSyntaxError("Delimiter change format wrong",index+command.length,this.engine.template);
 
         let lastIndex=_.delimiterRegex.token.lastIndex; //index+command.length+_.startDelimiter.length+_.endDelimiter.length;
 
@@ -311,93 +335,99 @@ const tokenFactory={
     }    
 }
 
-
-//treat as member function of Kaytan
-function parseTemplate(defaultStartDelimiter="{{",defaultEndDelimiter="}}"){
-
-    this._parserRuntime={
-        delimiterRegex:getDelimiterRegexes(defaultStartDelimiter,defaultEndDelimiter),
-        startDelimiter:defaultStartDelimiter,
-        endDelimiter:defaultEndDelimiter,
-        rootScope:{ parent:null,name:"#root", index:0, children:{},lastScope:[] },
-        block:{ ast:[] }
+class KaytanParser{
+    constructor(engine){
+        Object.defineProperties(this,{
+            engine:{ value:engine, writable:false }
+        });
     }
-    let _=this._parserRuntime;
-    _.currentScope=_.rootScope;
-    _.blockArr=[_.block]; //it is the root block
 
-    if (this.template){
+    parseTemplate(defaultStartDelimiter="{{",defaultEndDelimiter="}}"){
 
-        let lastIndex=0;
-        let token;
-        while((token=_.delimiterRegex.token.exec(this.template))){
-            let curIndex=token.index;
-            if (curIndex>lastIndex){
-                let strTokenData=this.template.substring(lastIndex,curIndex);
-                _.block.ast.push(new KaytanStringToken(this,strTokenData));
-            }
-
-            let tokenCommand;
-            if(token[2] && token[2][0]=="{" && token[2][token[2].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
-                tokenCommand="&"+token[3];  //see regex for why 3=inside triple tag 
-            else
-                tokenCommand=token[5]; //see regex for why 5=inside stadard tag
-
-            let tokenFn=tokenFactory[tokenCommand[0]]||tokenFactory[undefined];
-            tokenFn.call(this,tokenCommand,token.index);                    
-            lastIndex=_.delimiterRegex.token.lastIndex;
-
-            if (token[7]){ //see regex for why 7=white space and end line at the end of the tag 
-                let b=_.block;
-                for (let i=b.ast.length-1;i>-1;i--){
-                    let t=b.ast[i];
-                    if (t instanceof KaytanStringToken){
-                        let lastStr=t.value.replace(/^ +/,"");
-                        if (lastStr!="\r\n" && lastStr!='\r' && lastStr!='\n'){
-                            b.ast.push(new KaytanStringToken(this,token[7]));
-                        }
-                        break;
-                    }else if (t instanceof KaytanIdentifierValue){
-                        b.ast.push(new KaytanStringToken(this,token[7]));
-                        break;
-                    }    
+        this._parserRuntime={
+            delimiterRegex:getDelimiterRegexes(defaultStartDelimiter,defaultEndDelimiter),
+            startDelimiter:defaultStartDelimiter,
+            endDelimiter:defaultEndDelimiter,
+            rootScope:{ parent:null,name:"#root", index:0, children:{},lastScope:[] },
+            block:{ ast:[] }
+        }
+        let _=this._parserRuntime;
+        _.currentScope=_.rootScope;
+        _.blockArr=[_.block]; //it is the root block
+    
+        if (this.engine.template){
+    
+            let lastIndex=0;
+            let token;
+            while((token=_.delimiterRegex.token.exec(this.engine.template))){
+                let curIndex=token.index;
+                if (curIndex>lastIndex){
+                    let strTokenData=this.engine.template.substring(lastIndex,curIndex);
+                    _.block.ast.push(new KaytanStringToken(this.engine,strTokenData));
+                }
+    
+                let tokenCommand;
+                if(token[2] && token[2][0]=="{" && token[2][token[2].length-1]=="}") //rewrite {{{...}}} case as {{&...}}
+                    tokenCommand="&"+token[3];  //see regex for why 3=inside triple tag 
+                else
+                    tokenCommand=token[5]; //see regex for why 5=inside stadard tag
+    
+                let tokenFn=tokenFactory[tokenCommand[0]]||tokenFactory[undefined];
+                tokenFn.call(this,tokenCommand,token.index);                    
+                lastIndex=_.delimiterRegex.token.lastIndex;
+    
+                if (token[7]){ //see regex for why 7=white space and end line at the end of the tag 
+                    let b=_.block;
+                    for (let i=b.ast.length-1;i>-1;i--){
+                        let t=b.ast[i];
+                        if (t instanceof KaytanStringToken){
+                            let lastStr=t.value.replace(/^ +/,"");
+                            if (lastStr!="\r\n" && lastStr!='\r' && lastStr!='\n'){
+                                b.ast.push(new KaytanStringToken(this.engine,token[7]));
+                            }
+                            break;
+                        }else if (t instanceof KaytanIdentifierValue){
+                            b.ast.push(new KaytanStringToken(this.engine,token[7]));
+                            break;
+                        }    
+                    }
                 }
             }
-        }
-
-        if (lastIndex<this.template.length){            
-            let endOfTemplate=this.template.substring(lastIndex,this.template.length);
-
-            if (_.delimiterRegex.errorCheck.test(endOfTemplate))
-                throw new KaytanSyntaxError("Missing delimiter close at the end of the template",this.template.length,this.template);
-
-            _.block.ast.push(new KaytanStringToken(this,endOfTemplate));
-        }
-
-        if (_.blockArr.length!=1)
-            throw new KaytanSyntaxError("block end expected",endIndex,this.template);
-    }
-
-    let ast=_.block.ast;
     
-    function scopeInfoFn(rr){
-        let retVal={};
-        let flag=false;
-        for (let r in rr.children) {
-            flag=true;
-            retVal[r]=scopeInfoFn(rr.children[r]);
+            if (lastIndex<this.engine.template.length){            
+                let endOfTemplate=this.engine.template.substring(lastIndex,this.engine.template.length);
+    
+                if (_.delimiterRegex.errorCheck.test(endOfTemplate))
+                    throw new KaytanSyntaxError("Missing delimiter close at the end of the template",this.engine.template.length,this.engine.template);
+    
+                _.block.ast.push(new KaytanStringToken(this.engine,endOfTemplate));
+            }
+    
+            if (_.blockArr.length!=1)
+                throw new KaytanSyntaxError("block end expected",endIndex,this.engine.template);
         }
-        if (flag)
-            return retVal;
-        else
-            return rr.exact;
-    }
+    
+        let ast=_.block.ast;
+        
+        function scopeInfoFn(rr){
+            let retVal={};
+            let flag=false;
+            for (let r in rr.children) {
+                flag=true;
+                retVal[r]=scopeInfoFn(rr.children[r]);
+            }
+            if (flag)
+                return retVal;
+            else
+                return rr.exact;
+        }
+    
+        this.scopeInfo=scopeInfoFn(this._parserRuntime.rootScope);    
+        delete this._parserRuntime;
+        
+        return new KaytanTokenList(this,ast);
+    };
+    
+}
 
-    let scopeInfo=scopeInfoFn(this._parserRuntime.rootScope);    
-    delete this._parserRuntime;
-
-    //return new KaytanTokenList(this,ast);
-    return { data:ast, scopeInfo:scopeInfo };
-};
-
-module.exports=parseTemplate;
+module.exports=KaytanParser;

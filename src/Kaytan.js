@@ -1,4 +1,4 @@
-const parseTemplate=require('./KaytanParserFn2');
+const KaytanParser=require('./KaytanParser');
 const KaytanTokenList=require('./KaytanTokenList');
 const KaytanTextWriter=require('./KaytanTextWriter');
 const KaytanDefaultTextWriter=require('./KaytanDefaultTextWriter');
@@ -38,10 +38,8 @@ class Kaytan{
             defaultEndDelimiter:{ value:(options && options.defaultEndDelimiter)||"}}", writable:false, enumerable:true }
         });
         
-        let parserResult=parseTemplate.call(this,this.defaultStartDelimiter,this.defaultEndDelimiter);
-        let ast=parserResult.data;
-        let tokenList=new KaytanTokenList(this,ast);
-        ast=tokenList.length==1?tokenList[0]:tokenList;
+        let parser=new KaytanParser(this);
+        let ast=parser.parseTemplate(this.defaultStartDelimiter,this.defaultEndDelimiter);
 
         if (options && options.optimized){
             this.varcounter=0;
@@ -72,7 +70,7 @@ ${Helper.formatJavascript(ast.toJavascriptCode(),1)}
 
         Object.defineProperties(this,{
             ast:{ value:ast, writable:false, enumerable:true },
-            scopeInfo: { value:parserResult.scopeInfo,writable:false,enumerable:true }
+            scopeInfo: { value:parser.scopeInfo,writable:false,enumerable:true }
         });
     }
 }
