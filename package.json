@@ -3,6 +3,7 @@
   "version": "0.7.0",
   "description": "Mustache like Template Engine with some logic extensions",
   "main": "index.js",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "test": "jest --config jest.config.js --coverage",
     "test-optimized": "jest --config jest.config.optimized.js --coverage",
