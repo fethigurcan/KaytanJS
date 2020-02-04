@@ -57,7 +57,7 @@ const binaryOperatorRegexStr="&|\\||=";
 const unaryOperatorRegexStr="\\!";
 const expressionRegexStr="(\\()|(\\))|("+binaryOperatorRegexStr+")|("+unaryOperatorRegexStr+")|("+identifierRegexStr+")|("+stringLiteralRegexStr+")|( +)";
 
-const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape
+const escapePrefixRegex=/^[&\\"'`[(\{]$/; // ['"` escape with doubling, \ escape C style, & raw data, {{noprefix}} default escape=html escape
 
 const numberLiteralRegex=new RegExp(numberLiteralRegexStr);
 
